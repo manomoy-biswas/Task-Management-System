@@ -53,9 +53,14 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
-
+#custom gems
+# for password encryption
 gem "bcrypt"
+# Adds bootstrap to rails
 gem "bootstrap", "~> 4.4", ">= 4.4.1"
+# Add jquery to rails
 gem "jquery-rails", "~> 4.3", ">= 4.3.5"
+# Adds icon and font style to rails
 gem "font-awesome-rails", "~> 4.7", ">= 4.7.0.5"
+# Adds authentication with google account
 gem 'omniauth-google-oauth2', '~> 0.8.0'

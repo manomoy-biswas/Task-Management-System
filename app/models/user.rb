@@ -5,10 +5,20 @@ class User < ApplicationRecord
   VALID_PHONE_REGEX=/\A[6-9]{1}[0-9]{9}\z/.freeze
 
   attr_accessor :roles
+  before_validation { self.name = name.to_s.titleize.strip }
+  before_validation { self.email = email.to_s.downcase.strip }
+
+  validates :name, presence: true, length: { maximum: 50 }
   validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
-  validates :phone, presence: true, length: {is: 10}, format: { with: VALID_PHONE_REGEX },
-                    uniqueness: true
+  validates :phone, presence: true, length: {is: 10}, format: { with: VALID_PHONE_REGEX }, uniqueness: true
+  validates :dob, presence: true
+  validate :valid_dob
   validates :password, presence: true, length: { minimum: 5 }, allow_nil: true
+
+  def digest(string)
+    cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
+    BCrypt::Password.create(string, cost: cost)
+  end
 
   def user_name
     return self.name
@@ -22,9 +32,16 @@ class User < ApplicationRecord
       user = User.new(
         email: data["email"],
         provider: auth.provider,
-        uid: auth.uid
+        uid: auth.uid,
         )
     end
     user
+  end
+
+  private
+  def valid_dob
+    if dob >= Date.today
+      errors.add(:dob, "is invalid")
+    end
   end
 end
