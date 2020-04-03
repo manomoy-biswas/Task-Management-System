@@ -30,7 +30,7 @@
             <td><%= user.user_name%></td>
             <td><%= user.email %></td>
             <td><%= user.phone %></td>
-            <td><%= user.dob %></td>
+            <td><%= DateTime.parse(user.dob.to_s).strftime("%d-%m-%Y") %></td>
             <td class="text-center">
               <% if user.admin %>
                 ADMIN

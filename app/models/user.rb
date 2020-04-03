@@ -32,7 +32,7 @@ class User < ApplicationRecord
       user = User.new(
         email: data["email"],
         provider: auth.provider,
-        uid: auth.uid,
+        uid: auth.uid
         )
     end
     user
@@ -42,6 +42,8 @@ class User < ApplicationRecord
   def valid_dob
     if dob >= Date.today
       errors.add(:dob, "is invalid")
+    elsif dob > 18.years.ago.to_date
+      errors.add("DOB should be before ", 18.years.ago.to_date)
     end
   end
 end
