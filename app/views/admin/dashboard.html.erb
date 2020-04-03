@@ -1,0 +1,25 @@
+<% content_for :title, "Admin Dashboard" %><div class="container">
+  <h1 class="text-center">Admin Dashboard</h1>
+  <div class="row">
+    <div class="col-sm-12 col-md-6">
+      <div class="text-center">
+        <%= link_to users_path, class: " box btn btn-success" do%>
+          <div class="dashboard-wrapper">
+            <div class="fa fa-users"></div>
+            <h2>Users</h2>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-6">
+      <div class="text-center">
+        <%= link_to users_path, class: "box btn btn-info" do%>
+          <div class="dashboard-wrapper">
+            <div class="fa fa-tasks"></div>
+            <h2>Tasks</h2>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

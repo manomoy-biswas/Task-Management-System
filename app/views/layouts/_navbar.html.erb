@@ -1,0 +1,29 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <a class="navbar-brand" href="<%= root_path%>">Task Management System</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+  </button>
+  <% if current_user %>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item nav-link active">
+          <a class="nav-link text-center" href="<%= admin_dashboard_path %>"><strong> Dashboard </strong></a>  
+        </li>
+        <li class="nav-item btn">
+          <a class="nav-link" href="#"><strong><%= current_user.name %></strong></a>
+        </li>
+        <li class="nav-link text-center">
+            <%= button_to "Sign out", logout_path, method: :delete, class:"btn btn-outline-danger my-2 my-sm-0" %>
+        </li> 
+      </ul>
+    </div>
+  <% else%> 
+    <% unless["new"].include?(params[:action])%>
+      <ul class="navbar-nav ml-auto">
+      <li class="nav-link text-center">
+          <%= link_to "Admin Login", admin_login_path, class:"btn btn-outline-success my-2 my-sm-0" %>
+        </li>
+      </ul>
+    <% end %>
+  <% end %>
+</nav>
