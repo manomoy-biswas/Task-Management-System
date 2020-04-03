@@ -1,12 +1,12 @@
 class SessionsController < ApplicationController
   include SessionsHelper
-
   before_action :find_user, only: [:create]
+
   def new
     unless logged_in?
       return
     else
-      flash[:warning] = "You have already logged in."
+      flash[:warning] = I18n.t "session.logged_in"
       if admin?
         redirect_to admin_dashboard_path
       else
@@ -16,24 +16,32 @@ class SessionsController < ApplicationController
   end  
 
   def create
-    if @user && @user.authenticate(params[:login][:password])
+    begin
+      user = @user && @user.authenticate(params[:login][:password])
+    rescue BCrypt::Errors::InvalidHash
+      flash[:danger] = I18n.t "session.only_admin"
+      render "new"
+      return
+    end
+    
+    if user
       if @user.admin
         login(@user)
-        flash[:success] = "Successfully Loged in."
+        flash[:success] = I18n.t "session.login_success", user: @user.user_name
         redirect_to admin_dashboard_path
       else
-        flash[:warning] = "Only Admin can login here. Youare not a Admin"
+        flash[:warning] = I18n.t "session.only_admin"
         redirect_to root_path
       end
     else
-      flash[:danger] = "Email or password is invalid"
+     flash[:danger] = I18n.t "session.invalid_credential"
       render "new"
     end
   end  
 
   def destroy
     logout
-    flash[:success] = "Successfully Loged out."
+    flash[:success] = I18n.t "session.logout_success"
     redirect_to root_path
   end
 

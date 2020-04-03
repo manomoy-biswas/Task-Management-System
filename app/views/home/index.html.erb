@@ -11,10 +11,10 @@
           <h1 class="title text-center">USER LOGIN</h1>
           <div class="row">
             <div class="form-group col-md-12 text-center align-items-center">
-              <%# <%= button_to user_google_oauth2_omniauth_authorize_path, class: "btn btn-primary signin-btn"  do%> %>
+              <%= link_to login_path,class: "btn btn-primary signin-btn" do%>
                 <%= image_tag("google", class:"google-icon") %>     
                 Sign in with Google Account
-              <%# <% end %> %>
+              <% end %>
             </div>
           </div>
         </div>

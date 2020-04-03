@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  include SessionsHelper
   before_action :set_cache_headers
   helper_method :current_user
   
@@ -11,9 +12,8 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_user!
-    return if current_user.present?
-
-    flash[:danger] = "Please login with your credential."
+    return if logged_in?
+    flash[:danger] = I18n.t "application.authentication_error"
     redirect_to root_path
   end
 

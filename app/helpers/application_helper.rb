@@ -11,15 +11,8 @@ module ApplicationHelper
   end
 
   def check_user_is_admin
-    unless current_user.admin
-      flash[:alert] = "You are not an Admin. Only Admin has right to login here"
-      redirect_to root_path
-    end
-  end
-
-  def check_user_is_hr
-    unless current_user.hr
-      flash[:alert] = "You are not an Admin. Only Admin has right to login here"
+    unless admin?
+      flash[:warning] = I18n.t "application.only_admin"
       redirect_to root_path
     end
   end

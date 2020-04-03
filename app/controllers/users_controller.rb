@@ -13,16 +13,19 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params) 
+    @user.provider="google_oauth2"
+
     if user_params[:roles].present?
       if user_params[:roles].include?("hr")
         @user.hr = true
       end
     end
+
     if @user.save
-      flash[:notice] = "User record added Successfully."
+      flash[:success] =  I18n.t "user.create_success"
       redirect_to users_path
     else
-      flash[:alert] = "Some error occcured. Please try again."
+      flash[:danger] = I18n.t "user.create_faild"
       render "new"
     end
   end
@@ -32,18 +35,22 @@ class UsersController < ApplicationController
 
   def update
     if @user.update(user_params) 
-      flash[:notice] = ' User record updated successfully.'
+      flash[:success] = I18n.t "user.update_success"
       redirect_to users_path
     else
-      flash[:alert] = "Some error occcured. Please try again."
+      flash[:danger] = I18n.t "user.update_faild"
       render "edit"
     end
   end
 
   def destroy
-    @user.destroy
-    flash[:notice]="User record deleted successfully"
-    redirect_to users_path
+    if @user.destroy
+      flash[:success]=I18n.t "user.destroy_success"
+      redirect_to users_path
+    else
+      flash[:success]=I18n.t "user.destroy_faild"
+      redirect_to users_path
+    end
   end
 
   private

@@ -30,4 +30,25 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  application:
+    authentication_error: "Please login with your credential."
+    only_admin: "You are not a Admin. Only Adminhas right to Login here."
+    only_hr: "You are not a Admin. Only HR has right Login here."
+  omniauth_callbacks:
+    success: "Successfully authenticated from Google account."
+    faild: "You are not an employee. Ask admin to register your gmail account"
+  user:
+    create_success: "Registration Successful."
+    create_faild: "Registration Unsuccessful. Please try again."
+    update_success: "Updated Successfully."
+    update_faild: "Some error occur. Please try again."
+    destroy_success: "User record Deleted Successfully."
+    destroy_faild: "Some error occur. Please try again."
+  session:
+    login_success: "Welcome %{user}. Login Successful"
+    only_admin: "You are not a Admin. Only Admin can Login here."
+    invalid_credential: Incorrect email / password combination"
+    logged_in: "you have already logged in"
+    logout_success: "Logged out Successfully. Bye"
+
+

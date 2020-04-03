@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_02_155251) do
+ActiveRecord::Schema.define(version: 2020_04_03_134017) do
 
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name", null: false
@@ -22,6 +22,8 @@ ActiveRecord::Schema.define(version: 2020_04_02_155251) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "admin", default: false
     t.boolean "hr", default: false
+    t.string "provider"
+    t.string "uid"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["phone"], name: "index_users_on_phone", unique: true
   end
