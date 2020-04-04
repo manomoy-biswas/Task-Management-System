@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   include SessionsHelper
+  include ApplicationHelper
   before_action :set_cache_headers
   helper_method :current_user
   

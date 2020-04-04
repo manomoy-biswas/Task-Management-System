@@ -64,3 +64,5 @@ gem "jquery-rails", "~> 4.3", ">= 4.3.5"
 gem "font-awesome-rails", "~> 4.7", ">= 4.7.0.5"
 # Adds authentication with google account
 gem 'omniauth-google-oauth2', '~> 0.8.0'
+# Adds upload document functionality
+gem 'paperclip', '~> 6.1'

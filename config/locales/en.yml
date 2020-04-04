@@ -50,5 +50,9 @@ en:
     invalid_credential: Incorrect email / password combination"
     logged_in: "you have already logged in"
     logout_success: "Logged out Successfully. Bye"
-
+  categories:
+    add_success: "Category added successfully"
+    update_success: "Category updated successfully"
+    deleted_success: "Category deleted successfully"
+    failed: "Some error occur. Please try again."
 

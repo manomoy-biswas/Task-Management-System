@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  task_name: MyString
+  task_catagory: MyString
+  submit_date: 2020-04-04 13:33:51
+  assign_task_to: MyString
+  repeat: MyString
+  priority: MyString
+  assign_task_by: MyString
+  recurring_task: false
+
+two:
+  task_name: MyString
+  task_catagory: MyString
+  submit_date: 2020-04-04 13:33:51
+  assign_task_to: MyString
+  repeat: MyString
+  priority: MyString
+  assign_task_by: MyString
+  recurring_task: false
