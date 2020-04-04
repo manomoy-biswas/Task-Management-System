@@ -60,9 +60,13 @@ gem "bcrypt"
 gem "bootstrap", "~> 4.4", ">= 4.4.1"
 # Add jquery to rails
 gem "jquery-rails", "~> 4.3", ">= 4.3.5"
+gem 'popper_js', '~> 1.16'
 # Adds icon and font style to rails
 gem "font-awesome-rails", "~> 4.7", ">= 4.7.0.5"
 # Adds authentication with google account
-gem 'omniauth-google-oauth2', '~> 0.8.0'
+gem "omniauth-google-oauth2", "~> 0.8.0"
 # Adds upload document functionality
-gem 'paperclip', '~> 6.1'
+gem "paperclip", "~> 6.1"
+#Adds Bootstrap datetimepicker
+
+
