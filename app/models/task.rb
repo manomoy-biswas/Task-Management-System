@@ -6,7 +6,7 @@ class Task < ApplicationRecord
   validates_attachment :document, content_type: {content_type: %w(image/jpeg image/jpg image/png application/pdf)}
 
   def valid_submit_date
-    if submit_date.to_datetime <= DateTime.now
+    if submit_date.to_datetime <= DateTime.now + 1.day
       error.add(:submit_date, " can not be assign to a previous date")
     end
   end

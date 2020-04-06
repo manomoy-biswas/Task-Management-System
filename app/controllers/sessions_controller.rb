@@ -28,7 +28,7 @@ class SessionsController < ApplicationController
       if @user.admin
         login(@user)
         flash[:success] = I18n.t "session.login_success", user: @user.user_name
-        redirect_to admin_dashboard_path
+        redirect_to user_dashboard_path
       else
         flash[:warning] = I18n.t "session.only_admin"
         redirect_to root_path

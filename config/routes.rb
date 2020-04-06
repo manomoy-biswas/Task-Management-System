@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  get :admin_dashboard, "admin/dashboard"
+  get :user_dashboard, "users/dashboard"
   resources :users
   resources :tasks
   resources :categories
