@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_04_124450) do
+ActiveRecord::Schema.define(version: 2020_04_05_230048) do
 
   create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name"
@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 2020_04_04_124450) do
     t.datetime "document_updated_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "description", default: ""
     t.index ["assign_task_to"], name: "fk_rails_8503550591"
     t.index ["task_category"], name: "fk_rails_38c638f0b2"
   end
@@ -49,6 +50,7 @@ ActiveRecord::Schema.define(version: 2020_04_04_124450) do
     t.boolean "hr", default: false
     t.string "provider"
     t.string "uid"
+    t.string "department"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["phone"], name: "index_users_on_phone", unique: true
   end

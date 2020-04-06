@@ -14,7 +14,6 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params) 
     @user.provider="google_oauth2"
-
     if user_params[:roles].present?
       if user_params[:roles].include?("hr")
         @user.hr = true

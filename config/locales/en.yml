@@ -55,4 +55,10 @@ en:
     update_success: "Category updated successfully"
     deleted_success: "Category deleted successfully"
     failed: "Some error occur. Please try again."
+  task:
+    success: "Task %{taskname} Created successfully. Your task id is %{taskid}"
+    update_success: "Task  %{ taskname }  updated successfully"
+    destroy: "Task %{task} deleted successfully"
+    failed: "Some error occur. Please try again."
+
 

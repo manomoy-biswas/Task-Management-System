@@ -37,6 +37,10 @@ class User < ApplicationRecord
     end
     user
   end
+  
+  def self.all_except(user)
+    where.not(id: user)
+  end
 
   private
   def valid_dob

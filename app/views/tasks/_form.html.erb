@@ -1,5 +1,5 @@
 <div class="page-wrapper">
-  <div class="wrapper">
+  <div class="task-wrapper">
     <div class="card card-5">
       <div class="card-body">
         <% unless["edit"].include?(params[:action])%>
@@ -7,65 +7,98 @@
         <% else %>
           <h1 class="title text-center"> Update Task </h1>
         <% end %>
+        <hr/>
         <%= form_for @task do |form| %>
           <% if @task.errors.any? %>
             <% @task.errors.full_messages.each do |msg| %>
               <div class="alert alert-danger"><%= msg %></div>
             <%end%>
           <%end%>
-          <div class="form-group row">
-            <%= form.label :task_name,"Task Name", for: "name", class:"col-12 col-sm-4 col-md-3 col-form-label"%>
-            <div class="col-12 col-sm-8 col-md-9">
-              <%= form.text_field :task_name, autofocus: true, class: "form-control", placeholder: "Enter task name", required: true %>  
+          <div class="row">
+            <div class="col-sm-12 col-md-8">
+              <div class="form-group row">
+                <%= form.label :task_category,"Category", for: "task_category", class:"col-12 col-sm-4 col-md-3 col-form-label"%>
+                <div class="col-8 col-md-9">
+                  <%= form.select :task_category, {}, { prompt: "-- Select catagory --", required: true }, { autofocus: true, class:"form-control text-center"} do %> 
+                    <% @categories.each do |category| -%>
+                      <%= content_tag(:option, category.name, value: category.id) %>
+                    <% end %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+              <div class="form-group row">
+              <% priorities=["Low", "Medium", "High"]%>
+                <%= form.label :priority, "Priority",for: "priority", class:"col-12 col-sm-4 col-md-4 col-form-label"%>
+                <div class="col-8 col-md-8">
+                <%= form.select :priority, options_for_select(priorities ,@task.priority), {required: true},{class: "form-control"} %>
+                </div>
+              </div>
             </div>
           </div>
+          <hr />
+          <div class="form-group row">
+            <%= form.label :task_name,"Task Name", for: "name", class:"col-12 col-sm-4 col-md-2 col-form-label"%>
+            <div class="col-12 col-sm-8 col-md-10">
+              <%= form.text_field :task_name, class: "form-control", placeholder: "Enter task name", required: true %>  
+            </div>
+          </div>
+          <div class="form-group row">
+            <%= form.label :description,"Description", for: "name", class:"col-12 col-sm-4 col-md-2 col-form-label"%>
+            <div class="col-12 col-sm-8 col-md-10">
+              <%= form.text_area :description, class: "form-control", placeholder: "Enter task description", required: true %>  
+            </div>
+          </div>
+          <hr />
           <div class="row">
             <div class="col-sm-12 col-md-6">
               <div class="form-group row">
-                <%= form.label :task_category,"Select Category", for: "task_category", class:"col-12 col-sm-4 col-md-6 col-form-label"%>
-                <div class="col-8 col-md-6">
-                  <%= form.select :task_category, class: "form-control", placeholder: "Enter your Gmail ID", required: true %>  
+                <%= form.label :assign_date, for: "task_assign_date", class:"col-12 col-sm-4 col-md-4 col-form-label"%>
+                <div class="col-8 col-md-8">
+                  <%= form.label :assign_date, DateTime.now.strftime("%d / %m / %Y - %I:%M %p"), class: "form-control" %>  
                 </div>
               </div>
             </div>
             <div class="col-sm-12 col-md-6">
               <div class="form-group row">
-                <%= form.label :priority, "Task Priority",for: "priority", class:"col-12 col-sm-4 col-md-6 col-form-label"%>
-                <div class="col-8 col-md-6">
-                  <%= form.select :priority, class: "form-control", required: true %>  
+                <%= form.label :submit_date, "Submit Date",for: "Last date to submit", class:"col-12 col-sm-4 col-md-4 col-form-label"%>
+                <div class="col-8 col-md-8">
+                  <%= form.date_field :submit_date, for: "submit_date", class: "form-control", required: true, autofill: false %>
+                  <div>
+                    <small class="note">* Should be 1 day after assign date</small>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           <div class="row">
-            <div class="col-sm-12 col-md-6">
+            <div class="col-sm-12 col-md-5">
               <div class="form-group row">
-                <%= form.label :assign_task_to, "Task Assign To", for: "assign_task_to", class:"col-12 col-sm-4 col-md-6 col-form-label"%>
-                <div class="col-8 col-md-6">
-                  <%= form.select :assign_task_to, class: "form-control", required: true %>  
+                <%= form.label :department, "Department", for: "assign_task_to", class:"col-12 col-sm-4 col-md-5 col-form-label"%>
+                <div class="col-8 col-md-7 my-col">
+                  <%= form.select :assign_task_to, options_for_select(["A","B"],@task.assign_task_to), {required: true},{class: "form-control"} %>
                 </div>
               </div>
             </div>
-            <div class="col-sm-12 col-md-6">
+            <div class="col-sm-12 col-md-7">
               <div class="form-group row">
-                <%= form.label :submit_date, "Deadline",for: "Last date to submit", class:"col-12 col-sm-4 col-md-6 col-form-label"%>
-                <div class="col-8 col-md-6">
-                  <%= form.date_field :submit_date, for: "submit_date", required: true, autofill: false %>
+                <%= form.label :assign_task_to, "Assign To", for: "assign_task_to", class:"col-12 col-sm-4 col-md-3 assign-col col-form-label"%>
+                <div class="col-8 col-md-9 assign-col">
+                  <%= form.select :assign_task_to, {disabled:"--Select Category--"}, { prompt: "-- Select employee --", required: true }, { class: "form-control text-center" } do %> 
+                    <% @users.each do |user| -%>
+                      <%= content_tag(:option, user.id.to_s + " - " + user.name, value: user.id) %>
+                    <% end %>
+                  <% end %>
                 </div>
               </div>
             </div>
           </div>
+          <hr />
           <div class="form-group row">
-            <% priorities=["Low", "Medium", "High"]%>
-            <%= form.label :priority, for: "task_priority", class:"col-12 col-sm-4 col-md-3 col-form-label"%>
-            <div class="col-8 col-md-9">
-              <%= form.select :priority, priorities, {required: true}%> 
-            </div>
-          </div>
-          <div class="form-group row">
-            <% repeats = ["Once", "Daily", "Weekly", "Monthly", "Quarterly", "Half-yearly", "Yearly"]%>
-            <%= form.label :repeat_interval, for: "repeat", class:"col-12 col-sm-4 col-md-3 col-form-label"%>
-            <div class="col-8 col-md-9">
+            <% repeats = ["One Time", "Daily", "Weekly", "Monthly", "Quarterly", "Half-yearly", "Yearly"]%>
+            <%= form.label :repeat_interval, for: "repeat", class:"col-12 col-sm-4 col-md-2 col-form-label"%>
+            <div class="col-8 col-md-10`">
               <div class="row">
                 <% repeats.each do |repeat|%>
                   <div class="col-12 col-md-3">
@@ -77,11 +110,15 @@
             </div>
           </div>
           <div class="form-group row">
-            <%= form.label :document, "Attach file (*if any)", for: "document",class:"col-4 col-md-3 col-form-label" %>
-            <div class="col-8 col-md-9">
-              <%= form.file_field :document, for: "attach file" %>
+            <div class="col-4 col-md-2 attach-lebel col-form-label">
+              <%= form.label :document, "Attach file", for: "document" %>
+              <small class="note"> (*if required)</small>
+            </div>
+            <div class="col-8 col-md-10">
+              <%= form.file_field :document, for: "attach file",class: "form-control attach-control" %>
             </div>
           </div>
+          <hr/>
           <div class="row">
             <div class="col-6">
               <strong><%= link_to  "CANCEL", users_path, class: "btn btn-danger btn-lg btn-block" %></strong>
