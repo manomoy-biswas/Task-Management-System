@@ -1,2 +1,124 @@
-<h1>Task#show</h1>
-<p>Find me in app/views/task/show.html.erb</p>
+<div class="page-wrapper">
+  <div class="task-wrapper">
+    <div class="card card-5">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-12 col-sm-6">
+            <div class="row">
+              <div class="col-6">
+                <span>Catagory :</span>
+              </div>
+              <div class="col-6 ">
+                <p><%= @task.task_category%></p>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6">
+            <div class="row">
+              <div class="col-6 col-md-5">
+                <span>Priority :</span>
+              </div>
+              <div class="col-6">
+                <p><%= @task.priority%></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12 col-sm-4 col-md-2">
+            <span>Task Name :</span>
+          </div>
+          <div class="col-12 col-sm-8 col-md-10">
+            <p><%= @task.task_name%></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 col-sm-4 col-md-2">
+            <span>Task Description :</span>
+          </div>
+          <div class="col-12 col-sm-8 col-md-10">
+            <p><%= @task.description%></p>
+          </div>
+        </div>
+        <% if @task.sub_task.present? %>
+          <% @task.sub_task.each do |subtask|%>
+            <div class="row">
+              <div class="col-12 col-sm-4 col-md-2">
+                <span>Subtask Name :</span>
+              </div>
+              <div class="col-12 col-sm-8 col-md-10">
+                <p><%= subtask.name%></p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 col-sm-4 col-md-2">
+                <span>Subtask Description :</span>
+              </div>
+              <div class="col-12 col-sm-8 col-md-10">
+                <p><%= subtask.subtask_description%></p>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+        <div class="row">
+          <div class="col-12 col-sm-6">
+            <div class="row">
+              <div class="col-6 col-md-5">
+                <span>Submit Date :</span>
+              </div>
+              <div class="col-6 col-md-7 ">
+                <p><%= @task.submit_date%></p>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6">
+            <div class="row">
+              <div class="col-6 col-md-5">
+                <span>Submission Status :</span>
+              </div>
+              <div class="col-6 col-md-7">
+                <p>
+                  <%if @task.submit%>
+                    Submited
+                  <% else %>
+                    In progress...
+                  <% end %>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <% if current_user.admin && @task.assign_task_to != current_user.id %>
+            <div class="col-12 col-sm-6">
+              <div class="row">
+                <div class="col-6 col-md-5">
+                  <span>Task Assigned To :</span>
+                </div>
+                <div class="col-6 col-md-7 ">
+                  <p><%= @task.user.name%></p>
+                </div>
+              </div>
+            </div>
+          <% end %>
+          <div class="col-12 col-sm-6">
+            <div class="row">
+              <div class="col-6 col-md-5">
+                <span>Task Assigned By :</span>
+              </div>
+              <div class="col-6 col-md-7 ">
+                <p>
+                <% unless @task.assign_task_by == current_user.id %>
+                  <%= User.find(@task.assign_task_by).name %></p>
+                <% else %>
+                  You
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

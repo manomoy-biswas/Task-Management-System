@@ -1,1 +1,17 @@
-<%= link_to "Create task", new_task_path, class:"btn btn-success btn-lg btn-block"%>
+<% content_for :title, "Tasks" %>
+<h1 class="text-center">My Task</h1>
+<br />
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-sm-4 text-center">
+      <%= link_to "CREATE TASK", new_task_path, class: "btn btn-primary btn-lg" %>
+    </div>
+    <div class="col-12 col-sm-4 text-center">
+      <% unless current_user.admin %>
+        <%= link_to "BACK", root_path, class: "btn btn-primary btn-lg" %>
+      <% else %>
+        <%= link_to  "BACK", users_dashboard_path, class: "btn btn-primary btn-lg" %>
+      <% end %>
+    </div>
+  <%= render "tasks/task_list"%>
+</div>

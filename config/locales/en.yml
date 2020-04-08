@@ -32,18 +32,18 @@
 en:
   application:
     authentication_error: "Please login with your credential."
-    only_admin: "You are not a Admin. Only Adminhas right to Login here."
+    only_admin: "You are not a Admin. Only Admin has right to Login here."
     only_hr: "You are not a Admin. Only HR has right Login here."
   omniauth_callbacks:
     success: "Successfully authenticated from Google account."
-    faild: "You are not an employee. Ask admin to register your gmail account"
+    failed: "You are not an employee. Ask admin to register your gmail account"
+    error: "Something went wrong. Please try again"
   user:
     create_success: "Registration Successful."
     create_faild: "Registration Unsuccessful. Please try again."
     update_success: "Updated Successfully."
-    update_faild: "Some error occur. Please try again."
     destroy_success: "User record Deleted Successfully."
-    destroy_faild: "Some error occur. Please try again."
+    failed: "Something went wrong. Please try again."
   session:
     login_success: "Welcome %{user}. Login Successful"
     only_admin: "You are not a Admin. Only Admin can Login here."
@@ -54,11 +54,11 @@ en:
     add_success: "Category added successfully"
     update_success: "Category updated successfully"
     deleted_success: "Category deleted successfully"
-    failed: "Some error occur. Please try again."
+    failed: "Something went wrong. Please try again."
   task:
     success: "Task %{taskname} Created successfully. Your task id is %{taskid}"
-    update_success: "Task  %{ taskname }  updated successfully"
+    update_success: "Task  %{taskname}  updated successfully"
     destroy: "Task %{task} deleted successfully"
-    failed: "Some error occur. Please try again."
+    failed: "Something went wrong. Please try again."
 
 

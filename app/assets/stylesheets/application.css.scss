@@ -36,8 +36,12 @@
   min-width:300px;
   width:auto;
 }
+.card{
+  word-wrap: normal;
+}
 .fa{
   font-size: 30px;
+  text-decoration: none;
 }
 .fa-trash{
   color: #DC143C;
@@ -45,16 +49,42 @@
 .fa-edit{
   color: #1E90FF;
 }
+.fa-check{
+  color: #00ff00;
+}
+.fa-eye, .fa-eye:hover{
+  color: #f3dc0a;
+  text-decoration: none;
+}
+.fa-eye:hover,
+.fa-edit:hover,
+.fa-trash:hover,
+.fa-check:hover{
+  color: #ffffff;
+  text-decoration: none;
+}
+.fa-minus-circle{
+  color: #f10404;
+}
+.fa-minus-circle:hover,
+.fa-plus:hover{
+  color: #000000;
+  text-decoration: none;
+}
+
 .fa-users, .fa-tasks,.fa-tag{
   font-size: 72px;
 }
 .signin-btn{
   font-size: 26px;
-  // padding-top: 10px;
   border-radius: 50px;
 }
 .modal-footer{
   display: block;
+}
+.table{
+  width: auto;
+  margin: auto;
 }
 @media screen and (min-width: 768px){
   .my-col{
@@ -70,5 +100,8 @@
   }
   .attach-lebel{
     padding-right: 0;
+  }
+  .container{
+    max-width: 1900px;
   }
 }

@@ -1,7 +1,11 @@
 Rails.application.routes.draw do
   get :user_dashboard, "users/dashboard"
-  resources :users
-  resources :tasks
+  resources :users 
+  resources :tasks do
+    collection do
+      get :new_subtask
+    end
+  end
   resources :categories
   get :login, to: redirect("auth/google_oauth2")
   get "auth/:provider/callback", to: "omniauth_callbacks#google_oauth2"

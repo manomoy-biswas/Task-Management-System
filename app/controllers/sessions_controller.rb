@@ -7,11 +7,7 @@ class SessionsController < ApplicationController
       return
     else
       flash[:warning] = I18n.t "session.logged_in"
-      if admin?
-        redirect_to admin_dashboard_path
-      else
-        redirect_to root_path
-      end
+      redirect_to admin_login_path
     end
   end  
 

@@ -10,12 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_06_110419) do
+ActiveRecord::Schema.define(version: 2020_04_08_181107) do
 
   create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "sub_tasks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "name"
+    t.boolean "submit", default: false
+    t.datetime "submitdate"
+    t.bigint "task_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "subtask_description"
+    t.index ["task_id"], name: "index_sub_tasks_on_task_id"
   end
 
   create_table "tasks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -34,6 +45,8 @@ ActiveRecord::Schema.define(version: 2020_04_06_110419) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "description", default: ""
+    t.boolean "submit", default: false
+    t.boolean "approved", default: false
     t.index ["assign_task_to"], name: "fk_rails_8503550591"
     t.index ["task_category"], name: "fk_rails_38c638f0b2"
   end
@@ -53,6 +66,8 @@ ActiveRecord::Schema.define(version: 2020_04_06_110419) do
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["phone"], name: "index_users_on_phone", unique: true
   end
+
+  add_foreign_key "sub_tasks", "tasks"
   add_foreign_key "tasks", "categories", column: "task_category"
   add_foreign_key "tasks", "users", column: "assign_task_to"
 end

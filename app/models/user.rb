@@ -1,5 +1,7 @@
 class User < ApplicationRecord
-  has_secure_password(validations: false)
+  has_secure_password(validations: false) 
+  has_many :tasks, foreign_key: "assign_task_to", primary_key: "id", dependent: :destroy
+
 
   VALID_EMAIL_REGEX = /\A([a-zA-Z0-9]+)([\.{1}])?([a-zA-Z0-9]+)\@g(oogle)?mail([\.])com\z/.freeze
   VALID_PHONE_REGEX=/\A[6-9]{1}[0-9]{9}\z/.freeze

@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
   include ApplicationHelper
-  before_action :authenticate_user!, :check_user_is_admin
+  before_action :authenticate_user!
+  before_action :check_user_is_admin, only: [:new, :create, :update, :destroy]
   before_action :set_user, only: [:edit, :update, :destroy]
 
   def index
@@ -37,7 +38,7 @@ class UsersController < ApplicationController
       flash[:success] = I18n.t "user.update_success"
       redirect_to users_path
     else
-      flash[:danger] = I18n.t "user.update_faild"
+      flash[:danger] = I18n.t "user.failed"
       render "edit"
     end
   end
@@ -47,7 +48,7 @@ class UsersController < ApplicationController
       flash[:success]=I18n.t "user.destroy_success"
       redirect_to users_path
     else
-      flash[:success]=I18n.t "user.destroy_faild"
+      flash[:success]=I18n.t "user.failed"
       redirect_to users_path
     end
   end
