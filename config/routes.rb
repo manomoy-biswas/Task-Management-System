@@ -2,6 +2,11 @@ Rails.application.routes.draw do
   get :user_dashboard, "users/dashboard"
   resources :users 
   resources :tasks do
+    member do
+      get :submit_task
+      get :submit_subtask
+      get :approve
+    end
     collection do
       get :new_subtask
     end

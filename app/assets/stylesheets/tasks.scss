@@ -28,3 +28,32 @@
 .btn-subtask{
   margin-left: 20px;
 }
+.show-wrapper{
+  margin: 0 auto;
+  max-width: 1400px; 
+}
+.task-list{
+  padding-top: 10px;
+}
+.task-item{
+  font-size: 18px;
+  font-weight: bolder;
+  color: #2a00e6;
+}
+.task-item-details{
+  font-size: 18px;
+  font-weight: 400;
+  color: #2f4132;
+}
+.task-item-row{
+  padding: 10px 0;
+}
+.sub-task-row{
+  background-color: #aeafae;
+  // padding-left: 10%;
+}
+.subtask-item-details{
+  font-size: 18px;
+  font-weight: 400;
+  color: #ffffff;
+}

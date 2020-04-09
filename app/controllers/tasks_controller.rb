@@ -1,10 +1,11 @@
 class TasksController < ApplicationController
-  before_action :authenticate_user!
   include TasksHelper
-
+  before_action :authenticate_user!
+  before_action :check_user_is_admin, only: [:approve]
   before_action :category_list, :employee_list, only: [:create, :edit, :update, :new]
-  before_action :set_task, only: [:edit, :update, :show, :destroy]
+  before_action :set_task, only: [:edit, :update, :show, :destroy, :submit_task, :approve]
   before_action :task_list
+
   def index
     @Tasks = Task.all
   end
@@ -19,6 +20,37 @@ class TasksController < ApplicationController
     end
   end
 
+  def submit_task
+    unless SubTask.all_subtasks_submitted(@task)
+      flash[:warning] = "Please Complete Your Sub task to Complete this task"
+      redirect_to task_path(@task)
+      return
+    end
+
+    @task.submit = true
+    @task.save
+    flash[:notice] = "Your task submitted successfully"
+    redirect_to tasks_path
+  end
+  def submit_subtask
+    @subtask = SubTask.find(params[:id])
+    @subtask.submit = true
+    @subtask.save
+    flash[:notice] = "You complete your Sub task " + @subtask.name
+    redirect_to task_path(@subtask.task_id)
+  end
+  def approve
+    session[:referer] = request.url
+    unless @task.submit
+      flash[:warning] = "Employee not Submitted the task yet."
+      reditect_to session[:referer]
+    end
+    @task.approved = true
+    @task.save(validate: false)
+    flash[:success] = "Task Approved"
+    redirect_to session[:referer]
+  end
+
   def new
     @task = Task.new
   end
@@ -26,7 +58,7 @@ class TasksController < ApplicationController
   def create
     @task = Task.new(task_params)
     @task.assign_task_by = current_user.id
-    # @task.submit_date = task_params[:submit_date].to_datetime
+    @task.submit_date = task_params[:submit_date].to_datetime
     unless task_params[:repeat] == "One Time"
       @task.recurring_task = true
     end
@@ -49,6 +81,7 @@ class TasksController < ApplicationController
     else
       @task.recurring_task = false
     end
+    @task.submit_date = task_params[:submit_date].to_datetime
 
     if @task.update(task_params)
       flash[:success] = I18n.t "task.update_success", taskname: @task.task_name
@@ -82,4 +115,7 @@ class TasksController < ApplicationController
   def set_task 
     @task = Task.find(params[:id])
   end
+  # def set_subtask
+  #   @subtask =  SubTask.sub_tasks.find(params[:id])
+  # end
 end

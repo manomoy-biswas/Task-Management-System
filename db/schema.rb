@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_08_181107) do
+ActiveRecord::Schema.define(version: 2020_04_09_134808) do
 
   create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name"
@@ -20,12 +20,12 @@ ActiveRecord::Schema.define(version: 2020_04_08_181107) do
 
   create_table "sub_tasks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name"
-    t.boolean "submit", default: false
     t.datetime "submitdate"
     t.bigint "task_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "subtask_description"
+    t.text "subtask_description", size: :long
+    t.boolean "submit", null: false, default: false
     t.index ["task_id"], name: "index_sub_tasks_on_task_id"
   end
 
@@ -44,7 +44,7 @@ ActiveRecord::Schema.define(version: 2020_04_08_181107) do
     t.datetime "document_updated_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "description", default: ""
+    t.text "description", size: :long
     t.boolean "submit", default: false
     t.boolean "approved", default: false
     t.index ["assign_task_to"], name: "fk_rails_8503550591"

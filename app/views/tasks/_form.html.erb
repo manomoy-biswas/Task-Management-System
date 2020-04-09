@@ -78,7 +78,11 @@
               <%if @users.present? %>
                 <%= form.select :assign_task_to, {}, { prompt: "-- Select employee --", required: true }, { class: "form-control text-center" } do %> 
                   <% @users.each do |user| -%>
-                    <%= content_tag(:option, user.id.to_s + " - " + user.name, value: user.id) %>
+                    <% unless user.admin || user.hr %>
+                      <%= content_tag(:option, user.id.to_s + " - " + user.name, value: user.id) %>
+                    <% else %>
+                      <%= content_tag(:option, "") %>
+                    <% end%>
                   <% end %>
                 <% end %>
               <%else%>
