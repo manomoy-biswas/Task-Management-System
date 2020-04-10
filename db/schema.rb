@@ -10,10 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_09_191505) do
+ActiveRecord::Schema.define(version: 2020_04_10_083948) do
 
   create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "notifications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "recipient_id"
+    t.bigint "actor_id"
+    t.datetime "read_at"
+    t.string "action"
+    t.bigint "notification_id"
+    t.string "notifiable_type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

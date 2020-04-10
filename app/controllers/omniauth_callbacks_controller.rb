@@ -7,11 +7,7 @@ class OmniauthCallbacksController < ApplicationController
         unless @user.admin
           login(@user)
           flash[:success] = I18n.t "omniauth_callbacks.success"
-          unless @user.hr
-            redirect_to tasks_path
-          else
-            redirect_to users_dashboard_path
-          end
+          redirect_to users_dashboard_path
         end
       else
         redirect_to root_path

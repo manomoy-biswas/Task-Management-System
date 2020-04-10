@@ -2,8 +2,10 @@
 <div class="container">
   <% if current_user.admin%>
     <h1 class="text-center">Admin Dashboard</h1>
+  <% elsif current_user.hr %>
+    <h1 class="text-center">HR Dashboard</h1>
   <% else %>
-    <h1 class="text-center">HR Dashoard</h1>
+    <h1 class="text-center">Employee Dashboard</h1>
   <% end %>
   <br />
   
@@ -31,7 +33,7 @@
       </div>
       <div class="col-sm-12 col-md-4">
         <div class="text-center">
-          <%= link_to tasks_path, class: "box btn btn-info" do%>
+          <%= link_to tasks_path("All"), class: "box btn btn-info" do%>
             <div class="dashboard-wrapper">
               <div class="fa fa-tasks" aria-hidden="true"></div>
               <h2>Tasks</h2>
@@ -40,7 +42,7 @@
         </div>
       </div>
     <% elsif current_user.hr %>
-    <div class="col-sm-12 col-md-4">
+      <div class="col-sm-12 col-md-4">
         <div class="text-center">
           <%= link_to tasks_path, class: " box btn btn-info" do%>
             <div class="dashboard-wrapper">
@@ -50,7 +52,27 @@
           <% end %>
         </div>
       </div>
-
+    <%else %>
+     <div class="col-sm-12 col-md-6">
+        <div class="text-center">
+          <%= link_to new_task_path, class: " box btn btn-primary" do%>
+            <div class="dashboard-wrapper">
+              <div class="fa fa-pencil-square-o" aria-hidden="true"></div>
+              <h2>Create Tasks</h2>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <div class="text-center">
+          <%= link_to tasks_path, class: " box btn btn-info" do%>
+            <div class="dashboard-wrapper">
+              <div class="fa fa-tasks" aria-hidden="true"></div>
+              <h2>View Tasks</h2>
+            </div>
+          <% end %>
+        </div>
+      </div>
     <% end %>
   </div>
 </div>

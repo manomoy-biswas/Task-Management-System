@@ -4,21 +4,34 @@ class TasksController < ApplicationController
   before_action :check_user_is_hr, only: [:print]
   before_action :check_user_is_hr?, except: [:index, :show]
   before_action :category_list, :employee_list, only: [:new, :create, :edit, :update]
-  before_action :set_task, except: [:index, :submit_subtask, :task_list, :create, :new] 
-  before_action :task_list
+  before_action :set_task, except: [:index, :submit_subtask, :create, :new] 
+  before_action :index
+  # before_action :set_priority_task
 
   def index
-    @Tasks = Task.all
+    # @priority= params[:priority]
+    # unless @priority == "All"
+      unless current_user.admin || current_user.hr
+          @Tasks_list =  current_user.tasks
+      else
+          @Tasks_list =  Task.all    
+      end
+    # else
+    #   unless current_user.admin || current_user.hr
+    #     @Tasks_list =  current_user.tasks
+    #   else
+    #     @Tasks_list =  Task.all
+    #   end
+    # end
   end
   
-  def task_list
-    @priority = params[:priority]
-    unless current_user.admin || current_user.hr
-      @Tasks_list =  current_user.tasks
-    else
-      @Tasks_list =  Task.all
-    end
-  end
+  # def index
+  #   unless current_user.admin || current_user.hr
+  #     @Tasks_list =  current_user.tasks
+  #   else
+  #     @Tasks_list =  Task.all
+  #   end
+  # end
 
   def submit_task
     unless SubTask.all_subtasks_submitted(@task)
@@ -42,7 +55,8 @@ class TasksController < ApplicationController
   def approve
     unless @task.submit
       flash[:warning] = "Employee not Submitted the task yet."
-      reditect_to request.referrer
+      redirect_to request.referrer
+      return
     end
     @task.approved = true
     @task.save(validate: false)
@@ -121,4 +135,7 @@ class TasksController < ApplicationController
   def set_task 
     @task = Task.find(params[:id])
   end
+  # def set_priority_task
+  #   @priority_task= Task.find_by_priority(params[:priority])
+  # end
 end

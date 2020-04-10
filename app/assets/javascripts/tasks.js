@@ -7,14 +7,20 @@ $(document).ready(function() {
     $(this).before($(this).data("fields").replace(regexp, time)).html(z);
   });
 
-  // $(".download").(function(event){
-  //   event.preventDefault();
-  //   window.location.reload(true);
-  // });
+ $("#priority").on("change", function() {
+    var value = $(this).val().toLowerCase();
+    $("#task_table tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
 });
 
 $(document).on("click",".remove-field", function(event){
   event.preventDefault();
   $(this).prev("input[type=hidden]").val("1");
   $(this).closest('.subtask ').hide();
+});
+
+$(document).ready(function(){
+  
 });

@@ -125,7 +125,7 @@
           <hr/>
           <div class="row">
             <div class="col-6">
-              <strong><%= link_to  "CANCEL", tasks_path, class: "btn btn-danger btn-lg btn-block" %></strong>
+              <strong><%= link_to  "CANCEL", request.referrer, class: "btn btn-danger btn-lg btn-block" %></strong>
             </div>
             <div class="col-6">
               <% unless["edit"].include?(params[:action])%>

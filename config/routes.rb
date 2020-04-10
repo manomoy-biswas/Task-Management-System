@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     end
     collection do
       get :new_subtask
+      get :sort
     end
   end
   resources :categories

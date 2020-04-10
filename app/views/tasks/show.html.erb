@@ -66,9 +66,9 @@
               <div class="col-1 col-sm-1 col-md-1 text-right">
                 <% if @task.assign_task_to == current_user.id %>
                   <% if subtask.submit %>
-                    <span class="fa fa-check-circle"></span>
+                    <span class="green"><i class="btn btn-outline-success btn-sm fa fa-check-circle"></i> Submitted</span> 
                   <% else %>
-                    <%= link_to  "", submit_subtask_task_path(subtask), class: "fa fa-circle-o" %>
+                    <span class="red"><%= link_to  "", submit_subtask_task_path(subtask), class: "btn btn-outline-danger btn-sm fa fa-circle-o" %> Submit</span>
                   <% end %>
                 <% end %>
               </div>
@@ -213,16 +213,16 @@
             </div>
           </div>
         <% else %>
-          <% if @task.submit %>
-            <div class="row task-item-row">
+          <div class="row task-item-row">
+            <% if @task.submit %>
               <div class="col text-center" >
                 <%= link_to  " Print", "#", onclick: "window.print(); return false;", class: "fa fa-print btn btn-outline-success btn-lg" %>
               </div>
-              <div class="col text-center">
-                <%= link_to  " Back", tasks_path, class: "fa fa-hand-o-left btn btn-outline-secondary btn-lg" %>
+            <% end %>
+            <div class="col text-center">
+              <%= link_to  " Back", tasks_path, class: "fa fa-hand-o-left btn btn-outline-secondary btn-lg" %>
             </div>
-            </div>
-          <% end %>
+          </div>
         <% end %>
       </div>
     </div>

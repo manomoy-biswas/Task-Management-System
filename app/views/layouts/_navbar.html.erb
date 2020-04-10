@@ -7,13 +7,21 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <% if current_user %>
       <ul class="navbar-nav ml-auto">
-        <% if current_user.admin || current_user.hr %>
           <li class="nav-item nav-link active">
             <strong><%= link_to "Dashboard", user_dashboard_path, class:"nav-link text-center"%></strong>
           </li>
-        <% end %>
         <li class="nav-item nav-link">
             <strong><%= link_to "My Task", tasks_path, class:"nav-link text-center"%></strong>
+        </li>
+        <li class="nav-item btn-group" data-behavior="notifications">
+          <a class="dropdown-toggle nav-link" data-behavior="notifications-link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-bell"></i><span data-behavior="unread-count"></span>
+          </a>
+          <div class="dropdown-menu " aria-labelledby="dropdownMenu1" data-behavior="notification-items">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another Action</a>
+            <a class="dropdown-item" href="#">Something</a>
+          </div>
         </li>
         <li class="nav-item nav-link">
         <ul class="navbar-nav ml-auto">
