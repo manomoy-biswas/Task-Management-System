@@ -1,6 +1,10 @@
 <% content_for :title, "Admin Dashboard" %>
 <div class="container">
-  <h1 class="text-center">Admin Dashboard</h1>
+  <% if current_user.admin%>
+    <h1 class="text-center">Admin Dashboard</h1>
+  <% else %>
+    <h1 class="text-center">HR Dashoard</h1>
+  <% end %>
   <br />
   
   <div class="row">
@@ -35,6 +39,18 @@
           <% end %>
         </div>
       </div>
+    <% elsif current_user.hr %>
+    <div class="col-sm-12 col-md-4">
+        <div class="text-center">
+          <%= link_to tasks_path, class: " box btn btn-info" do%>
+            <div class="dashboard-wrapper">
+              <div class="fa fa-tasks" aria-hidden="true"></div>
+              <h2>Task</h2>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
     <% end %>
   </div>
 </div>

@@ -16,6 +16,9 @@ class User < ApplicationRecord
   validates :dob, presence: true
   validate :valid_dob
   validates :password, presence: true, length: { minimum: 5 }, allow_nil: true
+  has_attached_file :avater, style: {medium: "300x300", thumb: "100x100" }
+  validates_attachment :avatar, ontent_type: {content_type: %w(image/jpeg image/jpg image/png)}
+
 
   def digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
@@ -30,15 +33,22 @@ class User < ApplicationRecord
     data = auth.info
     user = User.where(email: data["email"]).first
 
-    unless user
-      user = User.new(
-        email: data["email"],
-        provider: auth.provider,
-        uid: auth.uid
-        )
-    end
+    # unless user
+    #   user = User.new(
+    #     email: data["email"],
+    #     provider: auth.provider,
+    #     uid: auth.uid,
+    #     picture: data["image"]
+    #     )
+    # end
     user
   end
+  def self.find_or_create_from_auth_hash(auth)
+		where(provider: auth.provider, uid: auth.uid).first_or_initialize.tap do |user|
+			user.picture = auth.info.image
+			user.save!
+		end
+	end
   
   def self.all_except(user)
     where.not(id: user)

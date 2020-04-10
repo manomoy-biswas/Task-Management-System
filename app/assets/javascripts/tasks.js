@@ -6,6 +6,11 @@ $(document).ready(function() {
     regexp = new RegExp($(this).data("id"), "g");
     $(this).before($(this).data("fields").replace(regexp, time)).html(z);
   });
+
+  // $(".download").(function(event){
+  //   event.preventDefault();
+  //   window.location.reload(true);
+  // });
 });
 
 $(document).on("click",".remove-field", function(event){

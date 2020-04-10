@@ -6,6 +6,7 @@ Rails.application.routes.draw do
       get :submit_task
       get :submit_subtask
       get :approve
+      get :download
     end
     collection do
       get :new_subtask

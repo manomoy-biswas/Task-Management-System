@@ -1,9 +1,10 @@
 class TasksController < ApplicationController
   include TasksHelper
   before_action :authenticate_user!
-  before_action :check_user_is_admin, only: [:approve]
-  before_action :category_list, :employee_list, only: [:create, :edit, :update, :new]
-  before_action :set_task, only: [:edit, :update, :show, :destroy, :submit_task, :approve]
+  before_action :check_user_is_hr, only: [:print]
+  before_action :check_user_is_hr?, except: [:index, :show]
+  before_action :category_list, :employee_list, only: [:new, :create, :edit, :update]
+  before_action :set_task, except: [:index, :submit_subtask, :task_list, :create, :new] 
   before_action :task_list
 
   def index
@@ -12,9 +13,8 @@ class TasksController < ApplicationController
   
   def task_list
     @priority = params[:priority]
-    unless current_user.admin
+    unless current_user.admin || current_user.hr
       @Tasks_list =  current_user.tasks
-      # Task.where(assign_task_to: current_user)
     else
       @Tasks_list =  Task.all
     end
@@ -22,33 +22,39 @@ class TasksController < ApplicationController
 
   def submit_task
     unless SubTask.all_subtasks_submitted(@task)
-      flash[:warning] = "Please Complete Your Sub task to Complete this task"
-      redirect_to task_path(@task)
+      flash[:warning] = I18n.t "task.submit_task.failed"
+      redirect_to request.referrer
       return
     end
 
     @task.submit = true
     @task.save
-    flash[:notice] = "Your task submitted successfully"
-    redirect_to tasks_path
+    flash[:success] = I18n.t "task.submit_task.success"
+    redirect_to request.referrer
   end
   def submit_subtask
     @subtask = SubTask.find(params[:id])
     @subtask.submit = true
     @subtask.save
-    flash[:notice] = "You complete your Sub task " + @subtask.name
+    flash[:success] = I18n.t "task.submit_subtask.success", subtask: @subtask.name
     redirect_to task_path(@subtask.task_id)
   end
   def approve
-    session[:referer] = request.url
     unless @task.submit
       flash[:warning] = "Employee not Submitted the task yet."
-      reditect_to session[:referer]
+      reditect_to request.referrer
     end
     @task.approved = true
     @task.save(validate: false)
-    flash[:success] = "Task Approved"
-    redirect_to session[:referer]
+    flash[:success] = I18n.t "task.approve.success"
+    redirect_to request.referrer
+  end
+
+  def download
+    send_file ("#{Rails.root}/public#{@task.document.url.rpartition("?").first}"),
+    filename: @task.document_file_name,
+    type: @task.document_content_type,
+    disposition: 'attachment'
   end
 
   def new
@@ -115,7 +121,4 @@ class TasksController < ApplicationController
   def set_task 
     @task = Task.find(params[:id])
   end
-  # def set_subtask
-  #   @subtask =  SubTask.sub_tasks.find(params[:id])
-  # end
 end

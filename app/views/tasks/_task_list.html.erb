@@ -65,7 +65,7 @@
             </td>
             <td class= "text-center">
               <% if !task.submit%>
-                <%= link_to "SUBMIT", submit_task_path(task), class:"btn btn-success"%>
+                <%= link_to "SUBMIT", submit_task_task_path(task), class:"btn btn-success"%>
               <% else  %>
                 Submitted
               <% end%>
@@ -96,10 +96,12 @@
               </td>
               
             <td class="text-center">
-              <%= link_to "", task_path(task), data: {confirm: "Are you sure?" }, method: :delete, class:"fa fa-trash"%>
+              <%= link_to "", task_path(task), data: {confirm: "Are you sure to delete?" }, method: :delete, class:"fa fa-trash"%>
             </td>
-          <% elsif current_user.hr%>
-            <td scope= "col">Print</td>
+          <% elsif current_user.hr && task.submit%>
+            <td class="text-center">
+              <%= link_to "","#", onclick:"window.print(); return false;", class: "fa fa-print" %>
+            </td>
           <% end %>
         </tr>
       <% end %>

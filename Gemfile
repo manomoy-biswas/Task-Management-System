@@ -67,6 +67,5 @@ gem "font-awesome-rails", "~> 4.7", ">= 4.7.0.5"
 gem "omniauth-google-oauth2", "~> 0.8.0"
 # Adds upload document functionality
 gem "paperclip", "~> 6.1"
-# gem "turbolinks", "~> 5.2"
 
 

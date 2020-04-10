@@ -32,33 +32,42 @@
 en:
   application:
     authentication_error: "Please login with your credential."
-    only_admin: "You are not a Admin. Only Admin has right to Login here."
-    only_hr: "You are not a Admin. Only HR has right Login here."
+    only_admin: "You are not a ADMIN. Only ADMIN has right to login here."
+    only_hr: "You are not a HR. Only HR has right login here."
+    except_hr: "HR does not have this functionality"
   omniauth_callbacks:
-    success: "Successfully authenticated from Google account."
+    success: "Successfully authenticated from google account."
     failed: "You are not an employee. Ask admin to register your gmail account"
     error: "Something went wrong. Please try again"
   user:
-    create_success: "Registration Successful."
-    create_faild: "Registration Unsuccessful. Please try again."
-    update_success: "Updated Successfully."
-    destroy_success: "User record Deleted Successfully."
+    create_success: "Registration successful."
+    create_faild: "Registration unsuccessful. Please try again."
+    update_success: "Updated successfully."
+    destroy_success: "User record deleted successfully."
     failed: "Something went wrong. Please try again."
   session:
-    login_success: "Welcome %{user}. Login Successful"
-    only_admin: "You are not a Admin. Only Admin can Login here."
+    login_success: "Welcome %{user}. Login successful"
+    only_admin: "You are not a admin. Only admin can Login here."
     invalid_credential: Incorrect email / password combination"
     logged_in: "you have already logged in"
-    logout_success: "Logged out Successfully. Bye"
+    logout_success: "Logged out successfully. Bye"
   categories:
     add_success: "Category added successfully"
     update_success: "Category updated successfully"
     deleted_success: "Category deleted successfully"
     failed: "Something went wrong. Please try again."
   task:
-    success: "Task %{taskname} Created successfully. Your task id is %{taskid}"
+    success: "Task %{taskname} created successfully. Your task id is %{taskid}"
     update_success: "Task  %{taskname}  updated successfully"
     destroy: "Task %{task} deleted successfully"
     failed: "Something went wrong. Please try again."
+    submit_task:
+      success: "Your task submitted successfully"
+      failed: "Please submit your sub task to submit this task"
+    submit_subtask:
+      success: "You submitted your Sub task %w{subtask}."
+    approve:
+      success: Task Approved"
+    
 
 

@@ -2,18 +2,20 @@
 <h1 class="text-center">My Task</h1>
 <br />
 <div class="container">
-  <div class="row">
-    <div class="col-12 col-sm-6 text-center">
-      <%= link_to "CREATE TASK", new_task_path, class: "btn btn-primary btn-lg" %>
+  <% unless current_user.hr%>
+    <div class="row">
+      <div class="col-12 col-sm-6 text-center">
+        <%= link_to "CREATE TASK", new_task_path, class: "btn btn-primary btn-lg" %>
+      </div>
+      <div class="col-12 col-sm-6 text-center">
+        <% unless current_user.admin %>
+          <%= link_to "BACK", root_path, class: "btn btn-primary btn-lg" %>
+        <% else %>
+          <%= link_to  "BACK", users_dashboard_path, class: "btn btn-primary btn-lg" %>
+        <% end %>
+      </div>
     </div>
-    <div class="col-12 col-sm-6 text-center">
-      <% unless current_user.admin %>
-        <%= link_to "BACK", root_path, class: "btn btn-primary btn-lg" %>
-      <% else %>
-        <%= link_to  "BACK", users_dashboard_path, class: "btn btn-primary btn-lg" %>
-      <% end %>
-    </div>
-  </div>
+  <% end %>
   <div class="task-list">
     <%= render "tasks/task_list"%>
   </div>

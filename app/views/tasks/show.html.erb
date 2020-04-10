@@ -45,7 +45,7 @@
         </div>
         <div class="row task-item-row">
           <div class="col-12 col-sm-4 col-md-2">
-            <span class="task-item">Task Descriptio</span>
+            <span class="task-item">Task Description</span>
           </div>
           <div class="col-12 col-sm-8 col-md-10">
             <p class="task-item-details"><%= @task.description%></p>
@@ -155,14 +155,19 @@
             </div>
             <div class="col-12 col-sm-6">
               <div class="row">
-                <div class="col-6 col-md-5">
+                <div class="col-6 col-md-4">
                   <span class="task-item">Download Document</span>
                 </div>
-                <div class="col-6 col-md-7 ">
+                <div class="col-6 col-md-8 ">
                   <p class="task-item-details">
                     <% if @task.document.present?%>
-                      <%=@task.document_file_name%> (<%=(@task.document_file_size.to_f / 1000000).round(1)%> MB)
-                      <%= link_to "DOWNLOAD", "#", class: "btn btn-success"%>
+                      <%=@task.document_file_name%> (
+                        <% if @task.document_file_size <=1000000 %>  
+                          <%=(@task.document_file_size.to_f / 1000).round(1)%> KB)
+                        <%else%>
+                          <%=(@task.document_file_size.to_f / 1000000).round(1)%> MB)
+                        <% end %>
+                      <%= link_to "DOWNLOAD", download_task_path(@task), class: "btn btn-success" %>
                     <% else %>
                       No document availavle...
                     <%end%>
@@ -193,19 +198,32 @@
             <div class="col-12 col-sm-6"></div>
           </div>
         <% end %>
-        <div class="row task-item-row">
-          <div class="col-12 col-sm-4 text-center">
-            <%= link_to " Create", new_task_path, class: "fa fa-pencil btn btn-outline-primary btn-lg" %>
+        <% unless current_user.hr %>
+          <div class="row task-item-row">
+            <div class="col text-center">
+              <%= link_to " Create", new_task_path, class: "fa fa-pencil btn btn-outline-primary btn-lg" %>
+            </div>
+            <div class="col text-center">
+              <% if (@task.assign_task_by == current_user.id || current_user.admin) && !@task.approved %>
+                <%= link_to  " Edit", edit_task_path(@task), class: "fa fa-edit btn btn-outline-warning btn-lg" %>
+              <% end %>
+            </div>
+            <div class="col text-center">
+                <%= link_to  " Back", tasks_path, class: "fa fa-hand-o-left btn btn-outline-secondary btn-lg" %>
+            </div>
           </div>
-          <div class="col-12 col-sm-4 text-center">
-            <% if (@task.assign_task_by == current_user.id || current_user.admin) && !@task.approved %>
-              <%= link_to  " Edit", edit_task_path(@task), class: "fa fa-edit btn btn-outline-warning btn-lg" %>
-            <% end %>
-          </div>
-          <div class="col-12 col-sm-4 text-center">
-              <%= link_to  " Back", tasks_path, class: "fa fa-hand-o-left btn btn-outline-secondary btn-lg" %>
-          </div>
-        </div>
+        <% else %>
+          <% if @task.submit %>
+            <div class="row task-item-row">
+              <div class="col text-center" >
+                <%= link_to  " Print", "#", onclick: "window.print(); return false;", class: "fa fa-print btn btn-outline-success btn-lg" %>
+              </div>
+              <div class="col text-center">
+                <%= link_to  " Back", tasks_path, class: "fa fa-hand-o-left btn btn-outline-secondary btn-lg" %>
+            </div>
+            </div>
+          <% end %>
+        <% end %>
       </div>
     </div>
   </div>

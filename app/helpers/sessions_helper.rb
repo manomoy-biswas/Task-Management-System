@@ -13,4 +13,7 @@ module SessionsHelper
   def admin?
     current_user.admin
   end
+  def hr?
+    current_user.hr
+  end
 end
