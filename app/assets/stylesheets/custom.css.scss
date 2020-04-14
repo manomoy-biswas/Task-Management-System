@@ -1,0 +1,94 @@
+@import "/*";
+@import "bootstrap/dist/css/bootstrap";
+@import "font-awesome";
+
+.wrapper{
+  margin:0 auto;
+  max-width: 700px;
+}
+#notice_wrapper{
+  position: absolute;
+  text-align: center;
+  // width: 100%;
+  z-index: 999;
+  bottom: 0;
+  right: 0;
+  font-size: 20px;
+}
+.card-5{
+  max-width: 1000px;
+  min-width:300px;
+  width:auto;
+}
+.card-6{
+  width:auto;
+}
+.card{
+  word-wrap: normal;
+}
+.fa{
+  font-size: 30px;
+  text-decoration: none;
+}
+.fa-trash{
+  color: #DC143C;
+}
+.fa-edit{
+  color: #1E90FF;
+}
+.fa-check{
+  color: #00ff00;
+}
+.fa-eye, .fa-eye:hover{
+  color: #f3dc0a;
+  text-decoration: none;
+}
+.fa-eye:hover,
+.fa-edit:hover,
+.fa-trash:hover,
+.fa-check:hover{
+  color: #ffffff;
+  text-decoration: none;
+}
+.fa-minus-circle{
+  color: #f10404;
+}
+.fa-minus-circle:hover,
+.fa-plus:hover{
+  color: #000000;
+  text-decoration: none;
+}
+.fa-users, .fa-tasks,.fa-tag,.fa-pencil-square-o{
+  font-size: 72px;
+}
+.signin-btn{
+  font-size: 26px;
+  border-radius: 50px;
+}
+.modal-footer{
+  display: block;
+}
+.table{
+  width: auto;
+  margin: auto;
+}
+@media screen and (min-width: 768px){
+  .my-col{
+    padding-left: 10px;
+    padding-right: 5px;
+  }
+  .assign-col{
+    padding-left:25px;
+  }
+  .attach-control{
+    padding: 0;
+    height: auto;
+  }
+  .attach-lebel{
+    padding-right: 0;
+  }
+  .container{
+    max-width: 1900px;
+    margin: 0 auto;
+  }
+}

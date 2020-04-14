@@ -18,7 +18,6 @@ gem "popper_js", "~> 1.16"
 gem "font-awesome-rails", "~> 4.7", ">= 4.7.0.5"
 gem "omniauth-google-oauth2", "~> 0.8.0"
 gem "paperclip", "~> 6.1"
-gem "bootstrap-table-rails"
 
 group :development, :test do
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]

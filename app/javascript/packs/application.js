@@ -1,9 +1,23 @@
-//= require jquery3
-//= require bootstrap
-//= require popper 
-//= require jquery_ujs
-//= require activestorage
-//= require_tree
+// This file is automatically compiled by Webpack, along with any other files
+// present in this directory. You're encouraged to place your actual application logic in
+// a relevant structure within app/javascript and only use these pack files to reference
+// that code so it'll be compiled.
+require("jquery")
+require("@rails/ujs").start()
+require("turbolinks").start()
+require("@rails/activestorage").start()
+require("channels")
+require("bootstrap")
+require("packs/tasks")
+
+// Uncomment to copy all static images under ../images to the output folder and reference
+// them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)
+// or the `imagePath` JavaScript helper below.
+//
+// const images = require.context('../images', true)
+// const imagePath = (name) => images(name, true)
+
+import "bootstrap"
 
 
 $(()=>$(".hide").fadeOut(4000));
@@ -34,19 +48,4 @@ $(document).unbind('keydown').bind('keydown', function (event) {
           return false;
       }
   }
-}); 
-// $(document).ready(function() {
-  
-//   $(".add-fields").click(function(event){
-//     event.preventDefault();
-//     time = new Date().getTime();
-//     regexp = new RegExp($(this).data("id"), "g");
-//     $(this).before($(this).data("fields").replace(regexp, time));
-//   });
-// });
-
-// $(document).on("click",".remove-field", function(event){
-//   event.preventDefault();
-//   $(this).prev("input[type=hidden]").val("1");
-//   $(this).closest('.subtask ').hide();
-// });
+});

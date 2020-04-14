@@ -83,6 +83,7 @@ class TasksController < ApplicationController
       @task.recurring_task = true
     end
     if @task.save
+      Notification.create(recipient: @task.user, user: current_user, action: "assigned", notifiable: @task)
       flash[:success]= I18n.t "task.success", taskname: @task.task_name, taskid: @task.id
       redirect_to tasks_path
     else
@@ -116,9 +117,9 @@ class TasksController < ApplicationController
   end
 
   def destroy
-    taskname= " id: "+@task.id.to_s + @task.task_name 
+    taskname= " id: " + @task.id.to_s + " " + @task.task_name 
     @task.destroy
-    flash[:notice] = I18n.t "task.destroy", task: taskname
+    flash[:success] = I18n.t "task.destroy", task: taskname
     redirect_to tasks_path
   end
 

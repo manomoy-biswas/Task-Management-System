@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_10_083948) do
+ActiveRecord::Schema.define(version: 2020_04_14_150942) do
 
   create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name"
@@ -19,14 +19,15 @@ ActiveRecord::Schema.define(version: 2020_04_10_083948) do
   end
 
   create_table "notifications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.bigint "recipient_id"
-    t.bigint "actor_id"
+    t.bigint "user_id", null: false
+    t.integer "recipient_id"
     t.datetime "read_at"
     t.string "action"
-    t.bigint "notification_id"
     t.string "notifiable_type"
+    t.integer "notifiable_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
   create_table "sub_tasks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -79,6 +80,7 @@ ActiveRecord::Schema.define(version: 2020_04_10_083948) do
     t.index ["phone"], name: "index_users_on_phone", unique: true
   end
 
+  add_foreign_key "notifications", "users"
   add_foreign_key "sub_tasks", "tasks"
   add_foreign_key "tasks", "categories", column: "task_category"
   add_foreign_key "tasks", "users", column: "assign_task_to"
