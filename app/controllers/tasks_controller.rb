@@ -4,8 +4,8 @@ class TasksController < ApplicationController
   before_action :check_user_is_hr, only: [:print]
   before_action :check_user_is_hr?, except: [:index, :show]
   before_action :category_list, :employee_list, only: [:new, :create, :edit, :update]
-  before_action :set_task, except: [:index, :submit_subtask, :create, :new] 
-  before_action :index
+  before_action :set_task, except: [:assigned_by_me, :index, :submit_subtask, :create, :new] 
+  before_action :index, :task_assigned_by_me
 
   def index
     unless current_user.admin || current_user.hr
@@ -13,6 +13,10 @@ class TasksController < ApplicationController
     else
         @Tasks_list =  Task.all    
     end
+  end
+
+  def task_assigned_by_me
+    @Tasks_assigned_by = Task.where(assign_task_by: current_user.id)
   end
 
   def submit_task
@@ -49,7 +53,7 @@ class TasksController < ApplicationController
         Notification.create(recipient_id: 1, user: current_user, action: "approved by", notifiable: @task)
         content = current_user.name + "approved a task, assigned to " + User.find(@task.assign_task_to).name
         count = Notification.where(recipient_id: 1).unread.count
-        ActionCable.server.broadcast "notifications_channel_#{notification.recipient_id}", content: content, count: count
+        ActionCable.server.broadcast "notifications_channel_#{1}", content: content, count: count
       end
       flash[:success] = I18n.t "task.approve.success"
       redirect_to request.referrer

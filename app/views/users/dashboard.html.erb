@@ -65,7 +65,7 @@
       </div>
       <div class="col-sm-12 col-md-4">
         <div class="text-center">
-          <%= link_to tasks_path, class: " box btn btn-info" do%>
+          <%= link_to tasks_path, class: " box btn btn-danger" do%>
             <div class="dashboard-wrapper">
               <div class="fa fa-tasks" aria-hidden="true"></div>
               <h2>My Tasks</h2>
@@ -77,8 +77,8 @@
         <div class="text-center">
           <%= link_to tasks_assigned_by_me_path, class: " box btn btn-info" do%>
             <div class="dashboard-wrapper">
-              <div class="fa fa-tasks" aria-hidden="true"></div>
-              <h2>Tasks Assigned By Me</h2>
+              <div class="fa fa-check-square" aria-hidden="true"></div>
+              <h2>Set Tasks</h2>
             </div>
           <% end %>
         </div>

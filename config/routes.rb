@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get :user_dashboard, "users/dashboard"
+  get :task_assigned_by_me, "tasks/assigned_by_me"
   resources :users 
   resources :tasks do
     member do
@@ -10,7 +11,6 @@ Rails.application.routes.draw do
     end
     collection do
       get :new_subtask
-      get :sort
     end
   end
   resources :categories
