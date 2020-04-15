@@ -6,32 +6,14 @@ class TasksController < ApplicationController
   before_action :category_list, :employee_list, only: [:new, :create, :edit, :update]
   before_action :set_task, except: [:index, :submit_subtask, :create, :new] 
   before_action :index
-  # before_action :set_priority_task
 
   def index
-    # @priority= params[:priority]
-    # unless @priority == "All"
-      unless current_user.admin || current_user.hr
-          @Tasks_list =  current_user.tasks
-      else
-          @Tasks_list =  Task.all    
-      end
-    # else
-    #   unless current_user.admin || current_user.hr
-    #     @Tasks_list =  current_user.tasks
-    #   else
-    #     @Tasks_list =  Task.all
-    #   end
-    # end
+    unless current_user.admin || current_user.hr
+        @Tasks_list =  current_user.tasks
+    else
+        @Tasks_list =  Task.all    
+    end
   end
-  
-  # def index
-  #   unless current_user.admin || current_user.hr
-  #     @Tasks_list =  current_user.tasks
-  #   else
-  #     @Tasks_list =  Task.all
-  #   end
-  # end
 
   def submit_task
     unless SubTask.all_subtasks_submitted(@task)
@@ -39,12 +21,12 @@ class TasksController < ApplicationController
       redirect_to request.referrer
       return
     end
-
     @task.submit = true
     @task.save
     flash[:success] = I18n.t "task.submit_task.success"
     redirect_to request.referrer
   end
+
   def submit_subtask
     @subtask = SubTask.find(params[:id])
     @subtask.submit = true
@@ -52,16 +34,29 @@ class TasksController < ApplicationController
     flash[:success] = I18n.t "task.submit_subtask.success", subtask: @subtask.name
     redirect_to task_path(@subtask.task_id)
   end
+
   def approve
     unless @task.submit
       flash[:warning] = "Employee not Submitted the task yet."
       redirect_to request.referrer
       return
     end
-    @task.approved = true
-    @task.save(validate: false)
-    flash[:success] = I18n.t "task.approve.success"
-    redirect_to request.referrer
+    unless @task.approved
+      @task.approved = true
+      @task.save(validate: false)
+      Notification.create(recipient: @task.user, user: current_user, action: "approved", notifiable: @task)
+      unless current_user.admin
+        Notification.create(recipient_id: 1, user: current_user, action: "approved by", notifiable: @task)
+        content = current_user.name + "approved a task, assigned to " + User.find(@task.assign_task_to).name
+        count = Notification.where(recipient_id: 1).unread.count
+        ActionCable.server.broadcast "notifications_channel_#{notification.recipient_id}", content: content, count: count
+      end
+      flash[:success] = I18n.t "task.approve.success"
+      redirect_to request.referrer
+    else
+      flash[:success] = "already Approved"
+      redirect_to request.referrer
+    end
   end
 
   def download
@@ -105,6 +100,7 @@ class TasksController < ApplicationController
     @task.submit_date = task_params[:submit_date].to_datetime
 
     if @task.update(task_params)
+      Notification.create(recipient: @task.user, user: current_user, action: "updated", notifiable: @task)
       flash[:success] = I18n.t "task.update_success", taskname: @task.task_name
       redirect_to task_path(@task)
     else
@@ -118,25 +114,31 @@ class TasksController < ApplicationController
 
   def destroy
     taskname= " id: " + @task.id.to_s + " " + @task.task_name 
-    @task.destroy
-    flash[:success] = I18n.t "task.destroy", task: taskname
-    redirect_to tasks_path
+    if @task.present?
+      @task.destroy
+      Notification.create(recipient: @task.user, user: current_user, action: "deleted", notifiable: @task)
+      flash[:success] = I18n.t "task.destroy", task: taskname
+      redirect_to tasks_path
+    else
+      flash[:danger] = "Task doesn't exists"
+    end
   end
 
   private
   def category_list
     @categories ||= Category.all
   end
+
   def employee_list
     @users ||= User.all_except(current_user)
   end
+
   def task_params
     params.required(:task).permit(:task_category, :priority,:task_name, :description, :submit_date, :assign_task_to, :repeat, :document,sub_task_attributes: SubTask.attribute_names.map(&:to_sym).push(:_destroy))
   end
+
   def set_task 
     @task = Task.find(params[:id])
   end
-  # def set_priority_task
-  #   @priority_task= Task.find_by_priority(params[:priority])
-  # end
+
 end

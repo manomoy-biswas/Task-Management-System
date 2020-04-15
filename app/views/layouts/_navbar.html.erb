@@ -15,9 +15,10 @@
         </li>
         <li class="nav-item btn-group" data-behavior="notifications">
           <a class="dropdown-toggle nav-link" data-behavior="notifications-link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fa fa-bell"></i><span data-behavior="unread-count"></span>
+            <i class="fa fa-bell"></i><span class="red" id="unread-count">(<%= (Notification.where(recipient: current_user).unread).count %>)</span>
           </a>
-          <div class="dropdown-menu" id="notification" aria-labelledby="dropdownMenu1" data-behavior="notification-items">
+          <div class="dropdown-menu" id="notifications" aria-labelledby="dropdownMenu1" data-behavior="notification-items">
+           <%= render "layouts/notification" %>
           </div>
         </li>
         <li class="nav-item nav-link">

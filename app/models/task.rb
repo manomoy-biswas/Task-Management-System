@@ -18,4 +18,11 @@ class Task < ApplicationRecord
   def self.all_task_assigned_to(user)
     Task.where(assign_task_to: user)
   end
+  private
+  def create_task_notification
+    Notification.create(recipient: @task.user, user: current_user, action: "assigned", notifiable: @task)
+  end
+  def update_task_notification
+    Notification.create(recipient: @task.user, user: current_user, action: "updated", notifiable: @task)
+  end
 end

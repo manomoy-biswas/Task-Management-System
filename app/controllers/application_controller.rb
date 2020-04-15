@@ -3,6 +3,11 @@ class ApplicationController < ActionController::Base
   include ApplicationHelper
   before_action :set_cache_headers
   helper_method :current_user
+  before_action :notify
+
+  def notify
+    @notification = Notification.where(recipient: current_user)
+  end
   
   def current_user
     if session[:user_id]

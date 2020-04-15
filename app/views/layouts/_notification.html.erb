@@ -1,0 +1,21 @@
+<% Notification.where(recipient: current_user).unread.reverse.each do |notification| %>
+  <% if notification.notifiable_type == "Task" %>
+    <% if notification.action == "assigned" %>
+      <%= link_to task_path(notification.notifiable_id),class:"dropdown-item" do%>
+        <%= notification.user.name + " " + notification.action + " a task to You."%>
+      <% end %>
+    <% elsif notification.action == "deleted" %>
+        <a class="dropdown-item">
+          <%= notification.user.name + " " + notification.action + " a task, assigned to You."%>
+        </a>
+    <% elsif notification.action == "approved" %>
+      <%= link_to task_path(notification.notifiable_id),class:"dropdown-item" do%>
+        <%= notification.user.name + " " + notification.action + " a task, assigned to You."%>
+      <% end %>
+    <% else %>
+      <%= link_to task_path(notification.notifiable_id),class:"dropdown-item" do%>
+        <%= notification.user.name + " " + notification.action + " a task, assigned to You."%>
+      <% end %>
+    <%end%>
+  <% end %>
+<% end %>
