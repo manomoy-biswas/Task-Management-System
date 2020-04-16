@@ -3,6 +3,7 @@ class Task < ApplicationRecord
   belongs_to :category, foreign_key: "task_category", required: true
   has_many :sub_task, dependent: :destroy
   accepts_nested_attributes_for :sub_task, reject_if: lambda { |a| a[:name].blank? }, allow_destroy: true
+  after_destroy :destroy_notifications 
   
   validates :task_name, presence: true, length: { maximum: 255 }
   validates :priority, :repeat, :assign_task_to, :task_category, :submit_date, presence: true
@@ -19,10 +20,16 @@ class Task < ApplicationRecord
     Task.where(assign_task_to: user)
   end
   private
-  def create_task_notification
-    Notification.create(recipient: @task.user, user: current_user, action: "assigned", notifiable: @task)
-  end
-  def update_task_notification
-    Notification.create(recipient: @task.user, user: current_user, action: "updated", notifiable: @task)
+  # def create_task_notification
+  #   Notification.create(recipient: @task.user, user: current_user, action: "assigned", notifiable: @task)
+  # end
+  # def update_task_notification
+  #   Notification.create(recipient: @task.user, user: current_user, action: "updated", notifiable: @task)
+  # end
+  def destroy_notifications 
+    unread_notifications = Notification.where(notifiable: self).all
+    unread_notifications.each do |notification| 
+      notification.destroy
+    end
   end
 end

@@ -1,4 +1,4 @@
-<% content_for :title, "Admin Dashboard" %>
+<% content_for :title, "Dashboard" %>
 <div class="container">
   <% if current_user.admin%>
     <h1 class="text-center">Admin Dashboard</h1>
@@ -9,8 +9,8 @@
   <% end %>
   <br />
   
-  <div class="row">
-    <% if current_user.admin %>
+  <% if current_user.admin %>
+    <div class="row">
       <div class="col-sm-12 col-md-4">
         <div class="text-center">
           <%= link_to users_path, class: " box btn btn-success" do%>
@@ -41,7 +41,21 @@
           <% end %>
         </div>
       </div>
-    <% elsif current_user.hr %>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-4">
+        <div class="text-center">
+          <%= link_to task_approved_path, class: "box btn btn-orange" do%>
+            <div class="dashboard-wrapper">
+              <div class="fa fa-check-circle" aria-hidden="true"></div>
+              <h2>Approved Tasks</h2>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% elsif current_user.hr %>
+    <div class="row">
       <div class="col-sm-12 col-md-4">
         <div class="text-center">
           <%= link_to tasks_path, class: " box btn btn-info" do%>
@@ -52,8 +66,20 @@
           <% end %>
         </div>
       </div>
-    <%else %>
-     <div class="col-sm-12 col-md-4">
+      <div class="col-sm-12 col-md-4">
+        <div class="text-center">
+          <%= link_to task_approved_path, class: "box btn btn-orange" do%>
+            <div class="dashboard-wrapper">
+              <div class="fa fa-check-circle" aria-hidden="true"></div>
+              <h2>Approved Tasks</h2>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <%else %>
+    <div class="row">
+      <div class="col-sm-12 col-md-4">
         <div class="text-center">
           <%= link_to new_task_path, class: " box btn btn-primary" do%>
             <div class="dashboard-wrapper">
@@ -83,6 +109,6 @@
           <% end %>
         </div>
       </div>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
 </div>

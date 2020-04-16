@@ -2,6 +2,10 @@
 @import "bootstrap/dist/css/bootstrap";
 @import "font-awesome";
 
+a,
+a:hover{
+  text-decoration: none;
+}
 .wrapper{
   margin:0 auto;
   max-width: 700px;
@@ -58,8 +62,13 @@
   color: #000000;
   text-decoration: none;
 }
-.fa-users, .fa-tasks,.fa-tag,.fa-pencil-square-o,.fa-check-square{
-  font-size: 72px;
+.fa-users, 
+.fa-tasks,
+.fa-tag,
+.fa-pencil-square-o,
+.fa-check-square,
+.fa-check-circle{
+  font-size: 74px;
 }
 .signin-btn{
   font-size: 26px;
@@ -71,6 +80,42 @@
 .table{
   width: auto;
   margin: auto;
+}
+.dropdown-menu{
+  max-height: 400px;
+  min-width: 450px;
+  overflow-y: scroll;
+  overflow-x:hidden;
+  scrollbar-width: none;
+  // padding-top: 20px;
+}
+.dropdown-item{
+  padding: 10px 20px 5px;
+}
+.dropdown-item:hover{
+  background-color: #444141;
+  color:#ffffff;
+}
+.dropdown-item:hover
+
+.menu-header{
+  position: fixed;
+  height: 30px;
+  border: 1px solid #646060;
+  width: 100%;
+}
+.btn-orange{
+  color: #ffffff;
+  background-color: #f15b04;
+  border-color: #f15b04;
+}
+.btn-orange:hover{
+  color: #ffffff;
+  background-color: #bb5013;
+  border-color: #bb5013;
+}
+.btn{
+  border-radius: 25px;
 }
 @media screen and (min-width: 768px){
   .my-col{

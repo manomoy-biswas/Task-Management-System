@@ -34,8 +34,10 @@
     <tbody id="task_table">
       <% @Tasks_list.each do |task|%>
         <tr class="
-          <% if task.submit%>
+          <% if task.submit && task.approved%>
            green
+           <% elsif task.submit && !task.approved %>
+           yellow
           <% else %>
             red
           <% end %>">

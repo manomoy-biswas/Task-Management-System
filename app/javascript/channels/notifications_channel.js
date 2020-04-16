@@ -16,6 +16,6 @@ consumer.subscriptions.create("NotificationsChannel", {
     console.log("Receiving...")
     console.log(data.content)
     $("#unread-count").text("(" + data.count + ")")
-    $("#notifications").prepend("<a class=\"dropdown-item\">" + data.content + "</a>")
+    $("#notifications").prepend("<a class=\"dropdown-item\" href=\"/" + data.task_id.to_s + "\" value=\"" + data.task_id.to_s + "\">" + data.content + "</a>")
   }
 });

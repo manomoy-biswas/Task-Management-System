@@ -1,11 +1,12 @@
 class TasksController < ApplicationController
   include TasksHelper
+  include NotificationsHelper
   before_action :authenticate_user!
   before_action :check_user_is_hr, only: [:print]
   before_action :check_user_is_hr?, except: [:index, :show]
   before_action :category_list, :employee_list, only: [:new, :create, :edit, :update]
-  before_action :set_task, except: [:assigned_by_me, :index, :submit_subtask, :create, :new] 
-  before_action :index, :task_assigned_by_me
+  before_action :set_task, except: [:assigned_by_me, :approved_task, :index, :submit_subtask, :create, :new] 
+  before_action :index, :task_assigned_by_me, :approved_task
 
   def index
     unless current_user.admin || current_user.hr
@@ -13,6 +14,10 @@ class TasksController < ApplicationController
     else
         @Tasks_list =  Task.all    
     end
+  end
+  
+  def approved_task
+    @Tasks_approved = Task.where(approved: 1)
   end
 
   def task_assigned_by_me
@@ -48,12 +53,9 @@ class TasksController < ApplicationController
     unless @task.approved
       @task.approved = true
       @task.save(validate: false)
-      Notification.create(recipient: @task.user, user: current_user, action: "approved", notifiable: @task)
+      create_notification(@task.id, "approved")
       unless current_user.admin
-        Notification.create(recipient_id: 1, user: current_user, action: "approved by", notifiable: @task)
-        content = current_user.name + "approved a task, assigned to " + User.find(@task.assign_task_to).name
-        count = Notification.where(recipient_id: 1).unread.count
-        ActionCable.server.broadcast "notifications_channel_#{1}", content: content, count: count
+        create_notification(@task.id, "approved by")
       end
       flash[:success] = I18n.t "task.approve.success"
       redirect_to request.referrer
@@ -82,7 +84,7 @@ class TasksController < ApplicationController
       @task.recurring_task = true
     end
     if @task.save
-      Notification.create(recipient: @task.user, user: current_user, action: "assigned", notifiable: @task)
+      create_notification(@task.id, "assigned")
       flash[:success]= I18n.t "task.success", taskname: @task.task_name, taskid: @task.id
       redirect_to tasks_path
     else
@@ -104,7 +106,7 @@ class TasksController < ApplicationController
     @task.submit_date = task_params[:submit_date].to_datetime
 
     if @task.update(task_params)
-      Notification.create(recipient: @task.user, user: current_user, action: "updated", notifiable: @task)
+      create_notification(@task.id, "updated")
       flash[:success] = I18n.t "task.update_success", taskname: @task.task_name
       redirect_to task_path(@task)
     else
@@ -120,7 +122,7 @@ class TasksController < ApplicationController
     taskname= " id: " + @task.id.to_s + " " + @task.task_name 
     if @task.present?
       @task.destroy
-      Notification.create(recipient: @task.user, user: current_user, action: "deleted", notifiable: @task)
+      create_notification(@task.id, "deleted")
       flash[:success] = I18n.t "task.destroy", task: taskname
       redirect_to tasks_path
     else

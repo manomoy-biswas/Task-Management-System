@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   get :user_dashboard, "users/dashboard"
   get :task_assigned_by_me, "tasks/assigned_by_me"
+  get :task_approved, "tasks/approved_task"
   resources :users 
   resources :tasks do
     member do
@@ -14,7 +15,14 @@ Rails.application.routes.draw do
     end
   end
   resources :categories
-  resources :notifications
+  resources :notifications, only: [:index] do
+    member do
+      get :mark_as_read
+    end
+    collection do
+      post :mark_all_read
+    end
+  end
   get :login, to: redirect("auth/google_oauth2")
   get "auth/:provider/callback", to: "omniauth_callbacks#google_oauth2"
   get "auth/failure", to: redirect("/")
