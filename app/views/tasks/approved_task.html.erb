@@ -68,7 +68,7 @@
                     </td>
                     <% if current_user.admin %>
                       <td class= "text-center">
-                        <%= link_to "Notify HR", approve_task_path(task), class:"btn btn-success" if task.submit%>
+                        <%= link_to "Notify HR", notify_hr_task_path(task), class:"btn btn-success" if task.submit%>
                       </td>
                     <% end%>
                     <td class="text-center">

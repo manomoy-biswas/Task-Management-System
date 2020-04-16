@@ -15,7 +15,7 @@ consumer.subscriptions.create("NotificationsChannel", {
     // Called when there's incoming data on the websocket for this channel
     console.log("Receiving...")
     console.log(data.content)
-    $("#unread-count").text("(" + data.count + ")")
+    $("#unread-count,#unread-count1").text("(" + data.count + ")")
     $("#notifications").prepend("<a class=\"dropdown-item\" href=\"/" + data.task_id.to_s + "\" value=\"" + data.task_id.to_s + "\">" + data.content + "</a>")
   }
 });

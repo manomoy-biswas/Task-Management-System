@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       get :submit_subtask
       get :approve
       get :download
+      get :notify_hr
     end
     collection do
       get :new_subtask

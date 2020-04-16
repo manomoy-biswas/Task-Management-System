@@ -8,6 +8,8 @@ class NotificationRelayJob < ApplicationJob
           content = notification.user.name + " " + notification.action + " a task to you."
         elsif notification.action == "approved by"
           content = notification.user.name + " approved a task, assigned to " + User.find(Task.find(notification.notifiable_id).assign_task_to).name
+        elsif notification.action == "notified"
+          content = notification.user.name + " notification: a task has been approved. You can view task" 
         else
           content = notification.user.name + " " + notification.action + " a task, assigned to you."
         end

@@ -16,6 +16,18 @@ class TasksController < ApplicationController
     end
   end
   
+  def notify_hr
+    if current_user.admin
+      if @task.approved
+        @task.notify_hr = true
+        @task.save
+        flash[:success] = "A notification has been sent to all HRS"
+        create_notification(@task.id, "notified")
+        redirect_to request.referrer
+      end
+    end
+  end
+
   def approved_task
     @Tasks_approved = Task.where(approved: 1)
   end
@@ -121,8 +133,8 @@ class TasksController < ApplicationController
   def destroy
     taskname= " id: " + @task.id.to_s + " " + @task.task_name 
     if @task.present?
-      @task.destroy
       create_notification(@task.id, "deleted")
+      @task.destroy
       flash[:success] = I18n.t "task.destroy", task: taskname
       redirect_to tasks_path
     else

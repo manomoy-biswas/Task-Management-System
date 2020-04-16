@@ -2,23 +2,58 @@
   <% if notification.notifiable_type == "Task" %>
     <% if notification.action == "assigned" %>
       <%= link_to mark_as_read_notification_path(notification.id), class:"dropdown-item" do%>
-        <%= notification.user.name + " " + notification.action + " a task to You."%>
+        <div class="row">
+          <div class="col-1">
+            <i class="fa fa-tasks"></i>
+          </div>
+          <div class="col-11">
+            <p><%= notification.user.name + " " + notification.action + " a task to You."%></p>
+          </div>
+        </div>
       <% end %>
     <% elsif notification.action == "deleted" %>
-        <a class="dropdown-item" href="">
-          <%= notification.user.name + " " + notification.action + " a task, assigned to You."%>
-        </a>
+      <a class="dropdown-item" href="">
+        <div class="row">
+          <div class="col-1">
+            <i class="fa fa-trash"></i>
+          </div>
+          <div class="col-11">
+            <%= notification.user.name + " " + notification.action + " a task, assigned to You."%>
+          </div>
+        </div>
+      </a>
     <% elsif notification.action == "approved" %>
       <%= link_to mark_as_read_notification_path(notification.id),class:"dropdown-item" do%>
-        <%= notification.user.name + " " + notification.action + " a task, assigned to You."%>
+        <div class="row">
+          <div class="col-1">
+            <i class="fa fa-check-circle"></i>
+          </div>
+          <div class="col-11">
+            <%= notification.user.name + " " + notification.action + " a task, assigned to You."%>
+          </div>
+        </div>
       <% end %>
     <% elsif notification.action == "approved by" %>
       <%= link_to mark_as_read_notification_path(notification.id),class:"dropdown-item" do%>
-        <%= notification.user.name + " approved a task, assigned to " + User.find(Task.find(notification.notifiable_id).assign_task_to).name %>
+        <div class="row">
+          <div class="col-1">
+            <i class="fa fa-check-square"></i>
+          </div>
+          <div class="col-11">
+            <%= notification.user.name + " approved a task, assigned to " + User.find(Task.find(notification.notifiable_id).assign_task_to).name %>
+          </div>
+        </div>
       <% end %>
     <% else %>
       <%= link_to mark_as_read_notification_path(notification.id),class:"dropdown-item" do%>
-        <%= notification.user.name + " " + notification.action + " a task, assigned to You."%>
+        <div class="row">
+          <div class="col-1">
+            <i class="fa fa-tasks"></i>
+          </div>
+          <div class="col-11">
+            <p><%= notification.user.name + " " + notification.action + " a task, assigned to You."%></p>
+          </div>
+        </div>
       <% end %>
     <%end%>
   <% end %>

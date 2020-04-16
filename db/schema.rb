@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_16_151013) do
+ActiveRecord::Schema.define(version: 2020_04_16_185023) do
 
   create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name"
@@ -59,6 +59,7 @@ ActiveRecord::Schema.define(version: 2020_04_16_151013) do
     t.text "description", size: :long
     t.boolean "submit", default: false
     t.boolean "approved", default: false
+    t.boolean "notify_hr", default: false
     t.index ["assign_task_to"], name: "fk_rails_8503550591"
     t.index ["task_category"], name: "fk_rails_38c638f0b2"
   end

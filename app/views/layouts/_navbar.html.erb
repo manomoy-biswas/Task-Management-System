@@ -17,12 +17,12 @@
           <a class="dropdown-toggle nav-link" data-behavior="notifications-link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-bell"></i><span class="red" id="unread-count">(<%= (Notification.where(recipient: current_user).unread).count %>)</span>
           </a>
-          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+          <div class="dropdown-menu notification-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
             <div class="dropdown-header">
               <div class="row">
                 <div class="col-12 col-sm-6">
                   <h5>Notification
-                    <span class="red" id="unread-count">(
+                    <span class="red" id="unread-count1">(
                       <%= (Notification.where(recipient: current_user).unread).count %>)
                     </span>
                   </h5>
