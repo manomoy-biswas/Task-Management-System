@@ -29,6 +29,10 @@ class User < ApplicationRecord
     self.name
   end
 
+  def self.total_users
+    self.count
+  end
+
   def self.from_omniauth(auth)
     data = auth.info
     user = User.where(email: data["email"]).first

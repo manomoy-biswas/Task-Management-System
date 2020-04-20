@@ -113,7 +113,14 @@ a:hover{
   background-color: #bb5013;
   border-color: #bb5013;
 }
-.btn{
+// .btn{
+//   border-radius: 25px;
+// }
+.box{
+	height: 150px;
+	width: 270px;
+	font-size: 24px;
+  margin: 15px 10px;
   border-radius: 25px;
 }
 @media screen and (min-width: 768px){

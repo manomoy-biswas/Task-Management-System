@@ -1,5 +1,7 @@
 class NotificationRelayWorker
   include Sidekiq::Worker
+  sidekiq_options retry: true
+  sidekiq_options queue: "notification"
 
   def perform(notification_id)
     @notification = Notification.find(notification_id)

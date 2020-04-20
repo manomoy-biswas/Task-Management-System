@@ -13,10 +13,15 @@
     <div class="row">
       <div class="col-sm-12 col-md-4">
         <div class="text-center">
-          <%= link_to users_path, class: " box btn btn-success" do%>
+          <%= link_to users_path, class: "box btn btn-success" do%>
             <div class="dashboard-wrapper">
-              <div class="fa fa-users" aria-hidden="true"></div>
-              <h2>Users</h2>
+              <div class="user-icon">
+                <i class="fa fa-users"></i>
+              </div>
+              <div class="user-text">
+                <h2><%= User.total_users %></h2>
+                <span>Users</span>
+              </div>
             </div>
           <% end %>
         </div>

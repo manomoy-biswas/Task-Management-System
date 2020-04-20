@@ -2,11 +2,9 @@ import consumer from "./consumer"
 
 consumer.subscriptions.create("NotificationsChannel", {
   connected() {
-    console.log("Connected to client")
   },
 
   disconnected() {
-    console.log("Disconnected from client")
   },
 
   received(data) {

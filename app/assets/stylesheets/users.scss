@@ -12,12 +12,13 @@
   font-weight: 400;
   margin-bottom: 40px;
 }
-.box{
-	height: 150px;
-	width: 270px;
-	font-size: 24px;
-  margin: 15px 10px;
-}
 .dashboard-wrapper{
-	margin: 15px 5px;
+  margin: 15px 5px;
+  vertical-align: middle;
+}
+.user-icon, .user-text{
+  display: inline-block;
+}
+.user-text span{
+  font-size: 16px;
 }

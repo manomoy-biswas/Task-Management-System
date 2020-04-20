@@ -1,6 +1,5 @@
 class Notification < ApplicationRecord
-  # after_create_commit { NotificationRelayJob.perform_later(self) }
-  after_create { NotificationRelayWorker.perform_async(self.id)}
+  after_create { NotificationRelayWorker.perform_async(self.id) }
   belongs_to :user
   belongs_to :recipient, class_name: "User"
   belongs_to :notifiable, class_name: "Task", polymorphic: true
