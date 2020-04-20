@@ -1,0 +1,72 @@
+<div class="card">
+  <div class="card-body">
+    <h6 class="card-title">Task Management System</h6>
+    <hr>
+    <p class="card-text">
+      <%= @greeting %>
+    </p>
+    <p class="card-text">   
+      We are found that You are not Submit your task yet. We like to inform you that your have only 7 days left to submit your task.
+    </p>
+    <span class="card-text"> Your Task Status are Given Below:-</span>
+    <br>
+    <table class="table">
+      <thead class="thead-dark">
+        <th scope="col" class="text-left">
+          <%= @task.task_name %>
+        </th>
+        <th scope="col" colspan="2" class="text-right">
+          <%= @task.task_name %>
+        </th>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Task Category :</strong></td>
+          <td colspan="2"><%= @task.category.name%></td>
+        </tr>
+        <% if @task.sub_task.present? %>
+          <tr>
+            <td class="red"><strong>Sub tasks:</strong></td>
+            <td colspan="2">
+              <table class="table table-borderless">
+                <% @task.sub_task.each do |subtask| %>
+                  <tr>
+                    <td><strong><%= @task.sub_task.index(subtask)+1 %>.</strong></td>
+                    <td><strong>Name: <%= subtask.name%></strong></td>
+                    <td>Submitted: 
+                      <% if subtask.submit %>
+                        <span class="green"> Yes<i class="btn btn-outline-success btn-sm fa fa-check-circle"></i></span> 
+                      <% else %>
+                        <span class="red"> No</span>
+                      <% end %>
+                    </td>
+                  </tr>
+                  <% end %>
+              </table>
+            </td>
+          </tr>
+        <% end %>
+        <tr>
+          <td><strong>Deadline :</strong></td>
+          <td colspan="2"><%= DateTime.parse(@task.submit_date.to_s).strftime("%d-%m-%Y %I:%M %p")%></td>
+        </tr>
+        <tr>
+          <td><strong>Priority :</strong></td>
+          <td colspan="2"><%= @task.priority%></td>
+        </tr>
+        <tr>
+          <td><strong>Task Assigned By :</strong></td>
+          <td colspan="2"><%= @assign_task_by%></td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+    <%= link_to "View Task", @url, class:"btn-link"%>
+    <hr>
+    <p> See you online</p>
+    <p>Task Management System Team</p>
+    <p class="red">
+      Note: This is a auto generated email. Please do not reply to this email.
+    </p>
+  </div>
+</div>

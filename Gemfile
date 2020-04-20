@@ -18,6 +18,11 @@ gem "popper_js", "~> 1.16"
 gem "font-awesome-rails", "~> 4.7", ">= 4.7.0.5"
 gem "omniauth-google-oauth2", "~> 0.8.0"
 gem "paperclip", "~> 6.1"
+gem 'daemons', '~> 1.3', '>= 1.3.1'
+gem "delayed_job_active_record"
+gem "bootstrap-email"
+gem 'sidekiq', '~> 6.0', '>= 6.0.7'
+gem 'sidekiq-scheduler', '~> 3.0', '>= 3.0.1'
 
 group :development, :test do
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
@@ -40,7 +45,3 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-
-
-
-

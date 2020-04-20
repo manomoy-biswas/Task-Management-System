@@ -39,14 +39,14 @@
                 <th scope= "col">Assigned To</th>
                 <th scope= "col">Status</th>
                 <th scope= "col">View</th>
-                <th scopr= "col">Approve</th>
+                <th scope= "col">Approve</th>
                 <th scope= "col">Edit</th>
                 <th scope= "col">Delete</th>
               </tr>
             </thead>
-            <% if @Tasks_assigned_by.present? %>
+            <% if @tasks_assigned_by.present? %>
               <tbody id="task_table">
-                <% @Tasks_assigned_by.each do |task|%>
+                <% @tasks_assigned_by.each do |task|%>
                   <tr class="
                     <% if task.submit && task.approved %>
                       green
@@ -55,7 +55,7 @@
                     <% else %>
                       red
                     <% end %>">
-                    <td scope="row"><%= @Tasks_assigned_by.index(task)+1 %></td>
+                    <td><%= @tasks_assigned_by.index(task)+1 %></td>
                     <td class= "text-center"><%= task.id%></td>
                     <td class= "text-center"><%= task.task_name%></td>
                     <td class= "text-center"><%= task.category.name%></td>

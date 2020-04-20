@@ -1,0 +1,29 @@
+
+Task Management System
+----------------------------------------------------
+<%= @greeting %>
+
+Your Task <%= @task.task_name %> updated.
+
+Please go through task and for any doubt contact the person who assign this task to you.
+Your Task Details are Given Below:-
+Task ID         :
+Task Name       : <%= @task.task_name %>
+
+Task Category   : <%= @task.category.name%>
+<% if @task.sub_task.present? %>
+  Sub tasks        :
+  <% @task.sub_task.each do |subtask| %>
+    <%= @task.sub_task.index(subtask)+1 %>.Name: <%= subtask.name%>
+  <% end %>
+<% end %>
+Deadline         : <%= DateTime.parse(@task.submit_date.to_s).strftime("%d-%m-%Y %I:%M %p")%>
+Priority         : <%= @task.priority%>
+Task Assigned By : <%= @assign_task_by%>
+
+For more details visit<%= link_to "here", @url%>
+----------------------------------------------------
+See you online
+Task Management System Team
+-----------------------------------------------------
+Note: This is a auto generated email. Please do not reply to this email.

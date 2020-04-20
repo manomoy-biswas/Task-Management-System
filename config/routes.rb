@@ -1,4 +1,6 @@
+
 Rails.application.routes.draw do
+  require "sidekiq/web"
   get :user_dashboard, "users/dashboard"
   get :task_assigned_by_me, "tasks/assigned_by_me"
   get :task_approved, "tasks/approved_task"
@@ -31,4 +33,6 @@ Rails.application.routes.draw do
   get :admin_login, to: "sessions#new"
   delete :logout, to: "sessions#destroy"
   root "home#index"
+
+  mount Sidekiq::Web, at: "/sidekiq"
 end

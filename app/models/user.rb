@@ -1,10 +1,10 @@
 class User < ApplicationRecord
   has_secure_password(validations: false) 
-  has_many :tasks, foreign_key: "assign_task_to", primary_key: "id", dependent: :destroy
+  has_many :tasks, foreign_key: "assign_task_to", dependent: :destroy
   has_many :notification, foreign_key: "recipient_id", dependent: :destroy
 
-  VALID_EMAIL_REGEX = /\A([a-zA-Z0-9]+)([\.{1}])?([a-zA-Z0-9]+)\@g(oogle)?mail([\.])com\z/.freeze
-  VALID_PHONE_REGEX=/\A[6-9]{1}[0-9]{9}\z/.freeze
+  VALID_EMAIL_REGEX = /\A([a-zA-Z0-9]+)([.{1}])?([a-zA-Z0-9]+)@g(oogle)?mail([.])com\z/.freeze
+  VALID_PHONE_REGEX=/\A[6-9][0-9]{9}\z/.freeze
 
   attr_accessor :roles
   before_validation { self.name = name.to_s.titleize.strip }
@@ -17,7 +17,7 @@ class User < ApplicationRecord
   validate :valid_dob
   validates :password, presence: true, length: { minimum: 5 }, allow_nil: true
   has_attached_file :avater, style: {medium: "300x300", thumb: "100x100" }
-  validates_attachment :avatar, ontent_type: {content_type: %w(image/jpeg image/jpg image/png)}
+  # validates_attachment :avatar, content_type: {content_type: %w(image/jpeg image/jpg image/png)}
 
 
   def digest(string)
@@ -26,7 +26,7 @@ class User < ApplicationRecord
   end
 
   def user_name
-    return self.name
+    self.name
   end
 
   def self.from_omniauth(auth)
@@ -43,18 +43,13 @@ class User < ApplicationRecord
     # end
     user
   end
-  def self.find_or_create_from_auth_hash(auth)
-		where(provider: auth.provider, uid: auth.uid).first_or_initialize.tap do |user|
-			user.picture = auth.info.image
-			user.save!
-		end
-	end
   
   def self.all_except(user)
     where.not(id: user)
   end
 
   private
+
   def valid_dob
     if dob >= Date.today
       errors.add(:dob, "is invalid")

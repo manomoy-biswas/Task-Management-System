@@ -6,7 +6,7 @@
       <div class="card-body">
         <div class="task-list">
           <div class="row">
-            <% unless current_user.hr%>
+            <% unless current_user.hr %>
               <div class="col-12 col-sm-4 task-index-col text-center">
                 <%= link_to "CREATE TASK", new_task_path, class: "btn btn-primary btn-lg" %>
               </div>
@@ -41,16 +41,16 @@
                 <th scope= "col">Status</th>
                 <th scope= "col">View</th>
                 <% if current_user.admin %>
-                  <th scopr= "col">Send to HR</th>
+                  <th scope= "col">Send to HR</th>
                 <% end %>
                 <th scope= "col">Delete</th>
               </tr>
             </thead>
-            <% if @Tasks_approved.present? %>
+            <% if @tasks_approved.present? %>
               <tbody id="task_table">
-                <% @Tasks_approved.each do |task|%>
+                <% @tasks_approved.each do |task|%>
                   <tr class="green">
-                    <td scope="row"><%= @Tasks_approved.index(task)+1 %></td>
+                    <td><%= @tasks_approved.index(task)+1 %></td>
                     <td class= "text-center"><%= task.id%></td>
                     <td class= "text-center"><%= task.task_name%></td>
                     <td class= "text-center"><%= task.category.name%></td>

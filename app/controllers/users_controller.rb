@@ -22,6 +22,7 @@ class UsersController < ApplicationController
     end
 
     if @user.save
+      UserMailer.with(user: @user).welcome_user_email.deliver
       flash[:success] =  I18n.t "user.create_success"
       redirect_to users_path
     else

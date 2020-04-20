@@ -201,7 +201,7 @@
         <% unless current_user.hr %>
           <div class="row task-item-row">
             <div class="col text-center">
-              <%= link_to " Create", new_task_path, class: "fa fa-pencil btn btn-outline-primary btn-lg" %>
+              <%= link_to " Create", new_task_path, class: "fa fa-pencil btn btn-outline-primary btn-lg", data: {turbolinks: false} %>
             </div>
             <div class="col text-center">
               <% if (@task.assign_task_by == current_user.id || current_user.admin) && !@task.approved %>

@@ -1,0 +1,28 @@
+
+Task Management System
+----------------------------------------------------
+<%= @greeting %>
+
+We are found that You are not submit your task yet. Please Submit your task before <%= DateTime.parse(@task
+                                                                                                          .submit_date.to_s).strftime("%d-%m-%Y") %> .
+Your Task Status are Given Below:-
+Task ID         :
+Task Name       : <%= @task.task_name %>
+
+Task Category    : 	<%= @task.category.name%>
+<% if @task.sub_task.present? %>
+  Sub tasks        :
+  <% @task.sub_task.each do |subtask| %>
+    <%= @task.sub_task.index(subtask)+1 %>.Name: <%= subtask.name%> Submitted: <% if subtask.submit %> Yes <% else %> No <% end %>
+  <% end %>
+<% end %>
+Deadline         : 	<%= DateTime.parse(@task.submit_date.to_s).strftime("%d-%m-%Y %I:%M %p")%>
+Priority         : 	<%= @task.priority%>
+Task Assigned By : 	<%= @assign_task_by%>
+
+<%= link_to "View Task", @url, class:"btn-link"%>
+----------------------------------------------------
+See you online
+Task Management System Team
+-----------------------------------------------------
+Note: This is a auto generated email. Please do not reply to this email.

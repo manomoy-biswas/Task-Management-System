@@ -10,12 +10,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_16_185023) do
+ActiveRecord::Schema.define(version: 2020_04_19_171640) do
 
   create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "delayed_jobs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.integer "priority", default: 0, null: false
+    t.integer "attempts", default: 0, null: false
+    t.text "handler", size: :long, null: false
+    t.text "last_error", size: :long
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string "locked_by"
+    t.string "queue"
+    t.bigint "delayed_reference_id"
+    t.string "delayed_reference_type"
+    t.datetime "created_at", precision: 6
+    t.datetime "updated_at", precision: 6
+    t.index ["delayed_reference_id"], name: "delayed_jobs_delayed_reference_id"
+    t.index ["delayed_reference_type"], name: "delayed_jobs_delayed_reference_type"
+    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
+    t.index ["queue"], name: "delayed_jobs_queue"
   end
 
   create_table "notifications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -60,6 +80,7 @@ ActiveRecord::Schema.define(version: 2020_04_16_185023) do
     t.boolean "submit", default: false
     t.boolean "approved", default: false
     t.boolean "notify_hr", default: false
+    t.bigint "approved_by"
     t.index ["assign_task_to"], name: "fk_rails_8503550591"
     t.index ["task_category"], name: "fk_rails_38c638f0b2"
   end

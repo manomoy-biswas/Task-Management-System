@@ -1,0 +1,8 @@
+:schedule:
+  RecurringWorker:
+    every: ["24h", first_in: "0s"]
+
+:concurrency: 2
+:queue:
+  - default
+  - mailers

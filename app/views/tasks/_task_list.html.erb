@@ -8,11 +8,11 @@
       <th scope= "col">Category</th>
       <th scope= "col">Priority</th>
       <th scope= "col">Deadline</th>
-      <% if current_user.admin || current_user.hr %>
+      <% if admin? || hr? %>
         <th scope= "col">Assigned To</th>
       <% end %>
       <th scope= "col">Assigned By</th>
-      <% if current_user.admin || current_user.hr%>
+      <% if admin? || hr?%>
         <th scope= "col"> Status</th>
         <th scope= "col">View Task</th>
       <%else%>
@@ -20,19 +20,19 @@
         <th scope= "col"> Submit Task</th>
         <th scope= "col"> Approval</th>
       <% end %>
-      <% if current_user.admin%>
+      <% if admin? %>
         
         <th scope= "col">Edit</th>
         <th scope= "col">Delete</th>
-      <% elsif current_user.hr%>
-        <th scopr= "col">Approve</th>
+      <% elsif hr? %>
+        <th scope= "col">Approve</th>
         <th scope= "col">Print</th>
       <%end%>
     </tr>
   </thead>
-  <% if @Tasks_list.present? %>
+  <% if @tasks_list.present? %>
     <tbody id="task_table">
-      <% @Tasks_list.each do |task|%>
+      <% @tasks_list.each do |task|%>
         <tr class="
           <% if task.submit && task.approved%>
            green
@@ -41,17 +41,17 @@
           <% else %>
             red
           <% end %>">
-          <td scope="row"><%= @Tasks_list.index(task)+1 %></td>
+          <td><%= @tasks_list.index(task)+1 %></td>
           <td class= "text-center"><%= task.id%></td>
           <td class= "text-center"><%= task.task_name%></td>
           <td class= "text-center"><%= task.category.name%></td>
           <td id="priority" class= "text-center"><%= task.priority%></td>
           <td class= "text-center"><%= DateTime.parse(task.submit_date.to_s).strftime("%d-%m-%Y - %I:%M %p") %></td>
-          <% if current_user.admin || current_user.hr %>
+          <% if admin? || hr? %>
             <td class="text-center"><%= task.user.name %></td>
           <% end %>
-          <td class= "text-center"><%= User.find(task.assign_task_by).name%></td>
-          <% if current_user.admin || current_user.hr%>
+          <td class= "text-center"><%= User.find(task.assign_task_by).name %></td>
+          <% if admin? || hr?%>
             <td class= "text-center">
               <% if task.submit%>
                 Submitted
@@ -75,20 +75,20 @@
             </td>
             <% if task.submit%>
               <td class="text-center">
-                <% unless task.approved %>
-                  Pending
-                <% else %>
+                <% if task.approved %>
                   Approved
+                <% else %>
+                  Pending
                 <% end %>
-              </td
+              </td>
             <% end%>
           <% end %>
-          <% if current_user.admin%>
+          <% if admin? %>
             <td class="text-center">
-            <% unless task.approved%>
-              <%= link_to "approve", approve_task_path(task), class:"btn btn-success" if task.submit%>
-            <%else%>
+            <% if task.approved%>
               Approved
+            <%else%>
+              <%= link_to "approve", approve_task_path(task), class:"btn btn-success" if task.submit%>
             <%end%>
             </td>
             
@@ -101,12 +101,12 @@
             <td class="text-center">
               <%= link_to "", task_path(task), data: {confirm: "Are you sure to delete?" }, method: :delete, class:"fa fa-trash"%>
             </td>
-          <% elsif current_user.hr && task.submit%>
+          <% elsif hr? && task.submit%>
           <td class="text-center">
             <% if task.approved%>
               Approved
             <%else%>
-             Pending
+              Pending
             <%end%>
             </td>
             <td class="text-center">

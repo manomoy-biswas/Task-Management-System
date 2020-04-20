@@ -10,9 +10,11 @@ module SessionsHelper
   def logged_in?
     current_user.present?
   end
+
   def admin?
     current_user.admin
   end
+
   def hr?
     current_user.hr
   end

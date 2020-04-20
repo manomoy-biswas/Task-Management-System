@@ -48,7 +48,7 @@ en:
   session:
     login_success: "Welcome %{user}. Login successful"
     only_admin: "You are not a admin. Only admin can Login here."
-    invalid_credential: Incorrect email / password combination"
+    invalid_credential: "Incorrect email / password combination"
     logged_in: "you have already logged in"
     logout_success: "Logged out successfully. Bye"
   categories:
@@ -57,8 +57,8 @@ en:
     deleted_success: "Category deleted successfully"
     failed: "Something went wrong. Please try again."
   task:
-    success: "Task %{taskname} created successfully. Your task id is %{taskid}"
-    update_success: "Task  %{taskname}  updated successfully"
+    success: "Task %{task_name} created successfully. Your task id is %{task_id}"
+    update_success: "Task  %{task_name}  updated successfully"
     destroy: "Task %{task} deleted successfully"
     failed: "Something went wrong. Please try again."
     submit_task:
@@ -67,7 +67,7 @@ en:
     submit_subtask:
       success: "You submitted your Sub task %w{subtask}."
     approve:
-      success: Task Approved"
+      success: "Task Approved"
     
 
 

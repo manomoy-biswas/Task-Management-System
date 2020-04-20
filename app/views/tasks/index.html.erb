@@ -8,7 +8,7 @@
           <div class="row">
             <% unless current_user.hr%>
               <div class="col-12 col-sm-4 task-index-col text-center">
-                <%= link_to "CREATE TASK", new_task_path, class: "btn btn-primary btn-lg" %>
+                <%= link_to "CREATE TASK", new_task_path, class: "btn btn-primary btn-lg", data: {turbolinks: false} %>
               </div>
               <div class="col-12 col-sm-4 task-index-col text-center">
                 <%= link_to "BACK", users_dashboard_path, class: "btn btn-secondary btn-lg" %>

@@ -1,0 +1,11 @@
+Task Management System
+------------------------------------
+
+<%= @greeting %>
+Congratulation,You task with ID: <%= @task.id %> named: <%= @task.task_name %>, has been approved by <%= User.find(@task.approved_by).name %>
+For more details visit<%= link_to "here","" %>
+----------------------------------------
+Best,
+Task Management System Team
+
+Note: This is a auto generated email. Please do not reply to this email.
