@@ -18,26 +18,6 @@ ActiveRecord::Schema.define(version: 2020_04_19_171640) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "delayed_jobs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.integer "priority", default: 0, null: false
-    t.integer "attempts", default: 0, null: false
-    t.text "handler", size: :long, null: false
-    t.text "last_error", size: :long
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
-    t.string "locked_by"
-    t.string "queue"
-    t.bigint "delayed_reference_id"
-    t.string "delayed_reference_type"
-    t.datetime "created_at", precision: 6
-    t.datetime "updated_at", precision: 6
-    t.index ["delayed_reference_id"], name: "delayed_jobs_delayed_reference_id"
-    t.index ["delayed_reference_type"], name: "delayed_jobs_delayed_reference_type"
-    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
-    t.index ["queue"], name: "delayed_jobs_queue"
-  end
-
   create_table "notifications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.integer "recipient_id"
