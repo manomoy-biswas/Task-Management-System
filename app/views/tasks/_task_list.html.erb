@@ -21,7 +21,7 @@
         <th scope= "col"> Approval</th>
       <% end %>
       <% if admin? %>
-        
+        <th scope= "col"> Approval</th>
         <th scope= "col">Edit</th>
         <th scope= "col">Delete</th>
       <% elsif hr? %>
@@ -30,9 +30,9 @@
       <%end%>
     </tr>
   </thead>
-  <% if @tasks_list.present? %>
+  <% if @tasks.present? %>
     <tbody id="task_table">
-      <% @tasks_list.each do |task|%>
+      <% @tasks.each do |task|%>
         <tr class="
           <% if task.submit && task.approved%>
            green
@@ -41,7 +41,7 @@
           <% else %>
             red
           <% end %>">
-          <td><%= @tasks_list.index(task)+1 %></td>
+          <td><%= @tasks.index(task)+1 %></td>
           <td class= "text-center"><%= task.id%></td>
           <td class= "text-center"><%= task.task_name%></td>
           <td class= "text-center"><%= task.category.name%></td>

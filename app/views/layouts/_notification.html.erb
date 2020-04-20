@@ -44,6 +44,17 @@
           </div>
         </div>
       <% end %>
+    <% elsif ["Daily","Weekly", "Monthly", "Quarterly", "Half yearly", "Yearly"].include?(notification.action) %>
+      <%= link_to mark_as_read_notification_path(notification.id),class:"dropdown-item" do%>
+        <div class="row">
+          <div class="col-1">
+            <i class="fa fa-bullhorn"></i>
+          </div>
+          <div class="col-11">
+            <%= notification.action + " reminder: " + User.find(Task.find(notification.notifiable_id).assign_task_to).name + ", Please submit your task on or before " +  DateTime.parse(Task.find(notification.notifiable_id).submit_date.to_s).strftime("%d-%m-%Y %I:%M %p") + "." %>
+          </div>
+        </div>
+      <% end %>
     <% else %>
       <%= link_to mark_as_read_notification_path(notification.id),class:"dropdown-item" do%>
         <div class="row">

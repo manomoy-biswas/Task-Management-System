@@ -10,7 +10,7 @@ module TaskManagementSystem
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
-    config.active_job.queue_adapter = :delayed_job
+    # config.active_job.queue_adapter = :defaults
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers

@@ -15,16 +15,18 @@
               </div>
             <% end %>
             <div class="col-12 col-sm-4 task-index-col text-center">
-              <div class="form-group row">
-                <% priorities=["Low", "Medium", "High", "In progress", "Submitted", "Approved", "Pending"]%>
-                <span class="fa fa-filter col-3 text-right"></span>
-                <div class="col-7 text-right">
-                  <%= select_tag(:priority, options_for_select(priorities), prompt:"All", class:"form-control btn btn-outline-success text-center") %>
-                </div>
-                <div class="col-2"></div>
-
-                <div class="col-12 col-sm-8 col-md-4"></div>
-              </div>
+              <%=form_tag(tasks_path, action:"index", method: :get) do %>
+                <div class="form-group row">
+                  <% priorities=["Low", "Medium", "High"]%>
+                  <span class="fa fa-filter col-2 text-right"></span>
+                  <div class="col-7 text-right">
+                    <%= select_tag(:priority, options_for_select(priorities, params[:priority]), prompt:"All", class:"form-control btn  text-center") %>
+                  </div>
+                  <div class="col-3">
+                    <%= submit_tag "Filter", class:"btn btn-dark" %>
+                  </div>
+                </div>  
+              <% end %>
             </div>
           </div>
           <%= render "tasks/task_list"%>

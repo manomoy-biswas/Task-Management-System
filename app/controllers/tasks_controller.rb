@@ -8,11 +8,15 @@ class TasksController < ApplicationController
   before_action :index, :assigned_by_me, :approved_task
 
   def index
-    @tasks_list = if admin? || hr?
-                    Task.all
-                  else
-                    current_user.tasks 
-                  end
+    if params[:priority] != ""
+      if admin? || hr?
+        @tasks =  Task.where(priority: params[:priority]).all.order("created_at DESC")
+      else
+        @tasks =  current_user.tasks.where(priority: params[:priority]).all.order("created_at DESC")
+      end
+    else
+      @tasks = Task.all.order("created_at DESC")
+    end
   end
 
   def notify_hr
@@ -68,11 +72,11 @@ class TasksController < ApplicationController
       @task.approved = true
       @task.approved_by = current_user.id
       if @task.save(validate: false)
-        create_notification(@task.id, "approved")
-        TaskMailerJob.perform_now(@task,"approved")
+        Notification.create_notification(@task.id, "approved")
+        TaskMailerWorker.perform_async(@task.id,"approved")
         unless admin?
-          create_notification(@task.id, "approved by")
-          TaskMailerJob.perform_now(@task,"approved by")
+          Notification.create_notification(@task.id, "approved by")
+          TaskMailerWorker.perform_asycn(@task.id,"approved by")
         end
         flash[:success] = I18n.t 'task.approve.success'
         redirect_to request.referrer
@@ -99,7 +103,7 @@ class TasksController < ApplicationController
       @task.recurring_task = true
     end
     if @task.save
-      create_notification(@task.id, 'assigned')
+      Notification.create_notification(@task.id, 'assigned')
       flash[:success]= I18n.t 'task.success', task_name: @task.task_name, task_id: @task.id
       redirect_to tasks_path
     else
@@ -121,7 +125,7 @@ class TasksController < ApplicationController
     @task.submit_date = task_params[:submit_date].to_datetime
 
     if @task.update(task_params)
-      create_notification(@task.id, 'updated')
+      Notification.create_notification(@task.id, 'updated')
       flash[:success] = I18n.t 'task.update_success', task_name: @task.task_name
       redirect_to task_path(@task)
     else
@@ -136,15 +140,9 @@ class TasksController < ApplicationController
   def destroy
     if @task.present?
       taskname= ' id: ' + @task.id.to_s + ' ' + @task.task_name
-      task = @task
-      if @task.destroy
-        TaskMailerJob.perform_now(task,"destroy")
-        unless @task.assign_task_by == current_user
-          TaskMailerJob.perform_now(task,"destroy_by")
-        end
-        flash[:success] = I18n.t 'task.destroy', task: taskname
-        redirect_to tasks_path
-      end
+      @task.destroy
+      flash[:success] = I18n.t 'task.destroy', task: taskname
+      redirect_to tasks_path
     else
       flash[:danger] = "Task doesn't exists"
     end
@@ -166,5 +164,4 @@ class TasksController < ApplicationController
   def set_task
     @task = Task.find(params[:id])
   end
-
 end

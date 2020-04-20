@@ -6,7 +6,7 @@
       <%= @greeting %>
     </p>
     <p class="card-text">
-      <strong>Congratulation</strong> A task assigned to <%= @task.user.name %> with ID: <%= @task.id %>, Task name:
+      <strong>Congratulation</strong> A task assigned to <%= User.find(@task.assign_task_to).name  %> with ID: <%= @task.id %>, Task name:
       <%= @task.task_name %>,has been approved by <%= User.find(@task.approved_by).name %>.
       Please Notify user to take the print out if needed.
     </p>
