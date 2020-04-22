@@ -1,5 +1,37 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+<nav class="navbar navbar-expand-md">
   <a class="navbar-brand" href="<%= root_path%>">Task Management System</a>
+  <div class="mobile-notify ml-auto" >
+    <a class="notification-icon nav-link" id="notify" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <i class="fa fa-bell"></i><span class="red" id="unread-count">(<%= (Notification.where(recipient: current_user).unread).count %>)</span>
+    </a>
+    <div class="dropdown-menu notification-menu dropdown-menu-right" aria-labelledby="#notify">
+      <div class="dropdown-header">
+        <div class="row">
+          <div class="col-5 text-left">
+            <h5>Notification
+              <span class="red" id="unread-count1">(
+                <%= (Notification.where(recipient: current_user).unread).count %>)
+              </span>
+            </h5>
+          </div>
+          <div class="col-4 text-right">
+            <h6>
+              <%= link_to "Mark all as read", mark_all_read_notifications_path, method:"post", class:""%>
+            </h6>
+          </div>
+          <div class="col-3 text-right">
+            <h6>
+              <%= link_to "See all",notifications_path%>
+            </h6>
+          </div>
+        </div>
+      </div>
+      <div class="dropdown-divider"></div>
+      <div id="notifications">
+        <%= render "layouts/notification" %>
+      </div>
+    </div>
+  </div>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
   </button>
@@ -7,61 +39,61 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <% if current_user %>
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item nav-link active">
-          <strong><%= link_to "Dashboard", user_dashboard_path, class:"nav-link text-center"%></strong>
+        <li class="nav-item active">
+            <a class="nav-link" href="<%= user_dashboard_path %>">
+              <strong>Dashboard</strong>
+              <span class="sr-only">(current)</span>
+            </a>
         </li>
-        <li class="nav-item nav-link">
-            <strong><%= link_to "My Task", tasks_path, class:"nav-link text-center"%></strong>
+        <li class="nav-item">
+            <a class="nav-link" href="<%=tasks_path%>"><strong>My Tasks</strong></a>
         </li>
-        <li class="nav-item dropdown">
-          <a class="dropdown-toggle nav-link" id="notify" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <li class="desktop-notify">
+          <a class="nav-link notification-icon" id="notify" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-bell"></i><span class="red" id="unread-count">(<%= (Notification.where(recipient: current_user).unread).count %>)</span>
           </a>
-          <div class="dropdown-menu notification-menu dropdown-menu-right" aria-labelledby="notify">
+          <div class="dropdown-menu notification-menu dropdown-menu-right" aria-labelledby="#notify">
             <div class="dropdown-header">
               <div class="row">
-                <div class="col-12 col-sm-6">
+                <div class="col-5 text-left">
                   <h5>Notification
                     <span class="red" id="unread-count1">(
                       <%= (Notification.where(recipient: current_user).unread).count %>)
                     </span>
                   </h5>
                 </div>
-                <div class="col-12 col-sm-3">
-                  <h6 class="text-right">
+                <div class="col-4 text-right">
+                  <h6>
                     <%= link_to "Mark all as read", mark_all_read_notifications_path, method:"post", class:""%>
                   </h6>
                 </div>
-                <div class="col-12 col-sm-3">
-                  <h6 class="text-right">
+                <div class="col-3 text-right">
+                  <h6>
                     <%= link_to "See all",notifications_path%>
                   </h6>
                 </div>
               </div>
             </div>
             <div class="dropdown-divider"></div>
-            <div id="notifications">
+            <div id="notifications1">
               <%= render "layouts/notification" %>
             </div>
           </div>
         </li>
-        <li class="nav-item nav-link">
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <strong><%= current_user.name %></strong>
-              </a>
-              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                <%= link_to  "Sign out", logout_path, method: :delete, class: "dropdown-item" %>
-              </div>
-            </li>
-          </ul>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <strong><%= current_user.name %></strong>
+          </a>
+          <div class="dropdown-menu logout-menu dropdown-menu-right text-center" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" htef="#">Profile</a>
+            <%= link_to "Logout", logout_path, method:"delete", class:"btn btn-outline-danger my-2 my-sm-0" %>
+          </div>
         </li>
       </ul>
     <% else%> 
       <% unless["new"].include?(params[:action])%>
         <ul class="navbar-nav ml-auto">
-          <li class="nav-link text-center">
+          <li class="nav-item text-center">
             <%= link_to "Admin Login", admin_login_path, class:"btn btn-outline-success my-2 my-sm-0" %>
           </li>
         </ul>

@@ -6,8 +6,6 @@ require("channels")
 require("bootstrap")
 require("packs/tasks")
 
-import "bootstrap"
-
 
 $(()=>$(".hide").fadeOut(4000));
 

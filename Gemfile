@@ -14,6 +14,7 @@ gem "redis", "~> 4.0"
 gem "bootsnap", ">= 1.4.2"
 gem "bootstrap", "~> 4.4", ">= 4.4.1"
 gem "jquery-rails", "~> 4.3", ">= 4.3.5"
+gem 'slim', '~> 3.0', '>= 3.0.6'
 gem "popper_js", "~> 1.16"
 gem "font-awesome-rails", "~> 4.7", ">= 4.7.0.5"
 gem "omniauth-google-oauth2", "~> 0.8.0"

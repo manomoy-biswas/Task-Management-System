@@ -7,11 +7,15 @@
         <div class="task-list">
           <div class="row">
             <% unless current_user.hr%>
-              <div class="col-12 col-sm-4 task-index-col text-center">
-                <%= link_to "CREATE TASK", new_task_path, class: "btn btn-primary btn-lg", data: {turbolinks: false} %>
-              </div>
-              <div class="col-12 col-sm-4 task-index-col text-center">
-                <%= link_to "BACK", users_dashboard_path, class: "btn btn-secondary btn-lg" %>
+              <div class="col-12 col-sm-8">
+                <div class="row">
+                  <div class="col-8 text-left">
+                    <%= link_to "CREATE TASK", new_task_path, class: "btn btn-primary btn-lg", data: {turbolinks: false} %>
+                  </div>
+                  <div class="col-4 text-right">
+                    <%= link_to "BACK", users_dashboard_path, class: "btn btn-secondary btn-lg" %>
+                  </div>
+                </div>
               </div>
             <% end %>
             <div class="col-12 col-sm-4 task-index-col text-center">
@@ -20,7 +24,7 @@
                   <% priorities=["Low", "Medium", "High"]%>
                   <span class="fa fa-filter col-2 text-right"></span>
                   <div class="col-7 text-right">
-                    <%= select_tag(:priority, options_for_select(priorities, params[:priority]), prompt:"All", class:"form-control btn  text-center") %>
+                    <%= select_tag(:priority, options_for_select(priorities, params[:priority]), prompt:"All", class:"form-control text-center") %>
                   </div>
                   <div class="col-3">
                     <%= submit_tag "Filter", class:"btn btn-dark" %>
@@ -29,7 +33,9 @@
               <% end %>
             </div>
           </div>
-          <%= render "tasks/task_list"%>
+          <div class="index-table">
+            <%= render "tasks/task_list"%>
+          </div>
         </div>
       </div>
     </div>

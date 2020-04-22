@@ -8,15 +8,19 @@ class TasksController < ApplicationController
   before_action :index, :assigned_by_me, :approved_task
 
   def index
-    if params[:priority] != ""
-      if admin? || hr?
-        @tasks =  Task.where(priority: params[:priority]).all.order("created_at DESC")
-      else
-        @tasks =  current_user.tasks.where(priority: params[:priority]).all.order("created_at DESC")
-      end
-    else
-      @tasks = Task.all.order("created_at DESC")
-    end
+    @tasks =  if admin? || hr?
+                if !params[:priority] || params[:priority] == ""
+                  Task.all.order("created_at DESC")
+                else
+                  Task.where(priority: params[:priority]).all.order("created_at DESC")
+                end
+              else
+                if !params[:priority] || params[:priority] == ""
+                  current_user.tasks
+                else
+                  current_user.tasks.where(priority: params[:priority]).all.order("created_at DESC")
+                end
+              end
   end
 
   def notify_hr
@@ -76,7 +80,7 @@ class TasksController < ApplicationController
         TaskMailerWorker.perform_async(@task.id,"approved")
         unless admin?
           Notification.create_notification(@task.id, "approved by")
-          TaskMailerWorker.perform_asycn(@task.id,"approved by")
+          TaskMailerWorker.perform_async(@task.id,"approved by")
         end
         flash[:success] = I18n.t 'task.approve.success'
         redirect_to request.referrer

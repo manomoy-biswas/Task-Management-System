@@ -2,7 +2,7 @@ require "sidekiq-scheduler"
 
 class RecurringWorker
   include Sidekiq::Worker
-  sidekiq_options queue: "recurring"
+  # sidekiq_options queue: "recurring"
   sidekiq_options retry: true
 
   def perform
