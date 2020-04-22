@@ -1,0 +1,44 @@
+<%# <div class = "search-results-space"> %>
+<% content_for :title, "Tasks" %>
+<h1 class="text-center">MY TASKS</h1>
+<div class="page-wrapper">
+  <div class="tasklist-wrapper">
+    <div class="card card-6">
+      <div class="card-body">
+        <div class="task-list">
+          <div class="row">
+            <% unless current_user.hr%>
+              <div class="col-12 col-sm-8">
+                <div class="row">
+                  <div class="col-8 text-left">
+                    <%= link_to "CREATE TASK", new_task_path, class: "btn btn-primary btn-lg", data: {turbolinks: false} %>
+                  </div>
+                  <div class="col-4 text-right">
+                    <%= link_to "BACK", users_dashboard_path, class: "btn btn-secondary btn-lg" %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+            <div class="col-12 col-sm-4 task-index-col text-center">
+              <%=form_tag(tasks_path, action:"index", method: :get) do %>
+                <div class="form-group row">
+                  <% priorities=["Low", "Medium", "High"]%>
+                  <span class="fa fa-filter col-2 text-right"></span>
+                  <div class="col-7 text-right">
+                    <%= select_tag(:priority, options_for_select(priorities, params[:priority]), prompt:"All", class:"form-control text-center") %>
+                  </div>
+                  <div class="col-3">
+                    <%= submit_tag "Filter", class:"btn btn-dark" %>
+                  </div>
+                </div>  
+              <% end %>
+            </div>
+          </div>
+          <div class="index-table">
+            <%= render "tasks/task_list"%>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

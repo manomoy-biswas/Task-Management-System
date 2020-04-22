@@ -32,6 +32,7 @@
   </thead>
   <% if @tasks.present? %>
     <tbody id="task_table">
+      <% i=0 %>
       <% @tasks.each do |task|%>
         <tr class="
           <% if task.submit && task.approved%>
@@ -41,10 +42,10 @@
           <% else %>
             red
           <% end %>">
-          <td><%= @tasks.index(task)+1 %></td>
+          <td><%= i=i.to_i + 1 %></td>
           <td class= "text-center"><%= task.id%></td>
           <td class= "text-center"><%= task.task_name%></td>
-          <td class= "text-center"><%= task.category.name%></td>
+          <td class= "text-center"><%= Category.find(task.task_category).name%></td>
           <td id="priority" class= "text-center"><%= task.priority%></td>
           <td class= "text-center"><%= DateTime.parse(task.submit_date.to_s).strftime("%d-%m-%Y - %I:%M %p") %></td>
           <% if admin? || hr? %>
@@ -116,5 +117,11 @@
         </tr>
       <% end %>
     </tbody>
+  <%else%>
+  <tbody>
+    <tr>
+      <td colspan="13" class="text-center">No Record Found</td>
+    </tr>
+  </tbody>
   <% end %>
 </table>

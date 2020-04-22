@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md">
+<nav class="navbar navbar-expand-lg">
   <a class="navbar-brand" href="<%= root_path%>">Task Management System</a>
   <div class="mobile-notify ml-auto" >
     <a class="notification-icon nav-link" id="notify" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -38,7 +38,12 @@
   
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <% if current_user %>
-      <ul class="navbar-nav ml-auto">
+    <ul class="navbar-nav nav-item align-items-center"">
+      <li>
+        <%= render "layouts/search" %>
+      </li>
+    </ul>
+      <ul class="navbar-nav ml-auto text-center">
         <li class="nav-item active">
             <a class="nav-link" href="<%= user_dashboard_path %>">
               <strong>Dashboard</strong>

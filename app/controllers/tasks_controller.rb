@@ -4,8 +4,9 @@ class TasksController < ApplicationController
   before_action :authenticate_user!
   before_action :check_user_is_hr?, except: [:index, :show, :approved_task]
   before_action :category_list, :employee_list, only: [:new, :create, :edit, :update]
-  before_action :set_task, except: [:assigned_by_me, :approved_task, :index, :submit_subtask, :create, :new]
+  before_action :set_task, except: [:elastic_search,:assigned_by_me, :approved_task, :index, :submit_subtask, :create, :new]
   before_action :index, :assigned_by_me, :approved_task
+  before_action :beautify_search_url, only: [:search]
 
   def index
     @tasks =  if admin? || hr?
@@ -21,6 +22,24 @@ class TasksController < ApplicationController
                   current_user.tasks.where(priority: params[:priority]).all.order("created_at DESC")
                 end
               end
+  end
+            
+  def elastic_search
+    if params[:q].blank?
+      flash[:danger] = "Please enter a search term"
+      redirect_to tasks_path
+      return
+    end
+    if admin? || hr?
+      @tasks = Task.search(params[:q].present? ? params[:q] : nil)
+    else
+      @tasks = Task.search((params[:q].present? ? params[:q] : nil), current_user.id)
+    end
+    # if params[:q].nil?
+    #   @searched_tasks = ["no"]
+    # else
+    #   @searched_tasks = Task.search(params[:q])
+    # end
   end
 
   def notify_hr
@@ -163,6 +182,10 @@ class TasksController < ApplicationController
 
   def task_params
     params.required(:task).permit(:task_category, :priority,:task_name, :description, :submit_date, :assign_task_to, :repeat, :document,sub_task_attributes: SubTask.attribute_names.map(&:to_sym).push(:_destroy))
+  end
+
+  def beautify_search_url   
+    redirect_to search_tasks_path(query: params[:term]) if params[:term].present?
   end
 
   def set_task

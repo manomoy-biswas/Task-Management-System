@@ -45,6 +45,9 @@ a:hover{
   background-color: #343a40;
   padding-top: 4px;
 }
+.nav-item:focus{
+  outline: none;
+}
 .nav-item a{
 
   color: #ffffff;
@@ -208,31 +211,7 @@ border-bottom: 1px solid #dbdaff;
   border-radius: 25px;
 }
 @media screen and (min-width: 768px){
-  #navbarSupportedContent{
-    position: relative;
-    top:0;
-  }
-  .mobile-notify{
-    display: none;
-  }
-  .desktop-notify{
-    display: inline-block;
-    height: 60px;
-    margin-left: 25px;
-    padding-top: 10px;
-  }
-  .nav-item {
-    background:transparent;
-    height: 60px;
-    margin-top: 10px;
-    padding-top: 10px;
-    margin-left: 25px;
-  }
-  .nav-item a {
-    font-size: 18px;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
+  
   .signin-btn span{
     font-size: 24px;
   }
@@ -256,5 +235,30 @@ border-bottom: 1px solid #dbdaff;
   }
 }
 @media screen and (min-width: 992px){
+  #navbarSupportedContent{
+    position: relative;
+    top:0;
+  }
+  .mobile-notify{
+    display: none;
+  }
+  .desktop-notify{
+    display: inline-block;
+    height: 60px;
+    margin-left: 25px;
+    padding-top: 10px;
+  }
+  .nav-item {
+    background:transparent;
+    height: 60px;
+    margin-top: 10px;
+    padding-top: 10px;
+    margin-left: 15px;
+  }
+  .nav-item a {
+    font-size: 16px;
+    font-weight: bold;
+    // text-transform: uppercase;
+  }
 
 }

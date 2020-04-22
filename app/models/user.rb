@@ -11,7 +11,7 @@ class User < ApplicationRecord
   before_validation { self.email = email.to_s.downcase.strip }
 
   validates :name, presence: true, length: { maximum: 50 }
-  validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
+  validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }, uniqueness: true
   validates :phone, presence: true, length: {is: 10}, format: { with: VALID_PHONE_REGEX }, uniqueness: true
   validates :dob, presence: true
   validate :valid_dob

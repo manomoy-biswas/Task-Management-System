@@ -14,6 +14,7 @@ Rails.application.routes.draw do
       get :notify_hr
     end
     collection do
+      get :elastic_search
       get :new_subtask
     end
   end
