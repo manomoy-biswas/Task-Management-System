@@ -33,7 +33,7 @@ class NotificationRelayWorker
       end
     end
 
-    count = Notification.where(recipient: @notification.recipient_id).unread.count
+    count = Notification.where(recipient_id: @notification.recipient_id).unread.count
     ActionCable.server.broadcast "notifications_channel_#{@notification.recipient_id}", content: content, count: count
   end
   
@@ -47,7 +47,7 @@ class NotificationRelayWorker
           "<i class=\"fa "+ classname + "\"></i>" +
         "</div>" +
         "<div class=\"notify-info\">" +
-          "<h5>" + notification.user.name + " </h5>" +
+          "<h5>" + User.find(notification.user_id).name + " </h5>" +
           "<p>" + text + "</p>" +
           "<span class=\"notify-time\">" + (notification.created_at.to_datetime - DateTime.now).to_s + " ago<span>" +
           "</div>" +

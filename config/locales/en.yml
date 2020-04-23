@@ -61,6 +61,7 @@ en:
     update_success: "Task  %{task_name}  updated successfully"
     destroy: "Task %{task} deleted successfully"
     failed: "Something went wrong. Please try again."
+    not_exist: "Task doesn't exists"
     submit_task:
       success: "Your task submitted successfully"
       failed: "Please submit your sub task to submit this task"

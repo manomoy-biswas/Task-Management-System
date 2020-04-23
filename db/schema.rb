@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_19_171640) do
+ActiveRecord::Schema.define(version: 2020_04_23_195621) do
 
   create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name"
@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 2020_04_19_171640) do
   end
 
   create_table "notifications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.integer "recipient_id"
     t.datetime "read_at"
     t.string "action"
@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(version: 2020_04_19_171640) do
     t.bigint "notifiable_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_notifications_on_user_id"
+    t.index ["notifiable_id"], name: "fk_rails_4b545d474c"
   end
 
   create_table "sub_tasks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -41,6 +41,14 @@ ActiveRecord::Schema.define(version: 2020_04_19_171640) do
     t.index ["task_id"], name: "index_sub_tasks_on_task_id"
   end
 
+  create_table "task_documents", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "task_id", null: false
+    t.string "document"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["task_id"], name: "index_task_documents_on_task_id"
+  end
+
   create_table "tasks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "task_category", null: false
     t.string "task_name", null: false
@@ -50,10 +58,6 @@ ActiveRecord::Schema.define(version: 2020_04_19_171640) do
     t.string "repeat", null: false
     t.datetime "submit_date", null: false
     t.boolean "recurring_task", default: false
-    t.string "document_file_name"
-    t.string "document_content_type"
-    t.bigint "document_file_size"
-    t.datetime "document_updated_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.text "description", size: :long
@@ -82,8 +86,9 @@ ActiveRecord::Schema.define(version: 2020_04_19_171640) do
     t.index ["phone"], name: "index_users_on_phone", unique: true
   end
 
-  add_foreign_key "notifications", "users"
+  add_foreign_key "notifications", "tasks", column: "notifiable_id"
   add_foreign_key "sub_tasks", "tasks"
+  add_foreign_key "task_documents", "tasks"
   add_foreign_key "tasks", "categories", column: "task_category"
   add_foreign_key "tasks", "users", column: "assign_task_to"
 end

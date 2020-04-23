@@ -49,7 +49,7 @@
                   <%= link_to "", edit_user_path(user), class:"fa fa-edit"%>
                 </td>
                 <td class="text-center">
-                  <%= link_to "", user_path(user), data: {confirm: "Are you sure?" }, method: :delete, class:"fa fa-trash"%>
+                  <%= link_to "", user_path(user), data: {confirm: "Are you sure?" }, method: :delete, class:"fa fa-trash", data: { disable_with: "..." }%>
                 </td>
               <% end %>
             </tr>

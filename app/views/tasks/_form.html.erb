@@ -28,7 +28,7 @@
               <% priorities= %w[Low Medium High] %>
                 <%= form.label :priority, "Priority",for: "priority", class:"col-12 col-sm-4 col-md-4 col-form-label"%>
                 <div class="col-12 col-sm-8 col-md-8">
-                <%= form.select :priority, options_for_select(priorities ,@task.priority), {prompt: "--Select Priority--", required: true},{class: "form-control align-items-center"} %>
+                <%= form.select :priority, options_for_select(priorities ,@task.priority), {prompt: "--Select Priority--", required: true},{class: "form-control text-center"} %>
                 </div>
               </div>
             </div>
@@ -69,8 +69,8 @@
             </div>
           </div>
           <div class="form-group row">
-            <%= form.label :assign_task_to, "Assign To", for: "assign_task_to", class:"col-12 col-sm-4 col-md-2 assign-col col-form-label"%>
-            <div class="col-12 col-sm-8 col-md-10 assign-col">
+            <%= form.label :assign_task_to, "Assign To", for: "assign_task_to", class:"col-12 col-sm-4 col-md-2 col-form-label"%>
+            <div class="col-12 col-sm-8 col-md-10 ">
               <% if @users.present? %>
                 <% if admin? %>
                   <%= form.select :assign_task_to, options_from_collection_for_select(User.where.not(id: current_user.id) , :id, :name, form.object.assign_task_to), { prompt: "-- Select employee --", required: true }, { class: "form-control text-center" } %> 
@@ -98,13 +98,15 @@
             </div>
           </div>
           <div class="form-group row">
-            <div class="col-4 col-md-2 attach-lebel col-form-label">
-              <%= form.label :document, "Attach file", for: "document" %>
-              <small class="note"> (*if required)</small>
-            </div>
-            <div class="col-8 col-md-10">
-              <%= form.file_field :document, for: "attach file",class: "form-control attach-control" %>
-            </div>
+            <%= form.fields_for :task_document do |p| %>
+              <div class="col-4 col-md-2 attach-lebel col-form-label">
+                <%= p.label :document, "Attach file", for: "document" %>
+                <small class="note"> (*if required)</small>
+              </div>
+              <div class="col-8 col-md-10">
+              <%= p.file_field :document, :multiple => true, class: "form-control attach-control", name: "task_document[document][]" %>
+              </div>
+            <% end %>
           </div>
           <hr>
           <div class="subtask-container">

@@ -7,13 +7,15 @@ class Task < ApplicationRecord
 
   belongs_to :user, foreign_key: 'assign_task_to', required: true
   belongs_to :category, foreign_key: 'task_category', required: true
+  has_many :notification, foreign_key: 'notifiable_id', dependent: :destroy
   has_many :sub_task, dependent: :destroy
+  has_many :task_document, dependent: :destroy
   
   before_validation { self.task_name = task_name.to_s.squeeze(" ").strip.capitalize }
 
   accepts_nested_attributes_for :sub_task, reject_if: ->(a) { a[:name].blank? }, allow_destroy: true
   
-  after_destroy :destroy_notifications
+  # after_destroy :destroy_notifications
   after_create :task_reminder_email
 
   after_create { TaskMailerWorker.perform_async(self.id,"create") }
@@ -26,8 +28,9 @@ class Task < ApplicationRecord
   validates :priority, inclusion: %w[High Medium Low]
   validates :repeat, inclusion: %w[One_Time Daily Weekly Monthly Quarterly Half_yearly Yearly]
   validate :valid_submit_date, on: :create
-  has_attached_file :document
-  validates_attachment :document, content_type: { content_type: %w[image/jpeg image/jpg image/png application/pdf] }
+  # has_attached_file :document
+  # validates_attachment :document, content_type: { content_type: %w[image/jpeg image/jpg image/png application/pdf] }
+  # mount_uploader :document, DocumentUploader
 
   settings index: { number_of_shards: 1 } do
     mappings dynamic: 'false' do
@@ -53,7 +56,7 @@ class Task < ApplicationRecord
 
   def as_indexed_json(options = {})
     self.as_json(
-      options.merge({},
+      options.merge(only: [:id,:task_name, :description, :assign_task_to],
         include: {
           category: {only: [:id, :name]},
           sub_task: {only: [:id, :name, :subtask_description]},
@@ -119,11 +122,6 @@ class Task < ApplicationRecord
   def task_reminder_email
     return if DateTime.now.utc + 7.days > self.submit_date.to_datetime
     TaskReminderWorker.perform_at(self.submit_date.to_datetime - 7.days, self.id)
-  end
-
-  def destroy_notifications
-    notifications = Notification.where(notifiable: self).all
-    notifications.each(&:destroy)
   end
 end
 

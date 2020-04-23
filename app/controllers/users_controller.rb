@@ -1,11 +1,16 @@
 class UsersController < ApplicationController
   include ApplicationHelper
   before_action :authenticate_user!
-  before_action :check_user_is_admin, only: [:new, :create, :update, :destroy]
-  before_action :set_user, only: [:edit, :update, :destroy]
+  before_action :check_user_is_admin, only: [:new, :create, :destroy]
+  before_action :set_user, only: [:edit, :update, :destroy, :profile]
 
   def index
     @users = User.all
+  end
+
+  def profile
+    @user.picture=params[:picture]
+    @user.save
   end
 
   def new
@@ -32,6 +37,9 @@ class UsersController < ApplicationController
   end
 
   def edit
+  end
+
+  def show
   end
 
   def update
@@ -61,6 +69,6 @@ class UsersController < ApplicationController
   end
   
   def user_params
-    params.require(:user).permit(:name, :email, :phone, :dob, roles:[])
+    params.require(:user).permit(:name, :email, :phone, :picture, :dob, roles:[])
   end
 end

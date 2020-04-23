@@ -1,0 +1,11 @@
+<%= image_tag current_user.picture.url, class:"avater" if current_user.picture?%>
+<%# <%= image_tag("google.png", class:"google-icon") %> %>
+<%= form_tag profile_user_path, method: :get do%>
+<div class="image-upload">
+  <label for="file-input">
+    <span class="fa fa-upload"></span>
+  </label>
+  <%= file_field_tag :picture, id:"file-input" %>
+</div>
+  <%= submit_tag "submit"%>
+<% end %>

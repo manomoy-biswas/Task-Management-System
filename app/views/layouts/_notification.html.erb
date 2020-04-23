@@ -1,70 +1,72 @@
-<% Notification.where(recipient: current_user).unread.reverse.each do |notification| %>
-  <% if notification.notifiable_type == "Task" %>
-    <% if notification.action == "assigned" %>
-      <%= link_to mark_as_read_notification_path(notification.id), class:"dropdown-item" do%>
-        <div class="notify-content">
-          <div class="notify-image">
-            <i class="fa fa-tasks"></i>
+<% if logged_in? %>
+  <% Notification.where(recipient_id: current_user.id).unread.reverse.each do |notification| %>
+    <% if notification.notifiable_type == "Task" %>
+      <% if notification.action == "assigned" %>
+        <%= link_to mark_as_read_notification_path(notification.id), class:"dropdown-item" do%>
+          <div class="notify-content">
+            <div class="notify-image">
+              <i class="fa fa-tasks"></i>
+            </div>
+            <div class="notify-info">
+              <div><strong><%= User.find(notification.user_id).name%></strong></div>
+              <p><%=notification.action + " a task to You."%></p>
+              <span class="notify-time"><%=(notification.created_at.to_datetime - DateTime.now)%> ago<span>
+            </div>
           </div>
-          <div class="notify-info">
-            <div><strong><%= notification.user.name%></strong></div>
-            <p><%=notification.action + " a task to You."%></p>
-            <span class="notify-time"><%=(notification.created_at.to_datetime - DateTime.now)%> ago<span>
+        <% end %>
+      <% elsif notification.action == "approved" %>
+        <%= link_to mark_as_read_notification_path(notification.id),class:"dropdown-item" do%>
+          <div class="notify-content">
+            <div class="notify-image">
+              <i class="fa fa-check-circle"></i>
+            </div>
+            <div class="notify-info">
+              <div><strong><%= User.find(notification.user_id).name %></strong></div>
+              <p><%= notification.action + " a task, assigned to You."%></p>
+              <span class="notify-time"><%=(notification.created_at.to_datetime - DateTime.now)%> ago</span>
+            </div>
           </div>
-        </div>
-      <% end %>
-    <% elsif notification.action == "approved" %>
-      <%= link_to mark_as_read_notification_path(notification.id),class:"dropdown-item" do%>
-        <div class="notify-content">
-          <div class="notify-image">
-            <i class="fa fa-check-circle"></i>
+        <% end %>
+      <% elsif notification.action == "approved by" %>
+        <%= link_to mark_as_read_notification_path(notification.id),class:"dropdown-item" do%>
+          <div class="notify-content">
+            <div class="notify-image">
+              <i class="fa fa-check-square"></i>
+            </div>
+            <div class="notify-info">
+              <h5><%= User.find(notification.user_id).name%></h5>
+              <p><%="Approved a task, assigned to " + User.find(Task.find(notification.notifiable_id).assign_task_to).name %></p>
+              <span class="notify-time"><%=(notification.created_at.to_datetime - DateTime.now)%> ago</span>
+            </div>
           </div>
-          <div class="notify-info">
-            <div><strong><%= notification.user.name%></strong></div>
-            <p><%= notification.action + " a task, assigned to You."%></p>
-            <span class="notify-time"><%=(notification.created_at.to_datetime - DateTime.now)%> ago</span>
+        <% end %>
+      <% elsif ["Daily","Weekly", "Monthly", "Quarterly", "Half yearly", "Yearly"].include?(notification.action) %>
+        <%= link_to mark_as_read_notification_path(notification.id),class:"dropdown-item" do%>
+          <div class="notify-content">
+            <div class="notify-image">
+              <i class="fa fa-bullhorn"></i>
+            </div>
+            <div class="notify-info">
+            <div><strong><%= notification.action + " reminder "%></strong></div>
+              <p><%= "Please submit your task on or before " +  DateTime.parse(Task.find(notification.notifiable_id).submit_date.to_s).strftime("%d-%m-%Y %I:%M %p") + "." %></p>
+              <span class="notify-time"><%=(notification.created_at.to_datetime - DateTime.now)%> ago</span>
+            </div>
           </div>
-        </div>
-      <% end %>
-    <% elsif notification.action == "approved by" %>
-      <%= link_to mark_as_read_notification_path(notification.id),class:"dropdown-item" do%>
-        <div class="notify-content">
-          <div class="notify-image">
-            <i class="fa fa-check-square"></i>
+        <% end %>
+      <% else %>
+        <%= link_to mark_as_read_notification_path(notification.id),class:"dropdown-item" do%>
+          <div class="notify-content">
+            <div class="notify-image">
+              <i class="fa fa-tasks"></i>
+            </div>
+            <div class="notify-info">
+              <h5><strong><%= User.find(notification.user_id).name%></strong></di5>
+              <p><%= notification.action + " a task, assigned to You."%></p>
+              <span class="notify-time"><%=(notification.created_at.to_datetime - DateTime.now)%> ago</span>
+            </div>
           </div>
-          <div class="notify-info">
-            <h5><%= notification.user.name%></h5>
-            <p><%="Approved a task, assigned to " + User.find(Task.find(notification.notifiable_id).assign_task_to).name %></p>
-            <span class="notify-time"><%=(notification.created_at.to_datetime - DateTime.now)%> ago</span>
-          </div>
-        </div>
-      <% end %>
-    <% elsif ["Daily","Weekly", "Monthly", "Quarterly", "Half yearly", "Yearly"].include?(notification.action) %>
-      <%= link_to mark_as_read_notification_path(notification.id),class:"dropdown-item" do%>
-        <div class="notify-content">
-          <div class="notify-image">
-            <i class="fa fa-bullhorn"></i>
-          </div>
-          <div class="notify-info">
-          <div><strong><%= notification.action + " reminder "%></strong></div>
-            <p><%= "Please submit your task on or before " +  DateTime.parse(Task.find(notification.notifiable_id).submit_date.to_s).strftime("%d-%m-%Y %I:%M %p") + "." %></p>
-            <span class="notify-time"><%=(notification.created_at.to_datetime - DateTime.now)%> ago</span>
-          </div>
-        </div>
-      <% end %>
-    <% else %>
-      <%= link_to mark_as_read_notification_path(notification.id),class:"dropdown-item" do%>
-        <div class="notify-content">
-          <div class="notify-image">
-            <i class="fa fa-tasks"></i>
-          </div>
-          <div class="notify-info">
-            <h5><strong><%= notification.user.name%></strong></di5>
-            <p><%= notification.action + " a task, assigned to You."%></p>
-            <span class="notify-time"><%=(notification.created_at.to_datetime - DateTime.now)%> ago</span>
-          </div>
-        </div>
-      <% end %>
-    <%end%>
+        <% end %>
+      <%end%>
+    <% end %>
   <% end %>
 <% end %>

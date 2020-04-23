@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   has_secure_password(validations: false) 
   has_many :tasks, foreign_key: "assign_task_to", dependent: :destroy
-  has_many :notification, foreign_key: "recipient_id", dependent: :destroy
+  # has_many :notification, foreign_key: "recipient_id"
 
   VALID_EMAIL_REGEX = /\A([a-zA-Z0-9]+)([.{1}])?([a-zA-Z0-9]+)@g(oogle)?mail([.])com\z/.freeze
   VALID_PHONE_REGEX=/\A[6-9][0-9]{9}\z/.freeze
@@ -16,9 +16,7 @@ class User < ApplicationRecord
   validates :dob, presence: true
   validate :valid_dob
   validates :password, presence: true, length: { minimum: 5 }, allow_nil: true
-  has_attached_file :avater, style: {medium: "300x300", thumb: "100x100" }
-  # validates_attachment :avatar, content_type: {content_type: %w(image/jpeg image/jpg image/png)}
-
+  mount_uploader :picture, ProfilePictureUploader
 
   def digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
@@ -53,6 +51,11 @@ class User < ApplicationRecord
   end
 
   private
+
+  # def destroy_notifications
+  #   notifications = Notification.where(recipient: self).all
+  #   notifications.each(&:destroy)
+  # end
 
   def valid_dob
     if dob >= Date.today

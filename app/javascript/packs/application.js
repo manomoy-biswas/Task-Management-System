@@ -36,4 +36,9 @@ $(document).unbind('keydown').bind('keydown', function (event) {
       }
   }
 });
+
+$("file-input").change(function(event){
+    this.form.submit()
+    
+  });
   

@@ -4,7 +4,11 @@ Rails.application.routes.draw do
   get :user_dashboard, "users/dashboard"
   get :task_assigned_by_me, "tasks/assigned_by_me"
   get :task_approved, "tasks/approved_task"
-  resources :users 
+  resources :users do
+    member do
+      get :profile
+    end
+  end
   resources :tasks do
     member do
       get :submit_task

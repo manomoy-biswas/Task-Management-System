@@ -3,6 +3,7 @@ class TaskReminderWorker
   sidekiq_options retry: false
   # sidekiq_options queue: "default"
   def perform(task)
+    task=Task.find(task)
     unless task.submit
       TaskMailer.task_reminder_email(task).deliver
     end
