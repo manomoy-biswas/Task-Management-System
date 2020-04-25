@@ -21,6 +21,10 @@ class NotificationRelayWorker
         text = @notification.action + " a task, assigned to You."
         content = notification_content("fa-check-circle",text, @notification)
 
+      when "submitted"
+        text = @notification.action + " a task for verification."
+        content = notification_content("fa-tasks",text, @notification)
+
       when "notified"
         text = "A task has been approved. You can view task"
         content = notification_content("fa-bell",text, @notification)

@@ -53,7 +53,7 @@ a:hover{
   color: #ffffff;
   font-size: 16px;
 }
-.text-center{
+.select-center{
   text-align-last: center;
 }
 .dropdown-toggle::before{
@@ -160,6 +160,9 @@ flex-wrap: wrap;
 align-items: center;
 padding: 10px 0;
 border-bottom: 1px solid #dbdaff;
+}
+.notify-info{
+  text-align: left !important;
 }
 .notify-info p{
  width: 200px;

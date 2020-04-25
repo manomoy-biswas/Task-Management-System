@@ -1,5 +1,6 @@
 class OmniauthCallbacksController < ApplicationController
   include SessionsHelper
+  
   def google_oauth2
     begin
       @user = User.from_omniauth(request.env["omniauth.auth"])

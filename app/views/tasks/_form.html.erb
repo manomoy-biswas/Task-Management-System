@@ -19,7 +19,7 @@
               <div class="form-group row">
                 <%= form.label :task_category,"Category", for: "task_category", class:"col-12 col-sm-4 col-md-3 col-form-label"%>
                 <div class="col-8 col-md-9">
-                  <%= form.select :task_category, options_from_collection_for_select(Category.all, :id, :name, form.object.task_category), { prompt: "-- Select category --", required: true }, {autofocus: true, class:"form-control text-center"} %>
+                  <%= form.select :task_category, options_from_collection_for_select(Category.all, :id, :name, form.object.task_category), { prompt: "-- Select category --", required: true }, {autofocus: true, class:"form-control select-center"} %>
                 </div>
               </div>
             </div>
@@ -28,7 +28,7 @@
               <% priorities= %w[Low Medium High] %>
                 <%= form.label :priority, "Priority",for: "priority", class:"col-12 col-sm-4 col-md-4 col-form-label"%>
                 <div class="col-12 col-sm-8 col-md-8">
-                <%= form.select :priority, options_for_select(priorities ,@task.priority), {prompt: "--Select Priority--", required: true},{class: "form-control text-center"} %>
+                <%= form.select :priority, options_for_select(priorities ,@task.priority), {prompt: "--Select Priority--", required: true},{class: "form-control select-center"} %>
                 </div>
               </div>
             </div>
@@ -73,12 +73,12 @@
             <div class="col-12 col-sm-8 col-md-10 ">
               <% if @users.present? %>
                 <% if admin? %>
-                  <%= form.select :assign_task_to, options_from_collection_for_select(User.where.not(id: current_user.id) , :id, :name, form.object.assign_task_to), { prompt: "-- Select employee --", required: true }, { class: "form-control text-center" } %> 
+                  <%= form.select :assign_task_to, options_from_collection_for_select(User.where.not(id: current_user.id) , :id, :name, form.object.assign_task_to), { prompt: "-- Select employee --", required: true }, { class: "form-control select-center" } %> 
                 <%else%>    
-                  <%= form.select :assign_task_to, options_from_collection_for_select(User.where.not(id:current_user.id, admin: 1, hr: 1) , :id, :name, form.object.assign_task_to), { prompt: "-- Select employee --", required: true }, { class: "form-control text-center" } %>  
+                  <%= form.select :assign_task_to, options_from_collection_for_select(User.where.not(id:current_user.id, admin: 1, hr: 1) , :id, :name, form.object.assign_task_to), { prompt: "-- Select employee --", required: true }, { class: "form-control select-center" } %>  
                 <%end%>          
               <%else%>
-                <%= form.select :assign_task_to, {}, { prompt: "-- Select employee --", required: true }, { class: "form-control text-center" } %>
+                <%= form.select :assign_task_to, {}, { prompt: "-- Select employee --", required: true }, { class: "form-control select-center" } %>
               <% end %>
             </div>
           </div>
@@ -123,9 +123,9 @@
             </div>
             <div class="col-6">
               <% if ["edit"].include?(params[:action])%>
-                <strong><%=form.submit( "UPDATE",{ class: "btn btn-primary btn-lg btn-block"})%></strong>
+                <strong><%=form.submit( "UPDATE",{ class: "btn btn-primary btn-lg btn-block", data:{disable_with: "Updating.."}})%></strong>
               <% else %>
-                <strong><%=form.submit( "ASSIGN",{ class: "btn btn-success btn-lg btn-block"})%></strong>
+                <strong><%=form.submit( "ASSIGN",{ class: "btn btn-success btn-lg btn-block", data: {disable_with: "Assigning.."}})%></strong>
               <% end %>
             </div>
           </div>

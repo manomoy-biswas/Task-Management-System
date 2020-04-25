@@ -113,7 +113,7 @@
           </div>
         </div>
         <div class="row task-item-row">
-          <% if current_user.admin && @task.assign_task_to != current_user.id %>
+          <% if @task.assign_task_to != current_user.id %>
             <div class="col-12 col-sm-6">
               <div class="row">
                 <div class="col-6 col-md-4">
@@ -133,7 +133,7 @@
               <div class="col-6 col-md-8">
                 <p class="task-item-details">
                 <% unless @task.assign_task_by == current_user.id %>
-                  <%= User.find(@task.assign_task_by).name %></p>
+                  <%= find_user_name(@task.assign_task_by) %></p>
                 <% else %>
                   You
                 <% end %>
@@ -149,75 +149,70 @@
                   <span class="task-item">Submit Task</span>
                 </div>
                 <div class="col-6 col-md-8 ">
-                  <p class="task-item-details"><%= link_to "SUBMIT", submit_task_task_path(@task), class: "btn btn-success"%></p>
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-sm-6">
-              <div class="row">
-                <div class="col-6 col-md-4">
-                  <span class="task-item">Download Document</span>
-                </div>
-                <div class="col-6 col-md-8 ">
-                  <p class="task-item-details">
-                    <% if @task.task_document.present?%>
-                      <%= link_to "DOWNLOAD", download_task_path(@task), class: "btn btn-success" %>
-                    <% else %>
-                      No document availavle...
-                    <%end%>
-                  </p>
+                  <p class="task-item-details"><%= link_to "SUBMIT", submit_task_task_path(@task), class: "btn btn-success", data: { disable_with: "submitting..." }%></p>
                 </div>
               </div>
             </div>
           <% end %>
-        </div>
-        <% unless current_user.hr || @task.assign_task_to == current_user.id %>
-          <div class="row task-item-row">
-            <div class="col-12 col-sm-6">
-              <div class="row">
-                <div class="col-6 col-md-4">
-                  <span class="task-item">Approval Status</span>
-                </div>
-                <div class="col-6 col-md-8 ">
-                  <p class="task-item-details">
-                    <% if @task.submit && @task.approved  %>
-                      <span class="green">Approved</span>
-                    <% else %>
-                      <%= link_to "APPROVE", approve_task_path(@task), class: "btn btn-warning" if @task.submit%>
-                    <% end %>
-                  </p>
-                </div>
+          <div class="col-12 col-sm-6">
+            <div class="row">
+              <div class="col-6 col-md-4">
+                <span class="task-item">Download Document</span>
+              </div>
+              <div class="col-6 col-md-8 ">
+                <p class="task-item-details">
+                  <% if @task.task_document.present?%>
+                    <%= link_to "DOWNLOAD", download_task_path(@task), class: "btn btn-success", data: { disable_with: "Downloading.." } %>
+                  <% else %>
+                    No document availavle...
+                  <%end%>
+                </p>
               </div>
             </div>
-            <div class="col-12 col-sm-6"></div>
           </div>
-        <% end %>
-        <% unless current_user.hr %>
-          <div class="row task-item-row">
+        </div>
+        <div class="row task-item-row">
+          <div class="col-12 col-sm-6">
+            <div class="row">
+              <div class="col-6 col-md-4">
+                <span class="task-item">Approval Status</span>
+              </div>
+              <div class="col-6 col-md-8 ">
+                <p class="task-item-details">
+                  <% if @task.submit && @task.approved  %>
+                    <span class="green">Approved</span>
+                  <% else %>
+                    <% unless hr? || @task.assign_task_to == current_user.id %> 
+                      <%= link_to "APPROVE", approve_task_path(@task), class: "btn btn-warning", data: {disable_with: "Approving..."} if @task.submit%>
+                    <% end %>
+                  <% end %>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6"></div>
+        </div>
+        <div class="row task-item-row">
+          <% if !hr? %>
             <div class="col text-center">
-              <%= link_to " Create", new_task_path, class: "fa fa-pencil btn btn-outline-primary btn-lg", data: {turbolinks: false} %>
+              <%= link_to " Create", new_task_path, class: "fa fa-pencil btn btn-outline-primary btn-lg", data: {turbolinks: false, disable_with: "creating..."} %>
             </div>
             <div class="col text-center">
               <% if (@task.assign_task_by == current_user.id || current_user.admin) && !@task.approved %>
-                <%= link_to  " Edit", edit_task_path(@task), class: "fa fa-edit btn btn-outline-warning btn-lg" %>
+                <%= link_to  " Edit", edit_task_path(@task), class: "fa fa-edit btn btn-outline-warning btn-lg",data: { disable_with: "wait.." } %>
               <% end %>
             </div>
-            <div class="col text-center">
-                <%= link_to  " Back", tasks_path, class: "fa fa-hand-o-left btn btn-outline-secondary btn-lg" %>
-            </div>
-          </div>
-        <% else %>
-          <div class="row task-item-row">
+          <% else %>
             <% if @task.submit %>
               <div class="col text-center" >
-                <%= link_to  " Print", "#", onclick: "window.print(); return false;", class: "fa fa-print btn btn-outline-success btn-lg" %>
+                <%= link_to  " Print", print_task_details_tasks_path(task_id: @task.id, format: "pdf"), class: "fa fa-print btn btn-outline-success btn-lg", data: { disable_with: "printing..." } %>
               </div>
             <% end %>
-            <div class="col text-center">
-              <%= link_to  " Back", tasks_path, class: "fa fa-hand-o-left btn btn-outline-secondary btn-lg" %>
-            </div>
+          <% end %>
+          <div class="col text-center">
+            <%= link_to  " Back", request.referrer, class: "fa fa-hand-o-left btn btn-outline-secondary btn-lg" %>
           </div>
-        <% end %>
+        </div>
       </div>
     </div>
   </div>

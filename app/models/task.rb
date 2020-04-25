@@ -15,9 +15,8 @@ class Task < ApplicationRecord
 
   accepts_nested_attributes_for :sub_task, reject_if: ->(a) { a[:name].blank? }, allow_destroy: true
   
-  # after_destroy :destroy_notifications
+  after_commit :index_document
   after_create :task_reminder_email
-
   after_create { TaskMailerWorker.perform_async(self.id,"create") }
   after_update { TaskMailerWorker.perform_async(self.id,"update") }
 
@@ -28,9 +27,17 @@ class Task < ApplicationRecord
   validates :priority, inclusion: %w[High Medium Low]
   validates :repeat, inclusion: %w[One_Time Daily Weekly Monthly Quarterly Half_yearly Yearly]
   validate :valid_submit_date, on: :create
-  # has_attached_file :document
-  # validates_attachment :document, content_type: { content_type: %w[image/jpeg image/jpg image/png application/pdf] }
-  # mount_uploader :document, DocumentUploader
+
+  scope :my_assigned_tasks, ->(user_id=nil) { where(assign_task_by: user_id) }
+  scope :my_assigned_tasks_filter, ->(param=nil,user_id=nil) { where(priority: param, assign_task_by: user_id) }
+  scope :approved_tasks, ->{ where(approved: 1) }
+  scope :approved_tasks_filter, ->(param=nil) { where(priority: param, approved: 1) }
+  scope :notified_tasks, ->{ where(approved: 1, notify_hr: 1) }
+  scope :notified_tasks_filter, ->(param=nil) { where(priority: param, approved: 1, notify_hr: 1) }
+  scope :admin_task_filter, ->(param=nil) { where(priotity: param ) }
+  scope :my_task_filter, ->(param=nil, user_id) { where(priotity: param, assign_task_to: user_id ) }
+  scope :recurring_task, -> { where(repeat: true) }
+
 
   settings index: { number_of_shards: 1 } do
     mappings dynamic: 'false' do
@@ -41,7 +48,7 @@ class Task < ApplicationRecord
       indexes :assign_task_to, type: "text"
       indexes :assign_task_by, type: "text"
       indexes :search_field
-
+      
       indexes :category do
         indexes :id, type: :long
         indexes :name, type: "text", copy_to: :search_field
@@ -53,7 +60,7 @@ class Task < ApplicationRecord
       end
     end
   end
-
+  
   def as_indexed_json(options = {})
     self.as_json(
       options.merge(only: [:id,:task_name, :description, :assign_task_to],
@@ -64,10 +71,6 @@ class Task < ApplicationRecord
         }
       )
     )
-  end
-
-  def self.search(query, current_user_id)
-    __elasticsearch__.search(query: multi_match_query(query,current_user_id))
   end
 
   def self.search(query)
@@ -83,6 +86,10 @@ class Task < ApplicationRecord
         },
       }
     })
+  end
+
+  def self.search(query, current_user_id)
+    __elasticsearch__.search(query: multi_match_query(query,current_user_id))
   end
 
   def self.multi_match_query(query, current_user_id)
@@ -105,33 +112,20 @@ class Task < ApplicationRecord
     }
   end
 
-
   def valid_submit_date
     return unless submit_date.to_datetime <= DateTime.now + 1.day
 
-    errors.add(:submit_date, ' can not be assign to a previous date')
-  end
-
-  def find_user_name(user_id)
-    User.find(id: user_id).name
+    errors.add(:submit_date, " can not be assign to a previous date")
   end
 
   private
 
+  def index_document
+    IndexerWorker.perform_async
+  end
 
   def task_reminder_email
-    return if DateTime.now.utc + 7.days > self.submit_date.to_datetime
+    return if DateTime.now + 7.days > self.submit_date.to_datetime
     TaskReminderWorker.perform_at(self.submit_date.to_datetime - 7.days, self.id)
   end
 end
-
-# Delete the previous articles index in Elasticsearch
-Task.__elasticsearch__.client.indices.delete index: Task.index_name rescue nil
-
-# Create the new index with the new mapping
-Task.__elasticsearch__.client.indices.create \
-  index: Task.index_name,
-  body: { settings: Task.settings.to_hash, mappings: Task.mappings.to_hash }
-
-# Index all article records from the DB to Elasticsearch
-Task.import

@@ -10,7 +10,7 @@
               <div class="col-12 col-sm-8">
                 <div class="row">
                   <div class="col-8 text-left">
-                    <%= link_to "CREATE TASK", new_task_path, class: "btn btn-primary btn-lg", data: {turbolinks: false} %>
+                    <%= link_to "CREATE TASK", new_task_path, class: "btn btn-primary btn-lg", data: {turbolinks: false, disable_with: "creating..." } %>
                   </div>
                   <div class="col-4 text-right">
                     <%= link_to "BACK", users_dashboard_path, class: "btn btn-secondary btn-lg" %>

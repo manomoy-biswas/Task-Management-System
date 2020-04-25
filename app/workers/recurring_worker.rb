@@ -7,7 +7,7 @@ class RecurringWorker
 
   def perform
     today = DateTime.now
-    recurring_tasks = Task.where(recurring_task: 1)
+    recurring_tasks = Task.recurring_task
     recurring_tasks.each do |task|
       deadline = task.submit_date.to_datetime
       if today <= deadline

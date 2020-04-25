@@ -1,15 +1,6 @@
 class SessionsController < ApplicationController
   include SessionsHelper
-  before_action :find_user, only: [:create]
-
-  def new
-    unless logged_in?
-      return
-    else
-      flash[:warning] = I18n.t "session.logged_in"
-      redirect_to admin_login_path
-    end
-  end  
+  before_action :set_user, only: [:create]
 
   def create
     begin
@@ -34,15 +25,24 @@ class SessionsController < ApplicationController
       render "new"
     end
   end  
-
+  
   def destroy
     logout
     flash[:success] = I18n.t "session.logout_success"
     redirect_to root_path
   end
 
+  def new
+    unless logged_in?
+      return
+    else
+      flash[:warning] = I18n.t "session.logged_in"
+      redirect_to admin_login_path
+    end
+  end  
+
   private
-  def find_user
+  def set_user
     @user = User.find_by_email(params[:login][:email])
   end
 end

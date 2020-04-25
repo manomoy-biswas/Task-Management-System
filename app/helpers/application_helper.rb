@@ -18,17 +18,9 @@ module ApplicationHelper
   end
 
   def check_user_is_hr
-    unless hr?
+    if hr?
       flash[:warning] = I18n.t "application.only_hr"
       redirect_to users_dashboard_path
     end
   end
-
-  def check_user_is_hr?
-    if hr?
-      flash[:warning] = I18n.t "application.except_hr"
-      redirect_to users_dashboard_path
-    end
-  end
-
 end

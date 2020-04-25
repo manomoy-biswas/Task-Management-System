@@ -1,13 +1,6 @@
 class CategoriesController < ApplicationController
   before_action :authenticate_user!, :check_user_is_admin
   before_action :set_category, only: [:edit, :update, :destroy]
-  def index
-    @categories = Category.all
-  end
-
-  def new
-    @category = Category.new
-  end
 
   def create
     @category = Category.new(category_params)
@@ -19,8 +12,25 @@ class CategoriesController < ApplicationController
       render "new"
     end
   end
-
+  
+  def destroy
+    if @category.destroy
+      flash[:success]=I18n.t "category.destroy_success"
+    else
+      flash[:success]=I18n.t "category.faild"
+    end
+    redirect_to categories_path
+  end
+  
   def edit
+  end
+  
+  def index
+    @categories = Category.all
+  end
+
+  def new
+    @category = Category.new
   end
 
   def update
@@ -32,16 +42,7 @@ class CategoriesController < ApplicationController
       render "edit"
     end
   end
-
-  def destroy
-    if @category.destroy
-      flash[:success]=I18n.t "category.destroy_success"
-    else
-      flash[:success]=I18n.t "category.faild"
-    end
-    redirect_to categories_path
-  end
-
+  
   private
 
   def category_params

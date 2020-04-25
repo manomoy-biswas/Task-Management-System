@@ -1,8 +1,7 @@
 class User < ApplicationRecord
   has_secure_password(validations: false) 
   has_many :tasks, foreign_key: "assign_task_to", dependent: :destroy
-  # has_many :notification, foreign_key: "recipient_id"
-
+  
   VALID_EMAIL_REGEX = /\A([a-zA-Z0-9]+)([.{1}])?([a-zA-Z0-9]+)@g(oogle)?mail([.])com\z/.freeze
   VALID_PHONE_REGEX=/\A[6-9][0-9]{9}\z/.freeze
 
@@ -11,7 +10,7 @@ class User < ApplicationRecord
   before_validation { self.email = email.to_s.downcase.strip }
 
   validates :name, presence: true, length: { maximum: 50 }
-  validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }, uniqueness: true
+  validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
   validates :phone, presence: true, length: {is: 10}, format: { with: VALID_PHONE_REGEX }, uniqueness: true
   validates :dob, presence: true
   validate :valid_dob
@@ -34,15 +33,6 @@ class User < ApplicationRecord
   def self.from_omniauth(auth)
     data = auth.info
     user = User.where(email: data["email"]).first
-
-    # unless user
-    #   user = User.new(
-    #     email: data["email"],
-    #     provider: auth.provider,
-    #     uid: auth.uid,
-    #     picture: data["image"]
-    #     )
-    # end
     user
   end
   
@@ -51,11 +41,6 @@ class User < ApplicationRecord
   end
 
   private
-
-  # def destroy_notifications
-  #   notifications = Notification.where(recipient: self).all
-  #   notifications.each(&:destroy)
-  # end
 
   def valid_dob
     if dob >= Date.today

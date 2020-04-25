@@ -61,9 +61,9 @@
             </div>
             <div class="col-6">
               <% unless["edit"].include?(params[:action])%>
-                <strong><%=form.submit( "CREATE",{ class: "btn btn-primary btn-lg btn-block"})%></strong>
+                <strong><%=form.submit( "CREATE",{ class: "btn btn-primary btn-lg btn-block", data:{disable_with: "Creating.."}})%></strong>
               <% else %>
-                <strong><%=form.submit( "UPDATE",{ class: "btn btn-primary btn-lg btn-block"})%></strong>
+                <strong><%=form.submit( "UPDATE",{ class: "btn btn-primary btn-lg btn-block", data:{disable_with: "Updating..."}})%></strong>
               <% end %>
             </div>
           </p>

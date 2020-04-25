@@ -15,6 +15,8 @@ gem "jbuilder", "~> 2.7"
 gem "jquery-rails", "~> 4.3", ">= 4.3.5"
 gem "mysql2", ">= 0.4.4"
 gem "omniauth-google-oauth2", "~> 0.8.0"
+gem 'prawn', '~> 2.2', '>= 2.2.2'
+gem 'prawn-table', '~> 0.2.2'
 gem "popper_js", "~> 1.16"
 gem "puma", "~> 4.1"
 gem "rails", "~> 6.0.2", ">= 6.0.2.1"

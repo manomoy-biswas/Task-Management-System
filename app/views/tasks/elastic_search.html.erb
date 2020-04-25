@@ -11,7 +11,7 @@
               <div class="col-12 col-sm-8">
                 <div class="row">
                   <div class="col-8 text-left">
-                    <%= link_to "CREATE TASK", new_task_path, class: "btn btn-primary btn-lg", data: {turbolinks: false} %>
+                    <%= link_to "CREATE TASK", new_task_path, class: "btn btn-primary btn-lg", data: {turbolinks: false,disable_with: "creating..."} %>
                   </div>
                   <div class="col-4 text-right">
                     <%= link_to "BACK", users_dashboard_path, class: "btn btn-secondary btn-lg" %>
@@ -35,7 +35,113 @@
             </div>
           </div>
           <div class="index-table">
-            <%= render "tasks/task_list"%>
+            <table class="table table-striped table-bordered table-hover table-dark" data-toggle="table">
+              <caption class="text-center"> List of Tasks</caption>
+              <thead>
+                <tr class="text-center">
+                  <th scope= "col">#</th>
+                  <th scope= "col" data-sortable="true">Task ID</th>
+                  <th scope= "col">Task Name</th>
+                  <th scope= "col">Category</th>
+                  <th scope= "col">Priority</th>
+                  <th scope= "col">Deadline</th>
+                  <% if admin?%>
+                    <th scope= "col">Assigned To</th>
+                  <% end %>
+                  <th scope= "col">Assigned By</th>
+                  <% if admin? %>
+                    <th scope= "col"> Status</th>
+                  <% else %>
+                    <th scope= "col"> Submit Task</th>
+                  <% end %>
+                  <th scope= "col">View Task</th>
+                  <th scope= "col"> Approval</th>
+                  <% if admin? %>
+                    <th scope= "col">Edit</th>
+                    <th scope= "col">Delete</th>
+                  <%end%>
+                </tr>
+              </thead>
+              <% if @tasks.present? %>
+                <tbody id="task_table">
+                  <% i=0 %>
+                  <% @tasks.each do |task| %>
+                   <% task = find_task(task.id) %>
+                    <tr class="
+                      <% if task.submit && task.approved%>
+                      green
+                      <% elsif task.submit && !task.approved %>
+                      yellow
+                      <% else %>
+                        red
+                      <% end %>">
+                      <td><%= i=i.to_i + 1 %></td>
+                      <td class= "text-center"><%= task.id%></td>
+                      <td class= "text-center"><%= task.task_name%></td>
+                      <td class= "text-center"><%= Category.find(task.task_category).name%></td>
+                      <td id="priority" class= "text-center"><%= task.priority%></td>
+                      <td class= "text-center"><%= DateTime.parse(task.submit_date.to_s).strftime("%d-%m-%Y - %I:%M %p") %></td>
+                      <% if admin? %>
+                        <td class="text-center"><%= task.user.name %></td>
+                      <% end %>
+                      <td class= "text-center"><%= User.find(task.assign_task_by).name %></td>
+                      <td class= "text-center">
+                        <% if admin? %>
+                          <% if task.submit%>
+                            Submitted
+                          <% else %>
+                            In Progress
+                          <% end%>
+                        <%else%>
+                          <% if !task.submit%>
+                            <%= link_to "SUBMIT", submit_task_task_path(task), data: { disable_with: "wait.." }, class:"btn btn-success"%>
+                          <% else  %>
+                            Submitted
+                          <% end%>
+                        <% end %>
+                      </td>
+                      <td class="text-center">
+                        <%= link_to "", task_path(task), class:"fa fa-eye" %>
+                      </td>
+                      <td class="text-center">
+                        <% if admin? || task.assign_task_to != current_user.id %>
+                          <% if task.approved%>
+                              Approved
+                          <%else%>
+                            <%= link_to "approve", approve_task_path(task),data: { disable_with: "wait..." }, class:"btn btn-success" if task.submit%>
+                          <%end%>
+                        <% else %>
+                          <% if task.approved %>
+                            Approved
+                          <% else %>
+                            <% if task.submit %>
+                              Pending
+                            <% end %>
+                          <% end %>
+                        <% end %>
+                      </td>
+                      <% if admin? %>
+                        <td class="text-center">
+                          <% if !task.approved && task.assign_task_by == current_user.id %>
+                              <%= link_to "", edit_task_path(task), data: { disable_with: "..." }, class:"fa fa-edit" %>
+                          <%end%>
+                        </td> 
+                        <td class="text-center">
+                          <%= link_to "", task_path(task), data: {confirm: "Are you sure to delete?" }, method: :delete, data: { disable_with: "..." }, class:"fa fa-trash"%>
+                        </td>
+                      <% end %>
+                    </tr>
+                  <% end %>
+                </tbody>
+              <%else%>
+              <tbody>
+                <tr>
+                  <td colspan="13" class="text-center">No Record Found</td>
+                </tr>
+              </tbody>
+              <% end %>
+            </table>
+
           </div>
         </div>
       </div>

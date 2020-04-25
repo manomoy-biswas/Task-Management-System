@@ -2,8 +2,6 @@
 Rails.application.routes.draw do
   require "sidekiq/web"
   get :user_dashboard, "users/dashboard"
-  get :task_assigned_by_me, "tasks/assigned_by_me"
-  get :task_approved, "tasks/approved_task"
   resources :users do
     member do
       get :profile
@@ -20,6 +18,10 @@ Rails.application.routes.draw do
     collection do
       get :elastic_search
       get :new_subtask
+      get :approved_task
+      get :user_assigned_task
+      get :print_task_list
+      get :print_task_details
     end
   end
   resources :categories
