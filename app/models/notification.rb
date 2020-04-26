@@ -3,7 +3,8 @@ class Notification < ApplicationRecord
   after_create { NotificationRelayWorker.perform_async(self.id) }
   belongs_to :task, foreign_key: 'notifiable_id', required: true
 
-  scope :unread, ->{where(read_at: nil)}
+  scope :unread, ->(user_id=nil) {where(recipient_id: user_id, read_at: nil)}
+  scope :all_notification, ->(user_id=nil) {where(recipient_id: user_id)}
 
   def self.create_notification(notifiable_id, action)
     task=Task.find(notifiable_id)

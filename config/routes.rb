@@ -25,7 +25,7 @@ Rails.application.routes.draw do
     end
   end
   resources :categories
-  resources :notifications, only: [:index] do
+  resources :notifications, only: [:index,:destroy] do
     member do
       get :mark_as_read
     end

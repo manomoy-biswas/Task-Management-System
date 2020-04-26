@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_23_195621) do
+ActiveRecord::Schema.define(version: 2020_04_26_135547) do
 
   create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name"
@@ -69,6 +69,14 @@ ActiveRecord::Schema.define(version: 2020_04_23_195621) do
     t.index ["task_category"], name: "fk_rails_38c638f0b2"
   end
 
+  create_table "user_profiles", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "avater"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_user_profiles_on_user_id"
+  end
+
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name", null: false
     t.string "email"
@@ -81,7 +89,6 @@ ActiveRecord::Schema.define(version: 2020_04_23_195621) do
     t.boolean "hr", default: false
     t.string "provider"
     t.string "uid"
-    t.string "picture"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["phone"], name: "index_users_on_phone", unique: true
   end
@@ -91,4 +98,5 @@ ActiveRecord::Schema.define(version: 2020_04_23_195621) do
   add_foreign_key "task_documents", "tasks"
   add_foreign_key "tasks", "categories", column: "task_category"
   add_foreign_key "tasks", "users", column: "assign_task_to"
+  add_foreign_key "user_profiles", "users"
 end

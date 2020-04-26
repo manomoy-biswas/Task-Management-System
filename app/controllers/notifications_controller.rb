@@ -1,6 +1,18 @@
 class NotificationsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_notification, only: [:mark_as_read]
+  before_action :set_notification, only: [:destroy, :mark_as_read]
+
+  def destroy
+    return unless @notification.recipient_id == current_user.id
+    
+    if @notification.present?
+      @notification.destroy
+      flash[:success] = "Notification deleted"
+      redirect_to request.referrer
+    else
+      flash[:danger] = "Notification doesn't exist."
+    end
+  end
   
   def mark_all_read
     @notifications = Notification.where(recipient_id: current_user.id).unread
