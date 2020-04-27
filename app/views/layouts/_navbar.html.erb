@@ -89,12 +89,17 @@
           </div>
         </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a class="dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <% if current_user.avater? %>
+              <%= image_tag current_user.avater.url(:thumb) ,class: "profile-circle"%>
+            <% else %>
+              <%= image_tag "blank-profile-picture-male.png", class:"blank-circle"%> 
+            <% end %>
             <strong><%= current_user.name %></strong>
           </a>
           <div class="dropdown-menu logout-menu dropdown-menu-right text-center" aria-labelledby="navbarDropdown">
-            <%= link_to "Change Profile", profile_user_path(current_user.id) %>
-            <%= link_to "Logout", logout_path, method:"delete" %>
+            <div><%= link_to "Change Profile", user_path(current_user.id) %></div>
+            <div><%= link_to "Logout", logout_path, method:"delete" %></div>
           </div>
         </li>
       </ul>

@@ -3,19 +3,21 @@ class TasksController < ApplicationController
   include TasksHelper
   
   before_action :authenticate_user!
-  before_action :check_user_is_hr, except: [:index, :approved_task, :print_task_list, :print_task_details, :show, :submit_task, :submit_subtask]
+  before_action :check_user_is_hr, except: [:index, :approved_task, :print_task_list, 
+                :print_task_details, :show, :submit_tas,:submit_subtask, :elastic_search]
   before_action :category_list, :employee_list, only: [:new, :create, :edit, :update]
-  before_action :set_task, only: [:approve, :destroy, :download, :edit, :notify_hr, :show, :submit_task, :update]
+  before_action :set_task, only: [:approve, :destroy, :download, :edit, :notify_hr, :show, 
+                :submit_task, :update]
   
   def approve
-    if @task.assign_task_to == current_user.id
-      return
-    end
+    return if @task.assign_task_to == current_user.id
+
     unless @task.submit
       flash[:warning] = "Employee not Submitted the task yet."
       redirect_to request.referrer
       return
     end
+
     if @task.approved
       flash[:success] = "already Approved"
       redirect_to request.referrer
@@ -36,9 +38,8 @@ class TasksController < ApplicationController
   end
   
   def approved_task
-    unless admin? || hr?
-      return
-    end
+    return unless admin? || hr?
+
     @tasks_approved = if admin?
                         if !params[:priority] || params[:priority] == ""
                           Task.approved_tasks.order("created_at DESC")
@@ -63,12 +64,15 @@ class TasksController < ApplicationController
   end
 
   def create
-    return if hr?
-
     @task = Task.new(task_params)
+    
+    if hr? || User.find(@task.assign_task_to).admin || @task.assign_task_to == current_user
+      redirect_to root_path
+    end
+    
     @task.assign_task_by = current_user.id
     @task.submit_date = task_params[:submit_date].to_datetime
-    unless task_params[:repeat] == "One Time"
+    unless task_params[:repeat] == "One_Time"
       @task.recurring_task = true
     end
     if @task.save
@@ -87,7 +91,7 @@ class TasksController < ApplicationController
   end
 
   def destroy
-    return unless admin? || hr? || @task.assign_task_to == current_user.id
+    return unless admin? || @task.assign_task_to == current_user.id
     if @task.present?
       taskname= " id: " + @task.id.to_s + " " + @task.task_name
       @task.destroy
@@ -117,6 +121,9 @@ class TasksController < ApplicationController
   end
 
   def edit
+    unless @task.assign_task_by == current_user.id
+      redirect_to root_path
+    end
   end
 
   def elastic_search
@@ -126,7 +133,7 @@ class TasksController < ApplicationController
       return
     end  
     if admin? || hr?
-      @tasks = Task.search(params[:q].present? ? params[:q] : nil)
+      @tasks = Task.all_task_search(params[:q].present? ? params[:q] : nil)
     else
       @tasks = Task.search((params[:q].present? ? params[:q] : nil), current_user.id)
     end  
@@ -153,9 +160,7 @@ class TasksController < ApplicationController
   end
   
   def notify_hr
-    return unless admin?
-    
-    return unless @task.approved
+    return unless admin? && @task.approved
     
     @task.notify_hr = true
     @task.save
@@ -228,6 +233,9 @@ class TasksController < ApplicationController
     if @task.approved 
       redirect_to user_dashboard_path
       return
+    end
+    if hr? || User.find(task_params[:assign_task_to]).admin || task_params[:assign_task_to] == current_user.id
+      redirect_to root_path
     end
 
     if task_params[:repeat] == "One_Time"

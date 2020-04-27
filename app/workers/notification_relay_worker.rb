@@ -1,7 +1,6 @@
 class NotificationRelayWorker
   include Sidekiq::Worker
   sidekiq_options retry: true
-  # sidekiq_options queue: "notification"
 
   def perform(notification_id)
     @notification = Notification.find(notification_id)
@@ -37,7 +36,7 @@ class NotificationRelayWorker
       end
     end
 
-    count = Notification.where(recipient_id: @notification.recipient_id).unread.count
+    count = Notification.unread(@notification.recipient_id).count
     ActionCable.server.broadcast "notifications_channel_#{@notification.recipient_id}", content: content, count: count
   end
   

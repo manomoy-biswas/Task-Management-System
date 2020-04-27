@@ -1,5 +1,5 @@
 <div class="page-wrapper">
-  <div class="show-wrapper">
+  <div class="task-show-wrapper">
     <div class="card card-6">
       <div class="card-body">
         <h1 class="text-center"><%= @task.task_name %></h1>
@@ -66,9 +66,9 @@
               <div class="col-1 col-sm-1 col-md-1 text-right">
                 <% if @task.assign_task_to == current_user.id %>
                   <% if subtask.submit %>
-                    <span class="green"><i class="btn btn-outline-success btn-sm fa fa-check-circle"></i> Submitted</span> 
+                    <span class="green"><i class="btn btn-outline-success btn-sm fa fa-check-circle"></i></span> 
                   <% else %>
-                    <span class="red"><%= link_to  "", submit_subtask_task_path(subtask), class: "btn btn-outline-danger btn-sm fa fa-circle-o" %> Submit</span>
+                    <span class="red"><%= link_to  "", submit_subtask_task_path(subtask), class: "btn btn-outline-danger btn-sm fa fa-circle-o" %></span>
                   <% end %>
                 <% end %>
               </div>

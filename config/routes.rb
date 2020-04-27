@@ -3,8 +3,8 @@ Rails.application.routes.draw do
   require "sidekiq/web"
   get :user_dashboard, "users/dashboard"
   resources :users do
-    member do
-      get :profile
+    collection do
+      get :print_user_list
     end
   end
   resources :tasks do

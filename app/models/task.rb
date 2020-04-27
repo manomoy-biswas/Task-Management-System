@@ -35,8 +35,8 @@ class Task < ApplicationRecord
   scope :notified_tasks, ->{ where(approved: 1, notify_hr: 1) }
   scope :notified_tasks_filter, ->(param=nil) { where(priority: param, approved: 1, notify_hr: 1) }
   scope :admin_task_filter, ->(param=nil) { where(priotity: param ) }
-  scope :my_task_filter, ->(param=nil, user_id) { where(priotity: param, assign_task_to: user_id ) }
-  scope :recurring_task, -> { where(repeat: true) }
+  scope :my_task_filter, ->(param=nil, user_id) { where(priority: param , assign_task_to: user_id ) }
+  scope :recurring_task, -> { where(repeat: true) } 
 
 
   settings index: { number_of_shards: 1 } do
@@ -73,7 +73,7 @@ class Task < ApplicationRecord
     )
   end
 
-  def self.search(query)
+  def self.all_task_search(query)
     __elasticsearch__.search(query:{
       bool: {  
         must: {

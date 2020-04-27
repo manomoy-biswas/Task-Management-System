@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   has_secure_password(validations: false) 
   has_many :tasks, foreign_key: "assign_task_to", dependent: :destroy
+  mount_uploader :avater, AvaterUploader
   
   VALID_EMAIL_REGEX = /\A([a-zA-Z0-9]+)([.{1}])?([a-zA-Z0-9]+)@g(oogle)?mail([.])com\z/.freeze
   VALID_PHONE_REGEX=/\A[6-9][0-9]{9}\z/.freeze
@@ -15,7 +16,10 @@ class User < ApplicationRecord
   validates :dob, presence: true
   validate :valid_dob
   validates :password, presence: true, length: { minimum: 5 }, allow_nil: true
-  mount_uploader :picture, ProfilePictureUploader
+  scope :all_users_except_admin, -> { where(admin: false)}
+  scope :all_hr, -> { where(hr: true) }
+  scope :all_admin, -> { where(admin: true) }
+  scope :all_employee, -> {where(admin: false, hr: false)}
 
   def digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost

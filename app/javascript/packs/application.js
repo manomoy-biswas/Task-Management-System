@@ -37,8 +37,9 @@ $(document).unbind('keydown').bind('keydown', function (event) {
   }
 });
 
-$("file-input").change(function(event){
-    this.form.submit()
-    
+$(document).ready(function(){
+  $('#file-input').on('change', function() { 
+    $('#update_avater').submit(); 
   });
+});
   

@@ -13,6 +13,7 @@ gem "elasticsearch-rails"
 gem "font-awesome-rails", "~> 4.7", ">= 4.7.0.5"
 gem "jbuilder", "~> 2.7"
 gem "jquery-rails", "~> 4.3", ">= 4.3.5"
+gem "mini_magick", "~> 4.10", ">= 4.10.1"
 gem "mysql2", ">= 0.4.4"
 gem "omniauth-google-oauth2", "~> 0.8.0"
 gem 'prawn', '~> 2.2', '>= 2.2.2'

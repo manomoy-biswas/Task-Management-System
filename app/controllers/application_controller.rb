@@ -3,8 +3,6 @@ class ApplicationController < ActionController::Base
   include ApplicationHelper
   before_action :set_cache_headers
   helper_method :current_user
-
-
   private
   
   def set_cache_headers

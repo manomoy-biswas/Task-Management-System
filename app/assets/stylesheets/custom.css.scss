@@ -8,6 +8,9 @@
   box-sizing: border-box;
   font: 400 14px/1.5 "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
 }
+ul{
+  list-style: none;
+}
 a,
 a:hover{
   text-decoration: none;
@@ -55,6 +58,14 @@ a:hover{
 }
 .select-center{
   text-align-last: center;
+}
+.profile-circle{
+  border-radius: 50%;
+}
+.blank-circle{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
 }
 .dropdown-toggle::before{
   content: none;
@@ -107,6 +118,13 @@ max-width: 700px;
   color: #f3dc0a;
   text-decoration: none;
 }
+.fa-mobile{
+  font-size: 50px;
+  width: 50px;
+}
+.fa-envelope{
+  width: 50px;
+}
 .fa-eye:hover,
 .fa-edit:hover,
 .fa-trash:hover,
@@ -122,13 +140,15 @@ max-width: 700px;
   color: #000000;
   text-decoration: none;
 }
-.fa-users, 
-.fa-tasks,
-.fa-tag,
-.fa-pencil-square-o,
-.fa-check-square,
-.fa-check-circle{
-  font-size: 74px;
+.dashboard{
+  .fa-users, 
+  .fa-tasks,
+  .fa-tag,
+  .fa-pencil-square-o,
+  .fa-check-square,
+  .fa-check-circle{
+    font-size: 74px;
+  }
 }
 .signin-btn{
   border-radius: 50px;
@@ -205,9 +225,6 @@ border-bottom: 1px solid #dbdaff;
   background-color: #bb5013;
   border-color: #bb5013;
 }
-// .btn{
-//   border-radius: 25px;
-// }
 .box{
 	height: 150px;
   width: 90%;
@@ -264,7 +281,6 @@ border-bottom: 1px solid #dbdaff;
   .nav-item a {
     font-size: 16px;
     font-weight: bold;
-    // text-transform: uppercase;
   }
 
 }

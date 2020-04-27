@@ -8,112 +8,128 @@
     <h1 class="text-center">Employee Dashboard</h1>
   <% end %>
   <br />
-  
-  <% if admin? %>
-    <div class="row">
-      <div class="col-sm-12 col-md-4">
-        <div class="text-center">
-          <%= link_to users_path, class: "box btn btn-success" do%>
-            <div class="dashboard-wrapper">
-              <div class="user-icon">
-                <i class="fa fa-users"></i>
+  <div class="dashboard">
+    <% if admin? %>
+      <div class="row">
+        <div class="col-sm-12 col-md-4">
+          <div class="text-center">
+            <%= link_to users_path, class: "box btn btn-success" do%>
+              <div class="dashboard-wrapper">
+                <div class="user-icon">
+                  <i class="fa fa-users"></i>
+                </div>
+                <div class="user-text">
+                  <h2><%= User.total_users %></h2>
+                  <span>Users</span>
+                </div>
               </div>
-              <div class="user-text">
-                <h2><%= User.total_users %></h2>
-                <span>Users</span>
+            <% end %>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-4">
+          <div class="text-center">
+            <%= link_to categories_path, class: "box btn btn-danger" do %>
+              <div class="dashboard-wrapper">
+                <div class="fa fa-tag" aria-hidden="true"></div>
+                <h2>Category</h2>
               </div>
-            </div>
-          <% end %>
+            <% end %>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-4">
+          <div class="text-center">
+            <%= link_to tasks_path("All"), class: "box btn btn-info" do %>
+              <div class="dashboard-wrapper">
+                <div class="fa fa-tasks" aria-hidden="true"></div>
+                <h2>Tasks</h2>
+              </div>
+            <% end %>
+          </div>
         </div>
       </div>
-      <div class="col-sm-12 col-md-4">
-        <div class="text-center">
-          <%= link_to categories_path, class: "box btn btn-danger" do %>
-            <div class="dashboard-wrapper">
-              <div class="fa fa-tag" aria-hidden="true"></div>
-              <h2>Category</h2>
-            </div>
-          <% end %>
+      <div class="row">
+        <div class="col-sm-12 col-md-4">
+          <div class="text-center">
+            <%= link_to approved_task_tasks_path, class: "box btn btn-orange" do %>
+              <div class="dashboard-wrapper">
+                <div class="fa fa-check-circle" aria-hidden="true"></div>
+                <h2>Approved Tasks</h2>
+              </div>
+            <% end %>
+          </div>
         </div>
       </div>
-      <div class="col-sm-12 col-md-4">
-        <div class="text-center">
-          <%= link_to tasks_path("All"), class: "box btn btn-info" do %>
-            <div class="dashboard-wrapper">
-              <div class="fa fa-tasks" aria-hidden="true"></div>
-              <h2>Tasks</h2>
-            </div>
-          <% end %>
+    <% elsif hr? %>
+      <div class="row">
+        <div class="col-sm-12 col-md-4">
+          <div class="text-center">
+            <%= link_to users_path, class: "box btn btn-success" do%>
+              <div class="dashboard-wrapper">
+                <div class="user-icon">
+                  <i class="fa fa-users"></i>
+                </div>
+                <div class="user-text">
+                  <h2><%= User.total_users %></h2>
+                  <span>Users</span>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-4">
+          <div class="text-center">
+            <%= link_to tasks_path, class: " box btn btn-info" do%>
+              <div class="dashboard-wrapper">
+                <div class="fa fa-tasks" aria-hidden="true"></div>
+                <h2>Task</h2>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-4">
+          <div class="text-center">
+            <%= link_to approved_task_tasks_path, class: "box btn btn-orange" do%>
+              <div class="dashboard-wrapper">
+                <div class="fa fa-check-circle" aria-hidden="true"></div>
+                <h2>Approved Tasks</h2>
+              </div>
+            <% end %>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-12 col-md-4">
-        <div class="text-center">
-          <%= link_to approved_task_tasks_path, class: "box btn btn-orange" do %>
-            <div class="dashboard-wrapper">
-              <div class="fa fa-check-circle" aria-hidden="true"></div>
-              <h2>Approved Tasks</h2>
-            </div>
-          <% end %>
+    <%else %>
+      <div class="row">
+        <div class="col-sm-12 col-md-4">
+          <div class="text-center">
+            <%= link_to new_task_path, class: " box btn btn-primary" do%>
+              <div class="dashboard-wrapper">
+                <div class="fa fa-pencil-square-o" aria-hidden="true"></div>
+                <h2>Create Tasks</h2>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-4">
+          <div class="text-center">
+            <%= link_to tasks_path, class: " box btn btn-danger" do%>
+              <div class="dashboard-wrapper">
+                <div class="fa fa-tasks" aria-hidden="true"></div>
+                <h2>My Tasks</h2>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-4">
+          <div class="text-center">
+            <%= link_to user_assigned_task_tasks_path, class: " box btn btn-info" do%>
+              <div class="dashboard-wrapper">
+                <div class="fa fa-check-square" aria-hidden="true"></div>
+                <h2>Set Tasks</h2>
+              </div>
+            <% end %>
+          </div>
         </div>
       </div>
-    </div>
-  <% elsif hr? %>
-    <div class="row">
-      <div class="col-sm-12 col-md-4">
-        <div class="text-center">
-          <%= link_to tasks_path, class: " box btn btn-info" do%>
-            <div class="dashboard-wrapper">
-              <div class="fa fa-tasks" aria-hidden="true"></div>
-              <h2>Task</h2>
-            </div>
-          <% end %>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-4">
-        <div class="text-center">
-          <%= link_to approved_task_tasks_path, class: "box btn btn-orange" do%>
-            <div class="dashboard-wrapper">
-              <div class="fa fa-check-circle" aria-hidden="true"></div>
-              <h2>Approved Tasks</h2>
-            </div>
-          <% end %>
-        </div>
-      </div>
-    </div>
-  <%else %>
-    <div class="row">
-      <div class="col-sm-12 col-md-4">
-        <div class="text-center">
-          <%= link_to new_task_path, class: " box btn btn-primary" do%>
-            <div class="dashboard-wrapper">
-              <div class="fa fa-pencil-square-o" aria-hidden="true"></div>
-              <h2>Create Tasks</h2>
-            </div>
-          <% end %>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-4">
-        <div class="text-center">
-          <%= link_to tasks_path, class: " box btn btn-danger" do%>
-            <div class="dashboard-wrapper">
-              <div class="fa fa-tasks" aria-hidden="true"></div>
-              <h2>My Tasks</h2>
-            </div>
-          <% end %>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-4">
-        <div class="text-center">
-          <%= link_to user_assigned_task_tasks_path, class: " box btn btn-info" do%>
-            <div class="dashboard-wrapper">
-              <div class="fa fa-check-square" aria-hidden="true"></div>
-              <h2>Set Tasks</h2>
-            </div>
-          <% end %>
-        </div>
-      </div>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 </div>

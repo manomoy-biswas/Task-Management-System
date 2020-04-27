@@ -29,11 +29,38 @@
 .image-upload > label{
   cursor:pointer;
 }
-.avater{
-  width: 150px;
-  height: 150px;
-  border-top-left-radius: 50% 50%;
-  border-top-right-radius: 50% 50%;
-  border-bottom-right-radius: 50% 50%;
-  border-bottom-left-radius: 50% 50%;
+.img-circle {
+  border-radius: 50%;
+}
+.user-show-wrapper{
+  margin:0 auto;
+  max-width: 1000px;
+}
+.user-name,
+.user-position,
+.container-details,
+.user-dob{
+  text-align: center;
+}
+.user-email,
+.user-phone{
+  font-size: 20px;
+}
+.user-name{
+  color: #1d06f1;
+}
+.user-edit-button{
+  text-align: center;
+}
+
+@media screen and (min-width: 768px){
+  .user-name,
+  .user-position,
+  .container-details,
+  .user-dob{
+    text-align: left;
+  }
+  .user-edit-button{
+    text-align: right;
+  }
 }

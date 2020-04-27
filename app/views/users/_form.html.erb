@@ -2,10 +2,10 @@
   <div class="wrapper">
     <div class="card">
       <div class="card-body">
-        <% unless["edit"].include?(params[:action])%>
-          <h1 class="title text-center"> Employee Registration Form</h1>
-        <% else %>
+        <% if["edit"].include?(params[:action])%>
           <h1 class="title text-center"> Update Employee Details </h1>
+        <% else %>
+          <h1 class="title text-center"> Employee Registration Form</h1>
         <% end %>
         <%= form_for @user do |form| %>
 
@@ -24,7 +24,11 @@
           <div class="form-group row">
             <%= form.label :Gmail_id, for: "email", class:"col-sm-2 col-form-label"%>
             <div class="col-sm-10">
-              <%= form.email_field :email, class: "form-control", placeholder: "Enter your Gmail ID", required: true %>  
+              <% if ["edit"].include?(params[:action]) && !admin? %>
+                <%= form.label :email, @user.email, class: "form-control" %>  
+              <% else %>
+                <%= form.email_field :email, class: "form-control", placeholder: "Enter your Gmail ID", required: true %>  
+              <% end %>
             </div>
           </div>
           <div class="row">
@@ -57,7 +61,7 @@
 
           <div class="row">
             <div class="col-6">
-              <strong><%= link_to  "BACK", users_path, class: "btn btn-danger btn-lg btn-block" %></strong>
+              <strong><%= link_to  "BACK", request.referrer, class: "btn btn-danger btn-lg btn-block" %></strong>
             </div>
             <div class="col-6">
               <% unless["edit"].include?(params[:action])%>
