@@ -34,6 +34,8 @@ gem "zip-zip"
 group :development, :test do
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
   gem "faker", "~> 1.9", ">= 1.9.6"
+  gem "letter_opener", "~> 1.7"
+  gem "letter_opener_web", "~> 1.4"
 end
 
 group :development do

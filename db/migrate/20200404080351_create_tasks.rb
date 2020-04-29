@@ -9,7 +9,6 @@ class CreateTasks < ActiveRecord::Migration[6.0]
       t.string :repeat, null: false
       t.datetime :submit_date, null: false
       t.boolean :recurring_task, default: false
-      t.attachment :document
 
       t.timestamps
     end

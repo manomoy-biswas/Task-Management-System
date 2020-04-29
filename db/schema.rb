@@ -19,10 +19,10 @@ ActiveRecord::Schema.define(version: 2020_04_26_180311) do
   end
 
   create_table "notifications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.bigint "user_id"
-    t.integer "recipient_id"
+    t.bigint "user_id", null: false
+    t.integer "recipient_id", null: false
     t.datetime "read_at"
-    t.string "action"
+    t.string "action", null: false
     t.string "notifiable_type"
     t.bigint "notifiable_id"
     t.datetime "created_at", precision: 6, null: false
@@ -32,12 +32,12 @@ ActiveRecord::Schema.define(version: 2020_04_26_180311) do
 
   create_table "sub_tasks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name"
+    t.boolean "submit", default: false
     t.datetime "submitdate"
     t.bigint "task_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.text "subtask_description", size: :long
-    t.boolean "submit", default: false, null: false
     t.index ["task_id"], name: "index_sub_tasks_on_task_id"
   end
 

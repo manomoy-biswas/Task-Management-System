@@ -40,6 +40,6 @@ Rails.application.routes.draw do
   get :admin_login, to: "sessions#new"
   delete :logout, to: "sessions#destroy"
   root "home#index"
-
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
   mount Sidekiq::Web, at: "/sidekiq"
 end
