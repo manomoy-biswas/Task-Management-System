@@ -1,5 +1,3 @@
-require "faker"
-
 admin = User.new(id: 1, name: "Admin", email: "admin@gmail.com", phone:"123456789", dob: "01-01-2000", password: "admin", password_confirmation: "admin", admin: true, hr: false).save(validate: false)
 
 user1 = User.new(id: 2, name: "Arnab Roy", email: "arnab.roy@kreeti.com", dob: "01-01-1996").save(Validate: false)
