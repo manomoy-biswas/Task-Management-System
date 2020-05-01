@@ -1,7 +1,9 @@
 class Notification < ApplicationRecord
   include SessionsHelper
   after_create { NotificationRelayWorker.perform_async(self.id) }
-  belongs_to :task, foreign_key: 'notifiable_id', required: true
+  belongs_to :task, foreign_key: "notifiable_id", required: true
+  belongs_to :user, foreign_key: "user_id", required: true
+  belongs_to :recipient, class_name: "User", foreign_key: "recipient_id"
 
   scope :unread, ->(user_id=nil) {where(recipient_id: user_id, read_at: nil)}
   scope :all_notification, ->(user_id=nil) {where(recipient_id: user_id)}

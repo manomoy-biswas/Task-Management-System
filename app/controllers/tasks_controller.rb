@@ -6,7 +6,7 @@ class TasksController < ApplicationController
   before_action :check_user_is_hr, except: [:index, :approved_task, :print_task_list, 
                 :print_task_details, :show, :submit_tas,:submit_subtask, :elastic_search]
   before_action :category_list, :employee_list, only: [:new, :create, :edit, :update]
-  before_action :set_task, only: [:approve, :destroy, :download, :edit, :notify_hr, :show, 
+  before_action :set_task, only: [:approve, :destroy, :download, :edit, :notify_hr, :show,
                 :submit_task, :update]
   
   def approve
@@ -121,7 +121,7 @@ class TasksController < ApplicationController
   end
 
   def edit
-    unless @task.assign_task_by == current_user.id
+    unless @task.assign_task_by == current_user.id || admin?
       redirect_to root_path
     end
   end
@@ -132,7 +132,7 @@ class TasksController < ApplicationController
       redirect_to tasks_path
       return
     end  
-    if admin? || hr?
+    if admin?
       @tasks = Task.all_task_search(params[:q].present? ? params[:q] : nil)
     else
       @tasks = Task.search((params[:q].present? ? params[:q] : nil), current_user.id)
@@ -142,13 +142,13 @@ class TasksController < ApplicationController
   def index
     @tasks =  if admin?
                 if !params[:priority] || params[:priority] == ""
-                  Task.all.order("created_at DESC")
+                  Task.includes(:user, :assign_by, :category).order("created_at DESC")
                 else
-                  Task.admin_task_filter(params[:priority]).order("created_at DESC")
+                  Task.admin_task_filter(params[:priority]).includes(:user, :assign_by, :category).order("created_at DESC")
                 end    
               else
                 if !params[:priority] || params[:priority] == ""
-                  current_user.tasks
+                  current_user.tasks.includes(:assign_by, :category)
                 else
                   Task.my_task_filter(params[:priority], current_user.id).order("created_at DESC")
                 end  
@@ -196,6 +196,10 @@ class TasksController < ApplicationController
   end
   
   def show
+    unless @task.assign_task_to == current_user.id || @task.assign_task_by == current_user.id || admin?
+      flash[:danger] = "You are trying to visit other employees task"
+      redirect_to user_dashboard_path
+    end
   end
   
   def submit_subtask
@@ -222,18 +226,18 @@ class TasksController < ApplicationController
       flash[:success] = I18n.t "task.submit_task.success"
       redirect_to request.referrer
     end
-
   end  
   
   def update
-    unless @task.assign_task_by == current_user.id
+    unless @task.assign_task_by == current_user.id || admin?
       redirect_to user_dashboard_path
       return
     end
-    if @task.approved 
+    if @task.approved && !admin?
       redirect_to user_dashboard_path
       return
     end
+    
     if hr? || User.find(task_params[:assign_task_to]).admin || task_params[:assign_task_to] == current_user.id
       redirect_to root_path
     end
@@ -248,7 +252,7 @@ class TasksController < ApplicationController
     if @task.update(task_params)
       if params[:task_document].present?
         params[:task_document]["document"].each do |file|
-          @task_document = @task.task_document.create(document: file, task_id: @task.id)
+          @task_document = @task.task_document.update(document: file, task_id: @task.id)
         end
       end
       Notification.create_notification(@task.id, "updated")

@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   has_secure_password(validations: false) 
   has_many :tasks, foreign_key: "assign_task_to", dependent: :destroy
+  has_many :notifications, foreign_key: "user_id"
   mount_uploader :avater, AvaterUploader
   
   VALID_EMAIL_REGEX = /\A([a-zA-Z0-9]+)([.{1}])?([a-zA-Z0-9]+)@g(oogle)?mail([.])com\z/.freeze

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_26_180311) do
+ActiveRecord::Schema.define(version: 2020_05_01_125540) do
 
   create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name"
@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(version: 2020_04_26_180311) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["notifiable_id"], name: "fk_rails_4b545d474c"
+    t.index ["user_id"], name: "fk_rails_b080fb4855"
   end
 
   create_table "sub_tasks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -65,6 +66,7 @@ ActiveRecord::Schema.define(version: 2020_04_26_180311) do
     t.boolean "approved", default: false
     t.boolean "notify_hr", default: false
     t.bigint "approved_by"
+    t.index ["assign_task_by"], name: "fk_rails_d83cdb5373"
     t.index ["assign_task_to"], name: "fk_rails_8503550591"
     t.index ["task_category"], name: "fk_rails_38c638f0b2"
   end
@@ -87,8 +89,10 @@ ActiveRecord::Schema.define(version: 2020_04_26_180311) do
   end
 
   add_foreign_key "notifications", "tasks", column: "notifiable_id"
+  add_foreign_key "notifications", "users"
   add_foreign_key "sub_tasks", "tasks"
   add_foreign_key "task_documents", "tasks"
   add_foreign_key "tasks", "categories", column: "task_category"
+  add_foreign_key "tasks", "users", column: "assign_task_by"
   add_foreign_key "tasks", "users", column: "assign_task_to"
 end

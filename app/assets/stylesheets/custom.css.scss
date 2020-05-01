@@ -70,12 +70,6 @@ a:hover{
 .dropdown-toggle::before{
   content: none;
 }
-.mobile-notify{
-  display: inline-block;
-}
-.desktop-notify{
-  display: none;
-}
 .wrapper{
 margin:0 auto;
 max-width: 700px;
@@ -179,7 +173,7 @@ display: flex;
 flex-wrap: wrap;
 align-items: center;
 padding: 10px 0;
-border-bottom: 1px solid #dbdaff;
+// border-bottom: 1px solid #dbdaff;
 }
 .notify-info{
   text-align: left !important;
@@ -187,7 +181,7 @@ border-bottom: 1px solid #dbdaff;
 .notify-info p{
  width: 200px;
 }
-.notify-content:nth-last-child(){
+.notify-content:nth-last-child(1){
   border-bottom: 0px;
 }
 .notify-image{
@@ -262,14 +256,10 @@ border-bottom: 1px solid #dbdaff;
     position: relative;
     top:0;
   }
-  .mobile-notify{
-    display: none;
-  }
   .desktop-notify{
-    display: inline-block;
     height: 60px;
     margin-left: 25px;
-    padding-top: 10px;
+    padding-top: 15px;
   }
   .nav-item {
     background:transparent;

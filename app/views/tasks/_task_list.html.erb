@@ -40,13 +40,13 @@
           <td><%= i=i.to_i + 1 %></td>
           <td class= "text-center"><%= task.id%></td>
           <td class= "text-center"><%= task.task_name%></td>
-          <td class= "text-center"><%= Category.find(task.task_category).name%></td>
+          <td class= "text-center"><%= task.category.name%></td>
           <td id="priority" class= "text-center"><%= task.priority%></td>
           <td class= "text-center"><%= DateTime.parse(task.submit_date.to_s).strftime("%d-%m-%Y - %I:%M %p") %></td>
           <% if admin? %>
             <td class="text-center"><%= task.user.name %></td>
           <% end %>
-          <td class= "text-center"><%= User.find(task.assign_task_by).name %></td>
+          <td class= "text-center"><%= task.assign_by.name %></td>
           <td class= "text-center">
             <% if admin? %>
               <% if task.submit%>
@@ -66,15 +66,11 @@
             <%= link_to "", task_path(task), class:"fa fa-eye" %>
           </td>
           <td class="text-center">
-            <% if admin? || task.assign_task_to != current_user.id %>
-              <% if task.approved%>
-                  Approved
-              <%else%>
-                <%= link_to "approve", approve_task_path(task),data: { disable_with: "wait..." }, class:"btn btn-success" if task.submit%>
-              <%end%>
+            <% if task.approved%>
+              Approved
             <% else %>
-              <% if task.approved %>
-                Approved
+              <% if admin? || task.assign_task_by == current_user.id %>
+                <%= link_to "approve", approve_task_path(task),data: { disable_with: "wait..." }, class:"btn btn-success" if task.submit%>
               <% else %>
                 <% if task.submit %>
                   Pending
@@ -82,12 +78,10 @@
               <% end %>
             <% end %>
           </td>
-          <% if admin? %>
+          <% if admin? || task.assign_task_by == current_user.id %>
             <td class="text-center">
-              <% if !task.approved && task.assign_task_by == current_user.id %>
-                  <%= link_to "", edit_task_path(task), data: { disable_with: "..." }, class:"fa fa-edit" %>
-              <%end%>
-            </td> 
+              <%= link_to "", edit_task_path(task), data: { disable_with: "..." }, class:"fa fa-edit" %>
+            </td>
             <td class="text-center">
               <%= link_to "", task_path(task), data: {confirm: "Are you sure to delete?" }, method: :delete, data: { disable_with: "..." }, class:"fa fa-trash"%>
             </td>
@@ -103,3 +97,4 @@
   </tbody>
   <% end %>
 </table>
+

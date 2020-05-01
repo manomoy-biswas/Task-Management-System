@@ -12,3 +12,9 @@
   display: grid;
 align-items: center;  
 }
+.notification-row{
+  border-bottom: 1px solid #dbdaff;
+}
+.notification-row:nth-last-child(1){
+  border-bottom: none;
+}

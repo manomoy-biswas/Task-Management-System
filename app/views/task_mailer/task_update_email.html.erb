@@ -17,16 +17,18 @@
         <%= @task.task_name %>
       </th>
       </thead>
-      <tbody>
+      <tbody class="mailer-table-body">
       <tr>
         <td><strong>Task ID         :</strong></td>
         <td colspan="2"><%= @task.id%></td>
+      </tr>
+      <tr>
         <td><strong>Task Category   :</strong></td>
         <td colspan="2"><%= @task.category.name%></td>
       </tr>
       <% if @task.sub_task.present? %>
         <tr>
-          <td class="red"><strong>Sub tasks       :</strong></td>
+          <td class="red text-alignment"><strong>Sub tasks       :</strong></td>
           <td colspan="2">
             <table>
               <% @task.sub_task.each do |subtask| %>

@@ -3,9 +3,9 @@ require 'elasticsearch/model'
 class Task < ApplicationRecord
   include SessionsHelper
   include Elasticsearch::Model
-  include Elasticsearch::Model::Callbacks
 
-  belongs_to :user, foreign_key: 'assign_task_to', required: true
+  belongs_to :user, foreign_key: "assign_task_to", required: true
+  belongs_to :assign_by, class_name: "User", foreign_key: "assign_task_by"
   belongs_to :category, foreign_key: 'task_category', required: true
   has_many :notification, foreign_key: 'notifiable_id', dependent: :destroy
   has_many :sub_task, dependent: :destroy
@@ -15,14 +15,14 @@ class Task < ApplicationRecord
 
   accepts_nested_attributes_for :sub_task, reject_if: ->(a) { a[:name].blank? }, allow_destroy: true
   
-  after_commit :index_document
+  # after_commit :index_document
   after_create :task_reminder_email
   after_create { TaskMailerWorker.perform_async(self.id,"create") }
   after_update { TaskMailerWorker.perform_async(self.id,"update") }
 
-  VALID_TASK_NAME_REGEX = /\A[a-zA-Z][a-zA-Z\. ]*\z/.freeze
+  # VALID_TASK_NAME_REGEX = /\A[a-zA-Z][a-zA-Z\. ]*\z/.freeze
 
-  validates :task_name, presence: true, length: { maximum: 255 }, format: { with: VALID_TASK_NAME_REGEX }, uniqueness: true
+  validates :task_name, presence: true, length: { maximum: 255 }, uniqueness: true
   validates :priority, :repeat, :assign_task_to, :task_category, :submit_date, presence: true
   validates :priority, inclusion: %w[High Medium Low]
   validates :repeat, inclusion: %w[One_Time Daily Weekly Monthly Quarterly Half_yearly Yearly]
@@ -34,9 +34,10 @@ class Task < ApplicationRecord
   scope :approved_tasks_filter, ->(param=nil) { where(priority: param, approved: 1) }
   scope :notified_tasks, ->{ where(approved: 1, notify_hr: 1) }
   scope :notified_tasks_filter, ->(param=nil) { where(priority: param, approved: 1, notify_hr: 1) }
-  scope :admin_task_filter, ->(param=nil) { where(priotity: param ) }
+  scope :admin_task_filter, ->(param=nil) { where(priority: param ) }
   scope :my_task_filter, ->(param=nil, user_id) { where(priority: param , assign_task_to: user_id ) }
-  scope :recurring_task, -> { where(repeat: true) } 
+  scope :recurring_task, -> { where(repeat: true) }
+  scope :active, -> { where(submit: dalse) }
 
 
   settings index: { number_of_shards: 1 } do

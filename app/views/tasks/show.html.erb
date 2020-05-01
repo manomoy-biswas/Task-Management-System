@@ -198,8 +198,8 @@
               <%= link_to " Create", new_task_path, class: "fa fa-pencil btn btn-outline-primary btn-lg", data: {turbolinks: false, disable_with: "creating..."} %>
             </div>
             <div class="col text-center">
-              <% if @task.assign_task_by == current_user.id && !@task.approved %>
-                <%= link_to  " Edit", edit_task_path(@task), class: "fa fa-edit btn btn-outline-warning btn-lg",data: { disable_with: "wait.." } %>
+              <% if (@task.assign_task_by == current_user.id && !@task.approved) || admin? %>
+                <%= link_to " Edit", edit_task_path(@task), class: "fa fa-edit btn btn-outline-warning btn-lg",data: { disable_with: "wait.." } %>
               <% end %>
             </div>
           <% else %>
