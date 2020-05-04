@@ -18,8 +18,8 @@
             <div class="col-sm-12 col-md-8">
               <div class="form-group row">
                 <%= form.label :task_category,"Category", for: "task_category", class:"col-12 col-sm-4 col-md-3 col-form-label"%>
-                <div class="col-8 col-md-9">
-                  <%= form.select :task_category, options_from_collection_for_select(Category.all, :id, :name, form.object.task_category), { prompt: "-- Select category --", required: true }, {autofocus: true, class:"form-control select-center"} %>
+                <div class="col-12 col-sm-8 col-md-9">
+                  <%= form.select :task_category, options_from_collection_for_select(Category.all, :id, :name, form.object.task_category), { prompt: "Choose..." }, {autofocus: true, required: true, class:"custom-select d-block w-100"} %>
                 </div>
               </div>
             </div>
@@ -28,7 +28,7 @@
               <% priorities= %w[Low Medium High] %>
                 <%= form.label :priority, "Priority",for: "priority", class:"col-12 col-sm-4 col-md-4 col-form-label"%>
                 <div class="col-12 col-sm-8 col-md-8">
-                <%= form.select :priority, options_for_select(priorities ,@task.priority), {prompt: "--Select Priority--", required: true},{class: "form-control select-center"} %>
+                <%= form.select :priority, options_for_select(priorities ,@task.priority), {prompt: "Choose..."},{required: true, class: "form-control custom-select d-block w-100"} %>
                 </div>
               </div>
             </div>
@@ -52,7 +52,7 @@
               <div class="form-group row">
                 <%= form.label :assign_date, for: "task_assign_date", class:"col-12 col-sm-4 col-md-4 col-form-label"%>
                 <div class="col-12 col-sm-8 col-md-8">
-                  <%= form.label :assign_date, DateTime.now.strftime("%d / %m / %Y - %I:%M %p"), class: "form-control" %>  
+                  <%= form.label :assign_date, DateTime.now.strftime("%d/%m/%Y - %I:%M %p"), class: "form-control" %>  
                 </div>
               </div>
             </div>
@@ -60,7 +60,12 @@
               <div class="form-group row">
                 <%= form.label :submit_date, "Submit Date",for: "Last date to submit", class:"col-12 col-sm-4 col-md-4 col-form-label"%>
                 <div class="col-12 col-sm-8 col-md-8">
-                  <%= form.date_field :submit_date, for: "submit_date", class: "form-control", required: true, autofill: false %>
+                  <div class="input-group date" id="datetimepicker1" data-target="#datetimepicker1" data-toggle="datetimepicker" data-target-input="nearest">
+                    <%= form.text_field :submit_date, for: "submit_date", class:"form-control datetimepicker-input", value: (@task.submit_date.blank? ? "" : @task.submit_date.strftime("%d%m%Y %I:%M %p")), placeholder: "dd/mm/yyyy HH:MM AM/PM", required: true %>
+                    <div class="input-group-append">
+                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+                  </div>
                   <div>
                     <small class="note">* Should be 1 day after assign date</small>
                   </div>
@@ -73,12 +78,12 @@
             <div class="col-12 col-sm-8 col-md-10 ">
               <% if @users.present? %>
                 <% if admin? %>
-                  <%= form.select :assign_task_to, options_from_collection_for_select(User.where.not(id: current_user.id) , :id, :name, form.object.assign_task_to), { prompt: "-- Select employee --", required: true }, { class: "form-control select-center" } %> 
+                  <%= form.select :assign_task_to, options_from_collection_for_select(User.where.not(id: current_user.id).where.not(hr: true) , :id, :name, form.object.assign_task_to), { prompt: "choose..."}, {  required: "", class: "custom-select d-block w-100" } %>
                 <%else%>    
-                  <%= form.select :assign_task_to, options_from_collection_for_select(User.where.not(id:current_user.id, admin: 1, hr: 1) , :id, :name, form.object.assign_task_to), { prompt: "-- Select employee --", required: true }, { class: "form-control select-center" } %>  
+                  <%= form.select :assign_task_to, options_from_collection_for_select(User.where.not(id:current_user.id).where.not(admin: 1).where.not(hr: 1) , :id, :name, form.object.assign_task_to), { prompt: "Choose..."}, {  required: true , class: "form-control scustom-select d-block w-100" } %>  
                 <%end%>          
               <%else%>
-                <%= form.select :assign_task_to, {}, { prompt: "-- Select employee --", required: true }, { class: "form-control select-center" } %>
+                <%= form.select :assign_task_to, {}, { prompt: "No Employee Present", required: true }, { class: "form-control custom-select d-block w-100" } %>
               <% end %>
             </div>
           </div>
@@ -86,7 +91,7 @@
           <div class="form-group row">
             <% repeats = ["One_Time", "Daily", "Weekly", "Monthly", "Quarterly", "Half_yearly", "Yearly"]%>
             <%= form.label :repeat_interval, for: "repeat", class:"col-12 col-sm-4 col-md-2 col-form-label"%>
-            <div class="col-12 col-sm-8 col-md-10`">
+            <div class="col-12 col-sm-8 col-md-10">
               <div class="row">
                 <% repeats.each do |repeat|%>
                   <div class="col-12 col-sm-6 col-md-3">

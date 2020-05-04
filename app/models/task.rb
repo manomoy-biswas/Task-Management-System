@@ -15,18 +15,19 @@ class Task < ApplicationRecord
 
   accepts_nested_attributes_for :sub_task, reject_if: ->(a) { a[:name].blank? }, allow_destroy: true
   
-  # after_commit :index_document
+  after_commit  :index_task,  on: [:create, :update]
+  after_commit  :delete_task_index, on: :destroy
+
   after_create :task_reminder_email
   after_create { TaskMailerWorker.perform_async(self.id,"create") }
-  after_update { TaskMailerWorker.perform_async(self.id,"update") }
-
-  # VALID_TASK_NAME_REGEX = /\A[a-zA-Z][a-zA-Z\. ]*\z/.freeze
 
   validates :task_name, presence: true, length: { maximum: 255 }, uniqueness: true
   validates :priority, :repeat, :assign_task_to, :task_category, :submit_date, presence: true
   validates :priority, inclusion: %w[High Medium Low]
   validates :repeat, inclusion: %w[One_Time Daily Weekly Monthly Quarterly Half_yearly Yearly]
   validate :valid_submit_date, on: :create
+  validate :valid_updated_submit_date, on: :update
+
 
   scope :my_assigned_tasks, ->(user_id=nil) { where(assign_task_by: user_id) }
   scope :my_assigned_tasks_filter, ->(param=nil,user_id=nil) { where(priority: param, assign_task_by: user_id) }
@@ -37,38 +38,31 @@ class Task < ApplicationRecord
   scope :admin_task_filter, ->(param=nil) { where(priority: param ) }
   scope :my_task_filter, ->(param=nil, user_id) { where(priority: param , assign_task_to: user_id ) }
   scope :recurring_task, -> { where(repeat: true) }
-  scope :active, -> { where(submit: dalse) }
 
-
-  settings index: { number_of_shards: 1 } do
-    mappings dynamic: 'false' do
-      indexes :id, type: :text 
-      indexes :task_name, type: "text"
-      indexes :description, type: "text"
-      indexes :priority, type: "text"
-      indexes :assign_task_to, type: "text"
-      indexes :assign_task_by, type: "text"
-      indexes :search_field
-      
-      indexes :category do
-        indexes :id, type: :long
-        indexes :name, type: "text", copy_to: :search_field
-      end
-      indexes :sub_task, type: "nested" do
-        indexes :id, type: :long
-        indexes :name, type: "text", copy_to: :search_field
-        indexes :subtask_description, type: "text", copy_to: :search_field
-      end
+  mappings dynamic: "false" do
+    indexes :id, type: :text 
+    indexes :task_name, type: "text"
+    indexes :priority, type: "text"
+    indexes :assign_task_to, type: "text"
+    indexes :search_field
+    indexes :category do
+      indexes :name, type: "text", copy_to: :search_field
+    end
+    indexes :sub_task, type: "nested" do
+      indexes :name, type: "text", copy_to: :search_field
+    end
+    indexes :user do
+      indexes :name, type: "text", copy_to: :search_field
     end
   end
   
   def as_indexed_json(options = {})
     self.as_json(
-      options.merge(only: [:id,:task_name, :description, :assign_task_to],
+      options.merge(only: [:id, :task_name, :priority, :assign_task_to],
         include: {
-          category: {only: [:id, :name]},
-          sub_task: {only: [:id, :name, :subtask_description]},
-          user: {only: [:id, :name]}
+          category: {only: :name},
+          sub_task: {only: :name},
+          user: {only: :name}
         }
       )
     )
@@ -81,7 +75,7 @@ class Task < ApplicationRecord
           multi_match: {
             query: query,
             type: "best_fields",
-            fields: ["id", "task_name","priority", "description", "search_field"],
+            fields: ["id", "task_name","priority", "search_field"],
             operator: "and"
           }
         },
@@ -100,7 +94,7 @@ class Task < ApplicationRecord
           multi_match: {
             query: query,
             type: "best_fields",
-            fields: ["id", "task_name","priority", "description", "search_field"],
+            fields: ["id", "task_name","priority", "search_field"],
             operator: "and"
           }
         },
@@ -112,17 +106,25 @@ class Task < ApplicationRecord
       }
     }
   end
-
+  
+  private
+  
   def valid_submit_date
-    return unless submit_date.to_datetime <= DateTime.now + 1.day
-
-    errors.add(:submit_date, " can not be assign to a previous date")
+    return unless submit_date <= DateTime.now + 1.day
+    errors.add(:submit_date, " can not be assign to a previous date/time")
+  end
+  
+  def valid_updated_submit_date
+    return unless submit_date <= created_at.to_datetime + 1.day
+    errors.add(:submit_date, " must be greated that created date")
+  end
+  
+  def index_task
+    IndexerWorker.perform_async("index",  self.id)
   end
 
-  private
-
-  def index_document
-    IndexerWorker.perform_async
+  def delete_task_index
+    IndexerWorker.perform_async("delete", self.id)
   end
 
   def task_reminder_email

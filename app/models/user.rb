@@ -4,7 +4,8 @@ class User < ApplicationRecord
   has_many :notifications, foreign_key: "user_id"
   mount_uploader :avater, AvaterUploader
   
-  VALID_EMAIL_REGEX = /\A([a-zA-Z0-9]+)([.{1}])?([a-zA-Z0-9]+)@g(oogle)?mail([.])com\z/.freeze
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i.freeze
+                      #/\A([a-zA-Z0-9]+)([.{1}])?([a-zA-Z0-9]+)@g(oogle)?mail([.])com\z/.freeze
   VALID_PHONE_REGEX=/\A[6-9][0-9]{9}\z/.freeze
 
   attr_accessor :roles

@@ -53,7 +53,7 @@ a:hover{
 }
 .nav-item a{
 
-  color: #ffffff;
+  // color: #ffffff;
   font-size: 16px;
 }
 .select-center{
@@ -70,19 +70,31 @@ a:hover{
 .dropdown-toggle::before{
   content: none;
 }
+.search-field{
+  padding:5px 30px;
+}
+.submit-search{
+  padding-top: 10px;
+}
 .wrapper{
 margin:0 auto;
 max-width: 700px;
 }
-
+.nav-link{
+  color: #ffffff;
+}
 #notice_wrapper{
   position: absolute;
   text-align: center;
-  // width: 100%;
-  z-index: 999;
-  bottom: 0;
-  right: 0;
-  font-size: 20px;
+  width: 60%;
+  margin: 0 auto;
+  z-index: 1;
+  left:20%;
+  font-size: 24px;
+}
+.notice-text{
+  font-size: 24px;
+  font-weight: bolder;
 }
 .card-5{
   max-width: 1000px;
@@ -134,6 +146,9 @@ max-width: 700px;
   color: #000000;
   text-decoration: none;
 }
+.fa-calendar{
+  font-size: 21px;
+}
 .dashboard{
   .fa-users, 
   .fa-tasks,
@@ -156,6 +171,7 @@ max-width: 700px;
 }
 .notification-icon i{
   color: #ffffff;
+  padding-left: 20px;
 }
 .notification-menu{
   max-height: 400px;
@@ -194,6 +210,9 @@ padding: 10px 0;
 .logout-menu{
   position: absolute;
   background-color: #343a40;
+}
+.dropdown-toggle{
+  color: #ffffff;
 }
 .dropdown-item{
   color: #343a40;
@@ -271,6 +290,12 @@ padding: 10px 0;
   .nav-item a {
     font-size: 16px;
     font-weight: bold;
+  }
+  .search-field{
+    padding:12px 10px 0 0;
+  }
+  .submit-search{
+    padding: 0 10px 0 10px;
   }
 
 }

@@ -80,10 +80,10 @@
           </td>
           <% if admin? || task.assign_task_by == current_user.id %>
             <td class="text-center">
-              <%= link_to "", edit_task_path(task), data: { disable_with: "..." }, class:"fa fa-edit" %>
+              <%= link_to "", edit_task_path(task), class:"fa fa-edit" %>
             </td>
             <td class="text-center">
-              <%= link_to "", task_path(task), data: {confirm: "Are you sure to delete?" }, method: :delete, data: { disable_with: "..." }, class:"fa fa-trash"%>
+              <%= link_to "", task_path(task), data: {confirm: "Are you sure to delete?"}, method: :delete, class:"fa fa-trash"%>
             </td>
           <% end %>
         </tr>

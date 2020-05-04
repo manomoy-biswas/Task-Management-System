@@ -1,6 +1,6 @@
 class NotificationRelayWorker
   include Sidekiq::Worker
-  sidekiq_options retry: true
+  sidekiq_options retry: false
 
   def perform(notification_id)
     @notification = Notification.find(notification_id)
@@ -14,15 +14,19 @@ class NotificationRelayWorker
 
       when "approved by"
         text = " approved a task, assigned to " + User.find(Task.find(@notification.notifiable_id).assign_task_to).name
-        content = notification_content("fa-check-square",text, @notification)
+        content = notification_content("fa-check-square","admin",text, @notification)
 
       when "approved"
         text = @notification.action + " a task, assigned to You."
         content = notification_content("fa-check-circle",text, @notification)
 
       when "submitted"
-        text = @notification.action + " a task for verification."
-        content = notification_content("fa-tasks",text, @notification)
+        if @notification.recipient == Task.find(@notification.notifiable_id).assign_task_by
+          text = @notification.action + " a task, assigned by You."
+        else
+         text = "#{@notification.action} a task, assigned by #{User.find(Task.find(@notification.notifiable_id).assign_task_by).name}"
+        end
+        content = notification_content("fa-check-circle",text, @notification)
 
       when "notified"
         text = "A task has been approved. You can view task"
@@ -52,11 +56,12 @@ class NotificationRelayWorker
         "<div class=\"notify-info\">" +
           "<h5>" + User.find(notification.user_id).name + " </h5>" +
           "<p>" + text + "</p>" +
-          "<span class=\"notify-time\">" + (notification.created_at.to_datetime - DateTime.now).to_s + " ago<span>" +
+          "<span class=\"notify-time\"> Just now <span>" +
           "</div>" +
           "</div>" +
         "</a>"
   end
+  
   def recurring_notification_content(classname, text, notification)
     "<a class=\"dropdown-item\" href=\"http://localhost:3000/notifications/" +
      notification.id.to_s + "/mark_as_read\" value=\"" + notification.id.to_s + "\">" +
@@ -67,7 +72,7 @@ class NotificationRelayWorker
         " <div class=\"notify-info\">" +
           "<h5>" + @notification.action + " reminder: </h5>" +
          "<p>" + text + "</p>" +
-          "<span class=\"notify-time\">" + (notification.created_at.to_datetime - DateTime.now).to_s + " ago<span>"
+          "<span class=\"notify-time\"> Just Now <span>"
         "</div>" +
       "</div>" +
     "</a>"

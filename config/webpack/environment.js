@@ -4,7 +4,8 @@ const { environment } = require('@rails/webpacker')
     new webpack.ProvidePlugin({
       $: 'jquery/src/jquery',
       jQuery: 'jquery/src/jquery',
-      Popper: ['popper.js', 'default']
+      Popper: 'popper.js/dist/popper',
+      moment: 'moment/moment'
     })
   )
 

@@ -9,7 +9,7 @@ module TasksHelper
   end
 
   def find_task(task_id)
-    Task.find(task_id)
+    Task.find_by(id: task_id)
   end
   
   def find_user_name(user_id)

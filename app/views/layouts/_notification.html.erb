@@ -8,7 +8,7 @@
                 <i class="fa fa-tasks"></i>
               </div>
               <div class="notify-info">
-                <div><strong><%= notification.user_id.name%></strong></div>
+                <div><strong><%= notification.user.name%></strong></div>
                 <p><%=notification.action + " a task to You."%></p>
             <% elsif notification.action == "approved" %>
               <i class="fa fa-check-circle"></i>
@@ -48,6 +48,8 @@
             <span class="notify-time">  
               <% if DateTime.parse(notification.created_at.to_s).in_time_zone("Kolkata").day != DateTime.now.in_time_zone("Kolkata").day %>
                 <%= DateTime.parse(notification.created_at.to_s).strftime("%d-%m-%Y %I:%M %p")%>
+              <% elsif ((DateTime.now.in_time_zone("Kolkata") - DateTime.parse(notification.created_at.to_s).in_time_zone("Kolkata")) / 1.second).to_i < 60 %>
+                Just now
               <% elsif ((DateTime.now.in_time_zone("Kolkata") - DateTime.parse(notification.created_at.to_s).in_time_zone("Kolkata")) / 1.minute).to_i < 60 %>
                 <%= ((DateTime.now.in_time_zone("Kolkata") - DateTime.parse(notification.created_at.to_s).in_time_zone("Kolkata")) / 1.minute).to_i %> minutes ago
               <% else %>

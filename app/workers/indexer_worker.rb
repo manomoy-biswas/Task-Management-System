@@ -1,14 +1,15 @@
 class IndexerWorker
   include Sidekiq::Worker
-  sidekiq_options retry: true
+  sidekiq_options retry: false
   
-  def perform(*args)
-    Task.__elasticsearch__.client.indices.delete index: Task.index_name rescue nil
-
-    Task.__elasticsearch__.client.indices.create \
-      index: Task.index_name,
-      body: { settings: Task.settings.to_hash, mappings: Task.mappings.to_hash }
-
-    Task.import
+  def perform(action, task_id)
+    if action == "index"
+      record = Task.find(task_id) 
+      record.__elasticsearch__.index_document\
+    elsif action == "delete"
+      client = Task.__elasticsearch__.client
+      client.delete index: Task.index_name, type: "_doc", id: task_id
+    end
   end
+
 end

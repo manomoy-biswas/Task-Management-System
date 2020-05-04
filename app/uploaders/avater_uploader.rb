@@ -27,6 +27,6 @@ class AvaterUploader < CarrierWave::Uploader::Base
 
   # Override the filename of the uploaded files:
   def filename
-    "Profile_pivture_#{DateTime.now.strftime("%d%m%Y%I%M")}.jpg" if original_filename
+    "Profile_picture_#{DateTime.now.strftime("%d%m%Y%I%M")}.jpg" if original_filename
   end
 end

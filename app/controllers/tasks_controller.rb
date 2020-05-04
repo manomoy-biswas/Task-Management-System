@@ -3,8 +3,8 @@ class TasksController < ApplicationController
   include TasksHelper
   
   before_action :authenticate_user!
-  before_action :check_user_is_hr, except: [:index, :approved_task, :print_task_list, 
-                :print_task_details, :show, :submit_tas,:submit_subtask, :elastic_search]
+  before_action :check_user_is_hr, except: [:approved_task, :print_task_list, 
+                :print_task_details, :show]
   before_action :category_list, :employee_list, only: [:new, :create, :edit, :update]
   before_action :set_task, only: [:approve, :destroy, :download, :edit, :notify_hr, :show,
                 :submit_task, :update]
@@ -66,12 +66,12 @@ class TasksController < ApplicationController
   def create
     @task = Task.new(task_params)
     
-    if hr? || User.find(@task.assign_task_to).admin || @task.assign_task_to == current_user
+    if hr? || @task.user.admin || @task.user == current_user || @task.user.hr 
       redirect_to root_path
     end
     
     @task.assign_task_by = current_user.id
-    @task.submit_date = task_params[:submit_date].to_datetime
+    # @task.submit_date = task_params[:submit_date].to_datetime
     unless task_params[:repeat] == "One_Time"
       @task.recurring_task = true
     end
@@ -148,11 +148,11 @@ class TasksController < ApplicationController
                 end    
               else
                 if !params[:priority] || params[:priority] == ""
-                  current_user.tasks.includes(:assign_by, :category)
+                  current_user.tasks.includes(:assign_by, :category).order("created_at DESC")
                 else
-                  Task.my_task_filter(params[:priority], current_user.id).order("created_at DESC")
-                end  
-              end  
+                  Task.my_task_filter(params[:priority], current_user.id).includes(:assign_by, :category).order("created_at DESC")
+                end
+              end
   end            
       
   def new
@@ -164,7 +164,7 @@ class TasksController < ApplicationController
     
     @task.notify_hr = true
     @task.save
-    flash[:success] = "A notification has been sent to all HRS"
+    flash[:success] = "A notification has been sent to all HR's"
     Notification.create_notification(@task.id, "notified")
     redirect_to request.referrer
   end  
@@ -196,7 +196,7 @@ class TasksController < ApplicationController
   end
   
   def show
-    unless @task.assign_task_to == current_user.id || @task.assign_task_by == current_user.id || admin?
+    unless @task.assign_task_to == current_user.id || @task.assign_task_by == current_user.id || admin? || (@task.notify_hr && hr?)
       flash[:danger] = "You are trying to visit other employees task"
       redirect_to user_dashboard_path
     end
@@ -247,8 +247,6 @@ class TasksController < ApplicationController
     else
       @task.recurring_task = true unless @task.submit
     end
-    @task.submit_date = task_params[:submit_date].to_datetime
-
     if @task.update(task_params)
       if params[:task_document].present?
         params[:task_document]["document"].each do |file|
@@ -256,6 +254,7 @@ class TasksController < ApplicationController
         end
       end
       Notification.create_notification(@task.id, "updated")
+      TaskMailerWorker.perform_async(@task.id,"update")
       flash[:success] = I18n.t "task.update_success", task_name: @task.task_name
       redirect_to tasks_path
     else

@@ -5,6 +5,17 @@ $(document).ready(function() {
       let regexp = new RegExp($(this).data("id"), "g");
       $(this).after($(this).data("fields").replace(regexp, time));
   });
+
+  $('#datetimepicker1').datetimepicker({
+    sideBySide: true,
+    format: "DD/MM/YYYY LT",
+    icons: {
+      up: "fa fa-angle-up",
+      down: "fa fa-angle-down",
+      previous: 'fa fa-angle-double-left',
+      next: 'fa fa-angle-double-right',
+    }
+  });
 });
 
 $(document).on("click",".remove-field", function(event){

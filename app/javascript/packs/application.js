@@ -41,5 +41,10 @@ $(document).ready(function(){
   $('#file-input').on('change', function() { 
     $('#update_avater').submit(); 
   });
+
+  $('#datepicker1').datetimepicker({
+    format: "DD/MM/YYYY"
+  });
+  
 });
   
