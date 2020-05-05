@@ -42,7 +42,6 @@ class Task < ApplicationRecord
   mappings dynamic: "false" do
     indexes :id, type: :text 
     indexes :task_name, type: "text"
-    indexes :priority, type: "text"
     indexes :assign_task_to, type: "text"
     indexes :search_field
     indexes :category do
@@ -58,7 +57,7 @@ class Task < ApplicationRecord
   
   def as_indexed_json(options = {})
     self.as_json(
-      options.merge(only: [:id, :task_name, :priority, :assign_task_to],
+      options.merge(only: [:id, :task_name, :assign_task_to],
         include: {
           category: {only: :name},
           sub_task: {only: :name},
@@ -75,7 +74,7 @@ class Task < ApplicationRecord
           multi_match: {
             query: query,
             type: "best_fields",
-            fields: ["id", "task_name","priority", "search_field"],
+            fields: ["id", "task_name", "search_field"],
             operator: "and"
           }
         },
@@ -94,7 +93,7 @@ class Task < ApplicationRecord
           multi_match: {
             query: query,
             type: "best_fields",
-            fields: ["id", "task_name","priority", "search_field"],
+            fields: ["id", "task_name", "search_field"],
             operator: "and"
           }
         },

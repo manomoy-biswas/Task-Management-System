@@ -42,7 +42,7 @@ class TasksController < ApplicationController
 
     @tasks_approved = if admin?
                         if !params[:priority] || params[:priority] == ""
-                          Task.approved_tasks..includes(:user, :assign_by, :category)order("created_at DESC")
+                          Task.approved_tasks..includes(:user, :assign_by, :category).order("created_at DESC")
                         else
                           Task.approved_tasks_filter(params[:priority]).includes(:user, :assign_by, :category).order("created_at DESC")
                         end
@@ -71,7 +71,6 @@ class TasksController < ApplicationController
     end
     
     @task.assign_task_by = current_user.id
-    # @task.submit_date = task_params[:submit_date].to_datetime
     unless task_params[:repeat] == "One_Time"
       @task.recurring_task = true
     end
