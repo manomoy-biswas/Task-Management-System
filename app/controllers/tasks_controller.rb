@@ -42,24 +42,24 @@ class TasksController < ApplicationController
 
     @tasks_approved = if admin?
                         if !params[:priority] || params[:priority] == ""
-                          Task.approved_tasks.order("created_at DESC")
+                          Task.approved_tasks..includes(:user, :assign_by, :category)order("created_at DESC")
                         else
-                          Task.approved_tasks_filter(params[:priority]).order("created_at DESC")
+                          Task.approved_tasks_filter(params[:priority]).includes(:user, :assign_by, :category).order("created_at DESC")
                         end
                       elsif hr?
                         if !params[:priority] || params[:priority] == ""
-                          Task.notified_tasks.order("created_at DESC")
+                          Task.notified_tasks.includes(:user, :category).order("created_at DESC")
                         else
-                          Task.notified_tasks_filter(params[:priority]).order("created_at DESC")
+                          Task.notified_tasks_filter(params[:priority]).includes(:user, :category).order("created_at DESC")
                         end
                       end
   end  
   
   def user_assigned_task
     @tasks =  if !params[:priority] || params[:priority] == ""
-                Task.my_assigned_tasks(current_user.id).order("created_at DESC")
+                Task.my_assigned_tasks(current_user.id).includes(:user, :category).order("created_at DESC")
               else
-                Task.my_assigned_tasks_filter(params[:priority],current_user.id).order("created_at DESC")
+                Task.my_assigned_tasks_filter(params[:priority],current_user.id).includes(:user, :category).order("created_at DESC")
               end       
   end
 

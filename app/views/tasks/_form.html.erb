@@ -52,7 +52,7 @@
               <div class="form-group row">
                 <%= form.label :assign_date, for: "task_assign_date", class:"col-12 col-sm-4 col-md-4 col-form-label"%>
                 <div class="col-12 col-sm-8 col-md-8">
-                  <%= form.label :assign_date, DateTime.now.strftime("%d/%m/%Y - %I:%M %p"), class: "form-control" %>  
+                  <%= form.label :assign_date, (@task.created_at.blank? ? DateTime.now.strftime("%d/%m/%Y %I:%M %p") : @task.created_at.strftime("%d/%m/%Y %I:%M %p")), class: "form-control" %>  
                 </div>
               </div>
             </div>
