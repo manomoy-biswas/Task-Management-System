@@ -29,7 +29,7 @@
               <div><strong><%= notification.action + " reminder "%></strong></div>
                 <p><%= "Please submit your task on or before " +  DateTime.parse(notification.task.submit_date.to_s).strftime("%d-%m-%Y %I:%M %p") + "." %></p>
             <% elsif notification.action == "submitted" %>
-              <i class="fa fa-check-circle"></i>
+                <i class="fa fa-check-circle"></i>
               </div>
               <div class="notify-info">
                 <div><strong><%= notification.user.name %></strong></div>
@@ -42,12 +42,12 @@
                 <i class="fa fa-tasks"></i>
               </div>
               <div class="notify-info">
-                <h5><strong><%= notification.user.name%></strong></div>
+                <div><strong><%= notification.user.name%></strong></div>
                 <p><%= notification.action + " a task, assigned to You."%></p>
             <% end %>
             <span class="notify-time">  
               <% if DateTime.parse(notification.created_at.to_s).in_time_zone("Kolkata").day != DateTime.now.in_time_zone("Kolkata").day %>
-                <%= DateTime.parse(notification.created_at.to_s).strftime("%d-%m-%Y %I:%M %p")%>
+                <%= DateTime.parse(notification.created_at.to_s).strftime("%d %b %Y %I:%M %p")%>
               <% elsif ((DateTime.now.in_time_zone("Kolkata") - DateTime.parse(notification.created_at.to_s).in_time_zone("Kolkata")) / 1.second).to_i < 60 %>
                 Just now
               <% elsif ((DateTime.now.in_time_zone("Kolkata") - DateTime.parse(notification.created_at.to_s).in_time_zone("Kolkata")) / 1.minute).to_i < 60 %>

@@ -19,7 +19,8 @@
           <div class="col-12 col-sm-4 task-index-col text-center">
             <%=form_tag(users_path, action:"index", method: :get) do %>
               <div class="form-group row">
-                <% priorities=["Admin", "HR", "Employee"]%>
+                <% priorities=["Admin", "HR", "Employee"] if admin? %>
+                <% priorities=["HR", "Employee"] if hr? %>
                 <span class="fa fa-filter col-2 text-right"></span>
                 <div class="col-7 text-right">
                   <%= select_tag(:role, options_for_select(priorities, params[:role]), prompt:"All", class:"form-control text-center") %>

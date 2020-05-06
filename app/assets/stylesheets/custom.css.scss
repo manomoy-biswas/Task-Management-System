@@ -176,7 +176,7 @@ max-width: 700px;
 .notification-menu{
   max-height: 400px;
   width: 100%;
-  max-width: 460px;
+  width: 460px;
   overflow-y: scroll;
   overflow-x:hidden;
   scrollbar-width: none;
@@ -184,21 +184,23 @@ max-width: 700px;
   border-radius: 5px;
   box-shadow: 2px, 2px  3px rgba(0,0,0,0.1);
 }
+.notification-body a{
+  border-bottom: 1px solid #f8e8e8;
+}
+.notification-body a:nth-last-child(1){
+  border-bottom: none;
+}
 .notify-content{
 display: flex;
 flex-wrap: wrap;
 align-items: center;
-padding: 10px 0;
-// border-bottom: 1px solid #dbdaff;
+padding: 0;
 }
 .notify-info{
   text-align: left !important;
 }
 .notify-info p{
  width: 200px;
-}
-.notify-content:nth-last-child(1){
-  border-bottom: 0px;
 }
 .notify-image{
   margin-right: 15px;

@@ -81,7 +81,7 @@
           </a>
           <div class="dropdown-menu logout-menu dropdown-menu-right text-center" aria-labelledby="navbarDropdown">
             <div><%= link_to "Change Profile", user_path(current_user.id), class:"nav-link" %></div>
-            <div><%= link_to "Logout", logout_path, method:"delete", class:"nav-link" %></div>
+            <div><%= link_to "Logout", session_path(current_user), method:"delete", class:"nav-link" %></div>
           </div>
         </li>
       </ul>
@@ -89,7 +89,7 @@
       <% unless["new"].include?(params[:action])%>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item text-center">
-            <%= link_to "Admin Login", admin_login_path, class:"btn btn-outline-success my-2 my-sm-0" %>
+            <%= link_to "Admin Login", new_session_path, class:"btn btn-outline-success my-2 my-sm-0" %>
           </li>
         </ul>
       <% end %>

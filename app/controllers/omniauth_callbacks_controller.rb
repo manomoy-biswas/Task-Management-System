@@ -6,7 +6,6 @@ class OmniauthCallbacksController < ApplicationController
       @user = User.from_omniauth(request.env["omniauth.auth"])
       if @user.persisted?
         unless @user.admin
-          # UserProfile.create(@user.id, request.env["omniauth.auth"].info.image)
           login(@user)
           flash[:success] = I18n.t "omniauth_callbacks.success"
           redirect_to users_dashboard_path

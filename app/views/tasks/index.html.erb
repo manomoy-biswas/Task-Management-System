@@ -1,5 +1,9 @@
 <% content_for :title, "Tasks" %>
-<h1 class="text-center">MY TASKS</h1>
+<% if admin?%>
+  <h1 class="text-center">ALL TASKS</h1>
+<% else %>
+  <h1 class="text-center">MY TASKS</h1>
+<% end %>
 <div class="page-wrapper">
   <div class="tasklist-wrapper">
     <div class="card card-6">

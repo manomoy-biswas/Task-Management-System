@@ -48,7 +48,11 @@ class UsersController < ApplicationController
       redirerct_to root_path
     end
     @users =  if !params[:role] || params[:role] == ""
-                User.all.order("name ASC")
+                if admin?
+                  User.all.order("name ASC")
+                elsif hr?
+                  User.where.not(admin: 1).order("name ASC")
+                end
               elsif params[:role] == "Admin"
                 User.all_admin.order("name ASC")
               elsif params[:role] == "HR"
