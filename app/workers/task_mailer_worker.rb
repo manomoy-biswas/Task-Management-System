@@ -1,7 +1,6 @@
 class TaskMailerWorker
   include Sidekiq::Worker
   sidekiq_options retry: false
-  # sidekiq_options queue: "mailer"
 
   def perform(task, method)
     case method

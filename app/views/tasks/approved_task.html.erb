@@ -43,7 +43,6 @@
               <thead>
                 <tr class="text-center">
                   <th scope= "col">#</th>
-                  <th scope= "col">Task ID</th>
                   <th scope= "col">Task Name</th>
                   <th scope= "col">Category</th>
                   <th scope= "col">Priority</th>
@@ -66,7 +65,6 @@
                   <% @tasks_approved.each do |task|%>
                     <tr class="green">
                       <td><%= @tasks_approved.index(task)+1 %></td>
-                      <td class= "text-center"><%= task.id%></td>
                       <td class= "text-center"><%= task.task_name%></td>
                       <td class= "text-center"><%= task.category.name%></td>
                       <td id="priority" class= "text-center"><%= task.priority%></td>

@@ -6,10 +6,10 @@ Task Management System
 You are assigned a task by <%= @assign_task_by%>.
 Please go through task and for any doubt contact the person who assign this task to you.
 Your Task Details are Given Below:-
-Task ID         :
-Task Name       : <%= @task.task_name %>
 
-Task Category    : 	<%= @task.category.name%>
+Task Name        :  <%= @task.task_name %>
+
+Task Category    :  <%= @task.category.name%>
 <% if @task.sub_task.present? %>
 Sub tasks        :
   <% @task.sub_task.each do |subtask| %>

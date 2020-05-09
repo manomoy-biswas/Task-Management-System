@@ -11,7 +11,6 @@
               <thead>
                 <tr class="yellow text-center">
                   <th scope= "col">#</th>
-                  <th scope= "col" data-sortable="true">Task ID</th>
                   <th scope= "col">Task Name</th>
                   <th scope= "col">Category</th>
                   <th scope= "col">Priority</th>
@@ -28,28 +27,30 @@
               <% if @tasks.present? %>
                 <tbody id="task_table">
                   <% i=0 %>
-                  <% @tasks.each do |task| %>
-                    <tr class="green">
-                      <td><%= i=i.to_i + 1 %></td>
-                      <td class= "text-center"><%= task.id%></td>
-                      <td class= "text-center"><%= task.task_name%></td>
-                      <td class= "text-center"><%= task.category.name%></td>
-                      <td id="priority" class= "text-center"><%= task.priority%></td>
-                      <% if admin? %>
-                        <td class="text-center"><%= task.user.name %></td>
-                      <% end %>
-                      <td class="text-center">
-                        <%= link_to "", task_path(task.id), class:"fa fa-eye" %>
-                      </td>
-                      <% if admin? %>
+                  <% @tasks.each do |searched_task| %>
+                    <%task = Task.find(searched_task.id)%>
+                    <% if !task.approved %>
+                      <tr class="green">
+                        <td><%= i=i.to_i + 1 %></td>
+                        <td class= "text-center"><%= task.task_name%></td>
+                        <td class= "text-center"><%= task.category.name%></td>
+                        <td id="priority" class= "text-center"><%= task.priority%></td>
+                        <% if admin? %>
+                          <td class="text-center"><%= task.user.name %></td>
+                        <% end %>
                         <td class="text-center">
-                          <%= link_to "", edit_task_path(task.id), data: { disable_with: "..." }, class:"fa fa-edit" %>
-                        </td> 
-                        <td class="text-center">
-                          <%= link_to "", task_path(task.id), data: {confirm: "Are you sure to delete?" }, method: :delete, data: { disable_with: "..." }, class:"fa fa-trash"%>
+                          <%= link_to "", task_path(task.id), class:"fa fa-eye" %>
                         </td>
-                      <% end %>
-                    </tr>
+                        <% if admin? %>
+                          <td class="text-center">
+                            <%= link_to "", edit_task_path(task.id), data: { disable_with: "..." }, class:"fa fa-edit" %>
+                          </td> 
+                          <td class="text-center">
+                            <%= link_to "", task_path(task.id), data: {confirm: "Are you sure to delete?" }, method: :delete, data: { disable_with: "..." }, class:"fa fa-trash"%>
+                          </td>
+                        <% end %>
+                      </tr>
+                    <% end %>
                   <% end %>
                 </tbody>
               <%else%>

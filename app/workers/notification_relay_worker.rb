@@ -72,7 +72,7 @@ class NotificationRelayWorker
         " <div class=\"notify-info\">" +
           "<h5>" + @notification.action + " reminder: </h5>" +
          "<p>" + text + "</p>" +
-          "<span class=\"notify-time\"> Just Now <span>"
+          "<span class=\"notify-time\"> Just now <span>"
         "</div>" +
       "</div>" +
     "</a>"

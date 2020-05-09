@@ -2,8 +2,7 @@ require "sidekiq-scheduler"
 
 class RecurringWorker
   include Sidekiq::Worker
-  # sidekiq_options queue: "recurring"
-  sidekiq_options retry: true
+  sidekiq_options retry: false
 
   def perform
     today = DateTime.now
@@ -19,33 +18,33 @@ class RecurringWorker
           when "Weekly"
             if today.wday == 1
               Notification.create_notification(task.id, "Weekly")
-              TaskMailer.reminder_email(task, "Weekly").deliver
+              TaskMailer.reminder_email(task.id, "Weekly").deliver
             end
 
           when "Monthly"
             if today.mday == 1
               Notification.create_notification(task.id, "Monthly")
-              TaskMailer.reminder_email(task,"Monthly").deliver
+              TaskMailer.reminder_email(task.id,"Monthly").deliver
 
             end
 
           when "Quarterly"
             if (today.mon = 1 || today.mon = 3 || today.mon = 6 || today.mon = 9) && today.mday ==1
               Notification.create_notification(task.id, "Quarterly")
-              TaskMailer.reminder_email(task,"Quarterly").deliver
+              TaskMailer.reminder_email(task.id,"Quarterly").deliver
             end
 
           when "Half-yearly"
             if (today.mon = 1 || today.mon = 6) && today.mday ==1
               Notification.create_notification(task.id, "Half-yearly")
-              TaskMailer.reminder_email(task, "half-yearly").deliver
+              TaskMailer.reminder_email(task.id, "half-yearly").deliver
 
             end
 
           when "Yearly"
             if today.yday == 1
               Notification.create_notification(task.id, "Yearly")
-              TaskMailer.reminder_email(task, "yearly").deliver
+              TaskMailer.reminder_email(task.id, "yearly").deliver
             end
           else
           #nothing

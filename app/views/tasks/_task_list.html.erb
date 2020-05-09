@@ -3,7 +3,6 @@
   <thead>
     <tr class="text-center">
       <th scope= "col">#</th>
-      <th scope= "col" data-sortable="true">Task ID</th>
       <th scope= "col">Task Name</th>
       <th scope= "col">Category</th>
       <th scope= "col">Priority</th>
@@ -38,7 +37,6 @@
             red
           <% end %>">
           <td><%= i=i.to_i + 1 %></td>
-          <td class= "text-center"><%= task.id%></td>
           <td class= "text-center"><%= task.task_name%></td>
           <td class= "text-center"><%= task.category.name%></td>
           <td id="priority" class= "text-center"><%= task.priority%></td>

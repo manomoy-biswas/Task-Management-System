@@ -19,8 +19,8 @@ class TaskMailer < ApplicationMailer
     mail to: User.find(@task.assign_task_to).email, subject: "Task Updated: #{@task.task_name}"
   end
 
-  def reminder_email(task,type)
-    @task = task
+  def reminder_email(task_id,type)
+    @task = Task.find(task_id)
     @greeting = "Hi #{User.find(@task.assign_task_to).name},"
     @assign_task_by = User.find(@task.assign_task_by).name
     @url ="http://localhost:3000/tasks/"+@task.id.to_s

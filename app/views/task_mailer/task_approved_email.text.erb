@@ -3,7 +3,7 @@ Task Management System
 
 <%= @greeting %>
 Congratulation,You task with ID: <%= @task.id %> named: <%= @task.task_name %>, has been approved by <%= User.find(@task.approved_by).name %>
-For more details visit<%= link_to "here","" %>
+For more details visit<%= link_to "here", @url %>
 ----------------------------------------
 Best,
 Task Management System Team

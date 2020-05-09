@@ -74,7 +74,7 @@ class Task < ApplicationRecord
           multi_match: {
             query: query,
             type: "best_fields",
-            fields: ["id", "task_name", "search_field"],
+            fields: ["task_name", "search_field"],
             operator: "and"
           }
         },
@@ -93,7 +93,7 @@ class Task < ApplicationRecord
           multi_match: {
             query: query,
             type: "best_fields",
-            fields: ["id", "task_name", "search_field"],
+            fields: ["task_name", "search_field"],
             operator: "and"
           }
         },
