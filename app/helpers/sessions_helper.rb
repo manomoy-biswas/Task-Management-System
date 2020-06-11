@@ -14,22 +14,4 @@ module SessionsHelper
       @current_user = nil
     end
   end
-
-  def authenticate_user!
-    return if logged_in?
-    flash[:danger] = I18n.t "application.authentication_error"
-    redirect_to root_path
-  end
-
-  def logged_in?
-    current_user.present?
-  end
-
-  def admin?
-    current_user.admin
-  end
-
-  def hr?
-    current_user.hr
-  end
 end

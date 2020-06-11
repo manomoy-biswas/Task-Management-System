@@ -4,10 +4,11 @@ RSpec.describe Category, type: :model do
   subject { Category.new(name: "Birthb") }
   # before { subject.save }
 
-  it "name should be present" do
-    subject.name = nil
-    expect(subject).to_not be_valid
-  end
+  # it "name should be present" do
+  #   subject.name = nil
+  #   expect(subject).to_not be_valid
+  # end
+  it { should validate_presence_of(:name) }
 
   it 'name lenght should not be too short' do
     subject.name = 'a'

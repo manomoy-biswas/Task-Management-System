@@ -19,7 +19,8 @@ class Task < ApplicationRecord
   after_commit  :delete_task_index, on: :destroy
 
   after_create :task_reminder_email
-  after_create { TaskMailerWorker.perform_async(self.id,"create") }
+  after_create :task_create_email
+  after_create :task_create_notification
 
   validates :task_name, presence: true, length: { maximum: 255 }, uniqueness: true
   validates :priority, :repeat, :assign_task_to, :task_category, :submit_date, presence: true
@@ -27,7 +28,6 @@ class Task < ApplicationRecord
   validates :repeat, inclusion: %w[One_Time Daily Weekly Monthly Quarterly Half_yearly Yearly]
   validate :valid_submit_date, on: :create
   validate :valid_updated_submit_date, on: :update
-
 
   scope :my_assigned_tasks, ->(user_id=nil) { where(assign_task_by: user_id) }
   scope :my_assigned_tasks_filter, ->(param=nil,user_id=nil) { where(priority: param, assign_task_by: user_id) }
@@ -105,6 +105,54 @@ class Task < ApplicationRecord
       }
     }
   end
+
+  def self.task_search(param, current_user)
+    if current_user.admin
+      self.all_task_search(param.present? ? param : nil)
+    else
+      self.search((param.present? ? param : nil), current_user.id)
+    end  
+  end
+
+  def self.filter_by_priority(param, current_user)
+    if current_user.admin
+      if !param || param == ""
+        self.includes(:user, :assign_by, :category).order("created_at DESC")
+      else
+        self.admin_task_filter(param).includes(:user, :assign_by, :category).order("created_at DESC")
+      end    
+    else
+      if !param || param == ""
+        current_user.tasks.includes(:assign_by, :category).order("created_at DESC")
+      else
+        self.my_task_filter(param, current_user.id).includes(:assign_by, :category).order("created_at DESC")
+      end
+    end
+  end
+
+  def self.filter_approved_task_by_priority(param, current_user)
+    if current_user.admin
+      if !param || param == ""
+        self.approved_tasks.includes(:user, :assign_by, :category).order("created_at DESC")
+      else
+        self.approved_tasks_filter(param).includes(:user, :assign_by, :category).order("created_at DESC")
+      end    
+    elsif current_user.hr
+      if !param || param == ""
+        self.notified_tasks.includes(:user, :category).order("created_at DESC")
+      else
+        self.notified_tasks_filter(param).includes(:user, :category).order("created_at DESC")
+      end
+    end
+  end
+
+  def self.filter_user_assigned_task_by_priority(param, current_user)
+    if !param || param == ""
+      self.my_assigned_tasks(current_user.id).includes(:user, :category).order("created_at DESC")
+    else
+      self.my_assigned_tasks_filter(param,current_user.id).includes(:user, :category).order("created_at DESC")
+    end  
+  end
   
   private
   
@@ -129,5 +177,13 @@ class Task < ApplicationRecord
   def task_reminder_email
     return if DateTime.now + 7.days > self.submit_date.to_datetime
     TaskReminderWorker.perform_at(self.submit_date.to_datetime - 7.days, self.id)
+  end
+  
+  def task_create_email
+    TaskMailerWorker.perform_async(self.id,"create")
+  end
+
+  def task_create_notification
+    Notification.create_notification(self.id, "assigned")
   end
 end

@@ -3,9 +3,9 @@ class SubTask < ApplicationRecord
 
   before_validation { self.name = name.to_s.squeeze(" ").strip.capitalize }
 
-  VALID_SUB_TASK_NAME_REGEX = /\A[a-zA-Z][a-zA-Z\. ]*\z/.freeze
+  # VALID_SUB_TASK_NAME_REGEX = /\A[a-zA-Z][a-zA-Z\. ]*\z/.freeze
 
-  validates :name, presence: true, length: { maximum: 255 }, format: { with: VALID_SUB_TASK_NAME_REGEX }
+  validates :name, presence: true, length: { in: 3..255 }
 
   scope :find_subtasks, ->(task_id = null) { where(task_id: task_id) }
   scope :find_not_submitted_subtasks, ->(task_id = null) { where(task_id: task_id, submit: false)}

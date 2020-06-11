@@ -1,5 +1,4 @@
 class OmniauthCallbacksController < ApplicationController
-  include SessionsHelper
   
   def google_oauth2
     begin
@@ -7,20 +6,14 @@ class OmniauthCallbacksController < ApplicationController
       if @user.persisted?
         unless @user.admin
           login(@user)
-          flash[:success] = I18n.t "omniauth_callbacks.success"
-          redirect_to users_dashboard_path
+          redirect_to users_dashboard_path, flash: { success: t("omniauth_callbacks.success") }
         end
       else
-        redirect_to root_path
-        flash[:danger] = I18n.t "omniauth_callbacks.failed"
+        redirect_to root_path, flash: { danger: t("omniauth_callbacks.failed") }
       end
     rescue
-      if logged_in?
-        logout
-      end
-      redirect_to root_path
-      flash[:danger] = I18n.t "omniauth_callbacks.error"
-      return
+      logout if logged_in?
+      return redirect_to root_path, flash: { danger: t("omniauth_callbacks.error") }
     end
   end
 end

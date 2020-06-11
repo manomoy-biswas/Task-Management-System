@@ -4,22 +4,13 @@ class CategoriesController < ApplicationController
 
   def create
     @category = Category.new(category_params)
-    if @category.save
-      flash[:success] = I18n.t "categories.add_success"
-      redirect_to categories_path
-    else
-      flash[:danger] = I18n.t "categories.faild"
-      render "new"
-    end
+    return redirect_to categories_path, flash: { success: t("categories.add_success") } if @category.save
+    render "new", flash: { danger: t("categories.faild") }
   end
   
   def destroy
-    if @category.destroy
-      flash[:success]=I18n.t "category.destroy_success"
-    else
-      flash[:success]=I18n.t "category.faild"
-    end
-    redirect_to categories_path
+    return redirect_to categories_path, flash: { success: t("category.destroy_success") } if @category.destroy
+    flash[:danger]=I18n.t "category.faild"
   end
   
   def edit
@@ -34,13 +25,8 @@ class CategoriesController < ApplicationController
   end
 
   def update
-    if @category.update(category_params)
-      flash[:success] = I18n.t "categories.update_success"
-      redirect_to categories_path
-    else
-      flash[:danger] = I18n.t "categories.faild"
-      render "edit"
-    end
+    return redirect_to categories_path, flash: { success: t("categories.update_success") } if @category.update(category_params)
+    render "edit", flash: { danger: t("categories.faild") }
   end
   
   private

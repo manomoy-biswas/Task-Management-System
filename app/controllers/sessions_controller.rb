@@ -1,44 +1,34 @@
 class SessionsController < ApplicationController
-  include SessionsHelper
   before_action :set_user, only: [:create]
 
   def create
     begin
       user = @user && @user.authenticate(params[:login][:password])
     rescue BCrypt::Errors::InvalidHash
-      flash[:danger] = I18n.t "session.only_admin"
-      render "new"
+      render "new", flash: { danger: t("session.only_admin") }
       return
     end
     
     if user
       if @user.admin
         login(@user)
-        flash[:success] = I18n.t "session.login_success", user: @user.user_name
-        redirect_to user_dashboard_path
+        redirect_to user_dashboard_path, flash: { success: t("session.login_success", user: @user.user_name) }
       else
-        flash[:warning] = I18n.t "session.only_admin"
-        redirect_to root_path
+        redirect_to root_path, flash: { warning: t("session.only_admin") }
       end
     else
-     flash[:danger] = I18n.t "session.invalid_credential"
-      render "new"
+      render "new", flash: { danger: t("session.invalid_credential") }
     end
   end  
   
   def destroy
     logout
-    flash[:success] = I18n.t "session.logout_success"
-    redirect_to root_path
+    redirect_to root_path, flash: { success: t("session.logout_success") }
   end
 
   def new
-    unless logged_in?
-      return
-    else
-      flash[:warning] = I18n.t "session.logged_in"
-      redirect_to admin_login_path
-    end
+    return unless logged_in?
+    redirect_to admin_login_path, flash: { warning: t("session.logged_in") }
   end  
 
   private
