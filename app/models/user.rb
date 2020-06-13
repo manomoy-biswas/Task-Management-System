@@ -56,9 +56,9 @@ class User < ApplicationRecord
 
   def valid_dob?
     if dob.present?
-      errors.add("#{dob} is invalid. DOB should be before",18.years.ago.to_date ) if dob > 18.years.ago.to_date
+      errors.add(:dob, :invalid, message: "#{dob} is invalid. DOB should be before #{18.years.ago.to_date}") if dob > 18.years.ago.to_date
     else
-      errors.add(:dob, "can't be blank")
+      errors.add(:dob, :blank, message: "DOB can't be blank")
     end 
   end
 end

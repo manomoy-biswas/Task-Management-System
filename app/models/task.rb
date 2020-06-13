@@ -11,7 +11,8 @@ class Task < ApplicationRecord
   has_many :sub_task, dependent: :destroy
   has_many :task_document, dependent: :destroy
   
-  before_validation { self.task_name = task_name.to_s.squeeze(" ").strip.capitalize }
+  # before_validation { self.task_name = task_name.to_s.squeeze(" ").strip.capitalize }
+  before_validation :squeeze_task_name
 
   accepts_nested_attributes_for :sub_task, reject_if: ->(a) { a[:name].blank? }, allow_destroy: true
   
@@ -23,12 +24,12 @@ class Task < ApplicationRecord
   after_create :task_create_notification
 
   validates :task_name, length: { maximum: 255 }
-  validates :task_name, :priority, :repeat, :assign_task_to, :task_category, :submit_date, presence: true
   validates :priority, inclusion: %w[High Medium Low]
   validates :repeat, inclusion: %w[One_Time Daily Weekly Monthly Quarterly Half_yearly Yearly]
-  # validate :valid_submit_date, on: :create
-  # validate :valid_updated_submit_date, on: :update
+  validate :valid_submit_date, on: :create
+  validate :valid_updated_submit_date, on: :update
   validates_uniqueness_of :task_name, case_sensitive: false
+  validates_presence_of :task_name, :priority, :repeat, :assign_task_to, :task_category
 
 
   scope :my_assigned_tasks, ->(user_id=nil) { where(assign_task_by: user_id) }
@@ -116,7 +117,7 @@ class Task < ApplicationRecord
     end  
   end
 
-  def self.filter_by_priority(param, current_user)
+  def self.filter_by_priority(param = nil, current_user)
     if current_user.admin
       if !param || param == ""
         self.includes(:user, :assign_by, :category).order("created_at DESC")
@@ -155,17 +156,28 @@ class Task < ApplicationRecord
       self.my_assigned_tasks_filter(param,current_user.id).includes(:user, :category).order("created_at DESC")
     end  
   end
+
   
   private
-  
-  def valid_submit_date
-    return unless submit_date <= DateTime.now + 1.day
-    errors.add(:submit_date, " can not be assign to a previous date/time")
+
+  def squeeze_task_name
+    self.task_name = task_name.to_s.squeeze(" ").strip.capitalize
   end
-  
+
+  def valid_submit_date
+    if submit_date.present?
+      errors.add(:submit_date, :invalid, message:"Submit date can't be assign to a previous date/time.") unless submit_date >= DateTime.now + 1.day
+    else
+      errors.add(:submit_date, :blank, message: "Submit date can't be blank")
+    end
+  end
+
   def valid_updated_submit_date
-    return unless submit_date <= created_at.to_datetime + 1.day
-    errors.add(:submit_date, " must be greated that created date")
+    if submit_date.present?
+      errors.add(:submit_date, :invalid, message:"Submit date must be greated that created date") unless submit_date >= created_at.to_datetime + 1.day
+    else
+      errors.add(:submit_date, :blank, message: "Submit date can't be blank")
+    end
   end
   
   def index_task

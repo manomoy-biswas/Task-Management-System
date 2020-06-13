@@ -74,7 +74,11 @@ RSpec.describe User, type: :model do
     describe "#valid_dob?" do
       it "is expected to validate that :dob is valid" do
         user2.dob = "01-01-2009"
-        expect(user2.valid_dob?.to_s).to eq("[#{18.years.ago.strftime('%a, %d %b %Y')}]")
+        expect(user2.valid_dob?).to eq(["#{user2.dob} is invalid. DOB should be before #{18.years.ago.to_date}"])
+      end
+      it "is expected to validate that :dob is not blank" do
+        user2.dob = ""
+        expect(user2.valid_dob?).to eq(["DOB can't be blank"])
       end
     end
   end
