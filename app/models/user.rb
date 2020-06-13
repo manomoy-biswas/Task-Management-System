@@ -12,8 +12,8 @@ class User < ApplicationRecord
                       #/\A([a-zA-Z0-9]+)([.{1}])?([a-zA-Z0-9]+)@g(oogle)?mail([.])com\z/.freeze
   VALID_PHONE_REGEX=/\A[6-9][0-9]{9}\z/.freeze
 
-  before_validation { self.name = name.to_s.titleize.strip }
-  before_validation { self.email = email.to_s.downcase.strip }
+  before_validation :valid_name
+  before_validation :valid_email
 
   validates :name, length: { in: 3..50 }
   validates :email, format: { with: VALID_EMAIL_REGEX }
@@ -54,11 +54,21 @@ class User < ApplicationRecord
     end
   end
 
+  private
+
   def valid_dob?
     if dob.present?
       errors.add(:dob, :invalid, message: "#{dob} is invalid. DOB should be before #{18.years.ago.to_date}") if dob > 18.years.ago.to_date
     else
       errors.add(:dob, :blank, message: "DOB can't be blank")
     end 
+  end
+
+  def valid_name
+    self.name = name.to_s.titleize.strip
+  end
+
+  def valid_email
+    self.email = email.to_s.downcase.strip
   end
 end

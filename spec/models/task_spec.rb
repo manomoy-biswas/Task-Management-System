@@ -16,34 +16,78 @@ RSpec.describe Task, type: :model do
   let (:task6) { create(:assigned_task2, task_category: category1.id, assign_task_to: user4.id, assign_task_by: user2.id, approved: true, priority: "Low", notify_hr: true)}
 
   context "Association tests:" do
-    it { is_expected.to have_many(:sub_task).dependent(:destroy) }
-    it { is_expected.to have_many(:notification).with_foreign_key("notifiable_id").dependent(:destroy) }
-    it { is_expected.to have_many(:task_document).dependent(:destroy) }
-    it { is_expected.to belong_to(:category).with_foreign_key("task_category") }
-    it { is_expected.to belong_to(:user).with_foreign_key("assign_task_to") }
-    it { is_expected.to belong_to(:assign_by).class_name("User").with_foreign_key("assign_task_by") }
+    describe "has_many :sub_task" do
+      it { is_expected.to have_many(:sub_task).dependent(:destroy) }
+    end
+    describe "has_many :notification" do
+      it { is_expected.to have_many(:notification).with_foreign_key("notifiable_id").dependent(:destroy) }
+    end
+    describe "has_many :task_document" do
+      it { is_expected.to have_many(:task_document).dependent(:destroy) }
+    end
+    describe "belongs_to :category" do
+      it { is_expected.to belong_to(:category).with_foreign_key("task_category") }
+    end
+    describe "belongs_to :user" do
+      it { is_expected.to belong_to(:user).with_foreign_key("assign_task_to") }
+    end
+    describe "belongs_to :assign_by" do
+      it { is_expected.to belong_to(:assign_by).class_name("User").with_foreign_key("assign_task_by") }
+    end
   end
 
   context "Validation tests" do
-    it { is_expected.to validate_presence_of(:task_name)}
-    it { is_expected.to validate_presence_of(:priority)}
-    it { is_expected.to validate_presence_of(:task_category)}
-    it { is_expected.to validate_presence_of(:repeat)}
-    it { is_expected.to validate_presence_of(:assign_task_to)}
-    it { is_expected.to validate_uniqueness_of(:task_name).case_insensitive}
-    it { is_expected.to validate_length_of(:task_name).is_at_most(255) }
-    it { is_expected.to validate_inclusion_of(:priority).in_array(%w[High Medium Low]) }
-    it { is_expected.to validate_inclusion_of(:repeat).in_array(%w[One_Time Daily Weekly Monthly Quarterly Half_yearly Yearly]) }
-    it {is_expected.to accept_nested_attributes_for(:sub_task).allow_destroy(true) }
+    describe "validate_presence_of(:task_name)" do
+      it { is_expected.to validate_presence_of(:task_name)}
+    end
+    describe "validate_presence_of(:priority)" do
+      it { is_expected.to validate_presence_of(:priority)}
+    end
+    describe "validate_presence_of(:task_category)" do
+      it { is_expected.to validate_presence_of(:task_category)}
+    end
+    describe "validate_presence_of(:repeat)" do
+      it { is_expected.to validate_presence_of(:repeat)}
+    end
+    describe "validate_presence_of(:assign_task_to)" do
+      it { is_expected.to validate_presence_of(:assign_task_to)}
+    end
+    describe "validate_uniqueness_of(:task_name)" do
+      it { is_expected.to validate_uniqueness_of(:task_name).case_insensitive}
+    end
+    describe "validate_length_of(:task_name)" do
+      it { is_expected.to validate_length_of(:task_name).is_at_most(255) }
+    end
+    describe "validate_inclusion_of(:priority)" do
+      it { is_expected.to validate_inclusion_of(:priority).in_array(%w[High Medium Low]) }
+    end
+    describe "validate_inclusion_of(:repeat)" do
+      it { is_expected.to validate_inclusion_of(:repeat).in_array(%w[One_Time Daily Weekly Monthly Quarterly Half_yearly Yearly]) }
+    end
+    describe "accept_nested_attributes_for(:sub_task)" do
+      it {is_expected.to accept_nested_attributes_for(:sub_task).allow_destroy(true) }
+    end
   end
 
   context "Callback tests:" do
-    it {is_expected.to callback(:index_task).after(:commit)}
-    it {is_expected.to callback(:delete_task_index).after(:commit)}
-    it {is_expected.to callback(:task_reminder_email).after(:create)}
-    it {is_expected.to callback(:task_create_email).after(:create)}
-    it {is_expected.to callback(:task_create_notification).after(:create)}
-    it {is_expected.to callback(:squeeze_task_name).before(:validation)}
+    describe "after_commit :index_task" do
+      it {is_expected.to callback(:index_task).after(:commit)}
+    end
+    describe "after_commit :delete_task_index" do
+      it {is_expected.to callback(:delete_task_index).after(:commit)}
+    end
+    describe "after_create :task_reminder_email" do
+      it {is_expected.to callback(:task_reminder_email).after(:create)}
+    end
+    describe "after_create :task_create_email" do
+      it {is_expected.to callback(:task_create_email).after(:create)}
+    end
+    describe "after_create :task_create_notification" do
+      it {is_expected.to callback(:task_create_notification).after(:create)}
+    end
+    describe "before_validation :squeeze_task_name" do
+      it {is_expected.to callback(:squeeze_task_name).before(:validation)}
+    end
   end
 
   #Scope test
@@ -94,6 +138,7 @@ RSpec.describe Task, type: :model do
       end
     end
   end
+
   #Instance Method test
   context "Instance Method test:" do
     describe "#squeeze_task_name" do

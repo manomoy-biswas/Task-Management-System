@@ -1,5 +1,5 @@
 class Category < ApplicationRecord
-  before_validation { self.name = name.to_s.titleize.strip }
+  before_validation :valid_name
 
   validates :name, length: { in: 2..30 }
   validates_presence_of :name
@@ -7,4 +7,8 @@ class Category < ApplicationRecord
 
   has_many :tasks, foreign_key: "task_category"
   
+  private
+  def valid_name
+    self.name = name.to_s.titleize.strip
+  end
 end
