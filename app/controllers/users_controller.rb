@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  include UsersHelper
   before_action :authenticate_user!
   before_action :check_user_is_admin, only: [:new, :create, :destroy]
   before_action :set_user, only: [:edit, :update, :destroy]

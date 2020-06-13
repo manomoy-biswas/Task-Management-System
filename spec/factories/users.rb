@@ -4,6 +4,7 @@ FactoryBot.define do
     email {"arnab.roy@kreet.com"}
     phone  {rand(7000000000..9999999999)}
     dob {"01-01-1996"}
+    password_digest {"admin"}
     admin {true}
     hr {false}
   end

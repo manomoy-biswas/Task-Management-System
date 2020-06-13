@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe SubTask, type: :model do
+RSpec.describe Task, type: :model do
   let (:user1) {create(:admin)}
   let (:user2) {create(:employee)}
   let (:user3) {create(:employee)}
@@ -32,6 +32,10 @@ RSpec.describe SubTask, type: :model do
     it { is_expected.to validate_inclusion_of(:priority).in_array(%w[High Medium Low]) }
     it { is_expected.to validate_inclusion_of(:repeat).in_array(%w[One_Time Daily Weekly Monthly Quarterly Half_yearly Yearly]) }
     it {is_expected.to accept_nested_attributes_for(:sub_task).allow_destroy(true) }
+  end
+
+  context "callback tests:" do
+     it {is_expected.to callback(:index_task).after(:commit).on(:create, :update)}
   end
 
   context "Scope tests:" do
