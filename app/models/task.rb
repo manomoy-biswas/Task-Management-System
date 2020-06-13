@@ -22,22 +22,24 @@ class Task < ApplicationRecord
   after_create :task_create_email
   after_create :task_create_notification
 
-  validates :task_name, presence: true, length: { maximum: 255 }, uniqueness: true
-  validates :priority, :repeat, :assign_task_to, :task_category, :submit_date, presence: true
+  validates :task_name, length: { maximum: 255 }
+  validates :task_name, :priority, :repeat, :assign_task_to, :task_category, :submit_date, presence: true
   validates :priority, inclusion: %w[High Medium Low]
   validates :repeat, inclusion: %w[One_Time Daily Weekly Monthly Quarterly Half_yearly Yearly]
-  validate :valid_submit_date, on: :create
-  validate :valid_updated_submit_date, on: :update
+  # validate :valid_submit_date, on: :create
+  # validate :valid_updated_submit_date, on: :update
+  validates_uniqueness_of :task_name, case_sensitive: false
+
 
   scope :my_assigned_tasks, ->(user_id=nil) { where(assign_task_by: user_id) }
   scope :my_assigned_tasks_filter, ->(param=nil,user_id=nil) { where(priority: param, assign_task_by: user_id) }
-  scope :approved_tasks, ->{ where(approved: 1) }
-  scope :approved_tasks_filter, ->(param=nil) { where(priority: param, approved: 1) }
-  scope :notified_tasks, ->{ where(approved: 1, notify_hr: 1) }
-  scope :notified_tasks_filter, ->(param=nil) { where(priority: param, approved: 1, notify_hr: 1) }
+  scope :approved_tasks, ->{ where(approved: true) }
+  scope :approved_tasks_filter, ->(param=nil) { where(priority: param, approved: true) }
+  scope :notified_tasks, ->{ where(approved: true, notify_hr: true) }
+  scope :notified_tasks_filter, ->(param=nil) { where(priority: param, approved: true, notify_hr: true) }
   scope :admin_task_filter, ->(param=nil) { where(priority: param ) }
   scope :my_task_filter, ->(param=nil, user_id) { where(priority: param , assign_task_to: user_id ) }
-  scope :recurring_task, -> { where(repeat: true) }
+  scope :recurring_task, -> { where(recurring_task: true) }
 
   mappings dynamic: "false" do
     indexes :id, type: :text 

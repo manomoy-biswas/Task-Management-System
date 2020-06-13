@@ -35,6 +35,7 @@ group :development, :test do
   gem "letter_opener_web", "~> 1.4"
   gem 'rspec-rails', '~> 4.0', '>= 4.0.1'
   gem "shoulda-matchers"
+  gem 'factory_bot_rails'
 end
 
 group :development do

@@ -18,10 +18,10 @@ class User < ApplicationRecord
   validates :name, length: { in: 3..50 }
   validates :email, format: { with: VALID_EMAIL_REGEX }
   validates :phone, length: {is: 10}, format: { with: VALID_PHONE_REGEX }
-  validate :valid_dob
+  # validate :valid_dob
   validates :password, length: { minimum: 5 }, allow_nil: true
   validates_presence_of :name, :email, :phone, :dob
-  validates_uniqueness_of :email, :phone, case_sensitive: false
+  validates_uniqueness_of :email, :phone, case_sensitive: true
 
   scope :all_users_except_admin, -> { where(admin: false)}
   scope :all_hr, -> { where(hr: true) }
@@ -69,11 +69,11 @@ class User < ApplicationRecord
 
   private
 
-  def valid_dob
-    if dob >= Date.today
-      errors.add(:dob, "is invalid")
-    elsif dob > 18.years.ago.to_date
-      errors.add("DOB should be before ", 18.years.ago.to_date)
-    end
-  end
+  # def valid_dob
+  #   if dob >= Date.today
+  #     errors.add(:dob, "is invalid")
+  #   elsif dob > 18.years.ago.to_date
+  #     errors.add("DOB should be before ", 18.years.ago.to_date)
+  #   end
+  # end
 end

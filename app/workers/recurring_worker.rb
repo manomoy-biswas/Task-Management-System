@@ -29,13 +29,13 @@ class RecurringWorker
             end
 
           when "Quarterly"
-            if (today.mon = 1 || today.mon = 3 || today.mon = 6 || today.mon = 9) && today.mday ==1
+            if (today.mon == 1 || today.mon == 3 || today.mon == 6 || today.mon == 9) && today.mday ==1
               Notification.create_notification(task.id, "Quarterly")
               TaskMailer.reminder_email(task.id,"Quarterly").deliver
             end
 
           when "Half-yearly"
-            if (today.mon = 1 || today.mon = 6) && today.mday ==1
+            if (today.mon == 1 || today.mon == 6) && today.mday ==1
               Notification.create_notification(task.id, "Half-yearly")
               TaskMailer.reminder_email(task.id, "half-yearly").deliver
 

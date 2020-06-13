@@ -1,9 +1,7 @@
 class SubTask < ApplicationRecord
-  belongs_to :task
+  belongs_to :task, required: true
 
   before_validation { self.name = name.to_s.squeeze(" ").strip.capitalize }
-
-  # VALID_SUB_TASK_NAME_REGEX = /\A[a-zA-Z][a-zA-Z\. ]*\z/.freeze
 
   validates :name, presence: true, length: { in: 3..255 }
 
