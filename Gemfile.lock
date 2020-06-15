@@ -1,3 +1,12 @@
+GIT
+  remote: https://github.com/omc/bonsai-elasticsearch-rails.git
+  revision: 942dea4a263e0b86c7dc197528ea9770c88146c8
+  branch: master
+  specs:
+    bonsai-elasticsearch-rails (0.3.0)
+      elasticsearch-model (< 99)
+      elasticsearch-rails (< 99)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -331,6 +340,7 @@ PLATFORMS
 DEPENDENCIES
   bcrypt
   better_errors (~> 2.5, >= 2.5.1)
+  bonsai-elasticsearch-rails!
   bootsnap (>= 1.4.2)
   byebug
   capybara (>= 2.15)
@@ -370,7 +380,7 @@ DEPENDENCIES
   zip-zip
 
 RUBY VERSION
-   ruby 2.6.5p114
+   ruby 2.6.6p146
 
 BUNDLED WITH
    1.17.3
