@@ -2,7 +2,7 @@ class AvaterUploader < CarrierWave::Uploader::Base
   include CarrierWave::MiniMagick
 
   # Choose what kind of storage to use for this uploader:
-  storage :file
+  storage :fog
 
   # Override the directory where uploaded files will be stored.
   def store_dir
@@ -27,6 +27,6 @@ class AvaterUploader < CarrierWave::Uploader::Base
 
   # Override the filename of the uploaded files:
   def filename
-    "Profile_picture_#{DateTime.now.strftime("%d%m%Y%I%M")}.jpg" if original_filename
+    @name ||= "Profile_picture_#{DateTime.now.strftime("%d%m%Y%I%M%S")}.jpg" if original_filename
   end
 end

@@ -1,7 +1,7 @@
 class DocumentUploader < CarrierWave::Uploader::Base
   
   # Choose what kind of storage to use for this uploader:
-  storage :file
+  storage :fog
 
   # Override the directory where uploaded files will be stored.
   def store_dir
@@ -14,9 +14,11 @@ class DocumentUploader < CarrierWave::Uploader::Base
   end
 
   # Override the filename of the uploaded files:
-  # def filename
-  #   "#{file.filename.split(".").first}_#{DateTime.now.strftime("%d%m%Y%I%M%S").to_s + rand(100).to_s}.#{file.extension}" if original_filename.present?
-  # end
+  def filename
+    id = 0
+    id = TaskDocument.last.id if TaskDocument.last.present?
+    @name ||= "DOC_TD_#{id  + 1}#{DateTime.now.strftime("%d%m%Y%I%M%S")}.#{file.extension}" if original_filename.present?
+  end
 
   def size_range
     1.byte..50.megabytes

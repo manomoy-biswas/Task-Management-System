@@ -7,6 +7,7 @@ gem "bootsnap", ">= 1.4.2"
 gem "carrierwave", "~> 2.1"
 gem "elasticsearch-model"
 gem "elasticsearch-rails"
+gem "fog"
 gem "font-awesome-rails", "~> 4.7", ">= 4.7.0.5"
 gem "jbuilder", "~> 2.7"
 gem "jquery-rails", "~> 4.3", ">= 4.3.5"
@@ -52,6 +53,7 @@ end
 
 group :production do
   gem 'bonsai-elasticsearch-rails', github: 'omc/bonsai-elasticsearch-rails', branch: 'master'
+  gem "aws-sdk-s3", require: false
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
