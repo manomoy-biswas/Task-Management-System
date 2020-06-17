@@ -6,7 +6,7 @@ FactoryBot.define do
     assign_task_by {1}
     priority {["Low", "Medium", "High"].sample}
     repeat {"One_Time"}
-    submit_date {Faker::Date.between(1.days.from_now, 2.years.from_now)}
+    submit_date {Faker::Date.between(2.days.from_now, 2.years.from_now)}
     recurring_task {false}
     description {Faker::Lorem.paragraph(rand(30..40))}
   end
@@ -18,7 +18,7 @@ FactoryBot.define do
     assign_task_by {1}
     priority {["Low", "Medium", "High"].sample}
     repeat {"Monthly"}
-    submit_date {Faker::Date.between(1.days.from_now, 2.years.from_now)}
+    submit_date {Faker::Date.between(2.days.from_now, 2.years.from_now)}
     recurring_task {true}
     description {Faker::Lorem.paragraph(rand(30..40))}
   end
