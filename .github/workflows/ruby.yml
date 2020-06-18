@@ -63,7 +63,7 @@ jobs:
         run: |
           gem install bundler --version 1.17.3
           bundle install --jobs 4 --retry 3
-          bin/rails db:prepare --trace
+          bundle exec rails db:prepare --trace
           
       - name: Run tests
         env:
