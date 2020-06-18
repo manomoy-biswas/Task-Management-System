@@ -51,7 +51,7 @@ end
 group :production do
   gem 'bonsai-elasticsearch-rails', github: 'omc/bonsai-elasticsearch-rails', branch: 'master'
   # gem "aws-sdk-s3", require: false
-  gem "fog"
+  # gem "fog"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
