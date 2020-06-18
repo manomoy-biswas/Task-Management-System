@@ -71,22 +71,6 @@ GEM
     aliyun-sdk (0.7.2)
       nokogiri (~> 1.6)
       rest-client (~> 2.0)
-    aws-eventstream (1.1.0)
-    aws-partitions (1.329.0)
-    aws-sdk-core (3.100.0)
-      aws-eventstream (~> 1, >= 1.0.2)
-      aws-partitions (~> 1, >= 1.239.0)
-      aws-sigv4 (~> 1.1)
-      jmespath (~> 1.0)
-    aws-sdk-kms (1.34.1)
-      aws-sdk-core (~> 3, >= 3.99.0)
-      aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.68.1)
-      aws-sdk-core (~> 3, >= 3.99.0)
-      aws-sdk-kms (~> 1)
-      aws-sigv4 (~> 1.1)
-    aws-sigv4 (1.1.4)
-      aws-eventstream (~> 1.0, >= 1.0.2)
     bcrypt (3.1.13)
     better_errors (2.6.0)
       coderay (>= 1.0.0)
@@ -342,7 +326,6 @@ GEM
     ipaddress (0.8.3)
     jbuilder (2.10.0)
       activesupport (>= 5.0.0)
-    jmespath (1.4.0)
     json (2.3.0)
     jwt (2.2.1)
     launchy (2.5.0)
@@ -580,7 +563,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  aws-sdk-s3
   bcrypt
   better_errors (~> 2.5, >= 2.5.1)
   bonsai-elasticsearch-rails!

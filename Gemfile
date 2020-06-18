@@ -50,7 +50,7 @@ end
 
 group :production do
   gem 'bonsai-elasticsearch-rails', github: 'omc/bonsai-elasticsearch-rails', branch: 'master'
-  gem "aws-sdk-s3", require: false
+  # gem "aws-sdk-s3", require: false
   gem "fog"
 end
 
