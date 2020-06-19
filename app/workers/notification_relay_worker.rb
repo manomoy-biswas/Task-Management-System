@@ -14,14 +14,14 @@ class NotificationRelayWorker
 
       when "approved by"
         text = " approved a task, assigned to " + User.find(Task.find(@notification.notifiable_id).assign_task_to).name
-        content = notification_content("fa-check-square","admin",text, @notification)
+        content = notification_content("fa-check-square",text, @notification)
 
       when "approved"
         text = @notification.action + " a task, assigned to You."
         content = notification_content("fa-check-circle",text, @notification)
 
       when "submitted"
-        if @notification.recipient == Task.find(@notification.notifiable_id).assign_task_by
+        if @notification.recipient_id == Task.find(@notification.notifiable_id).assign_task_by
           text = @notification.action + " a task, assigned by You."
         else
          text = "#{@notification.action} a task, assigned by #{User.find(Task.find(@notification.notifiable_id).assign_task_by).name}"

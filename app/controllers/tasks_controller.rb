@@ -8,84 +8,49 @@ class TasksController < ApplicationController
   before_action :category_list, :employee_list, only: [:new, :create, :edit, :update]
   before_action :set_task, only: [:approve, :destroy, :download, :edit, :notify_hr, :show,
                 :submit_task, :update]
+  after_action :create_approved_notification_and_email, only: [:approve]
+  after_action :create_update_notification_and_email, only: [:update]
+  after_action :create_notify_hr_notification, only: [:notify_hr]
+  after_action :create_submit_task_notification, only: [:submit_task]
   
   def approve
     return if @task.assign_task_to == current_user.id
-
-    unless @task.submit
-      flash[:warning] = "Employee not Submitted the task yet."
-      redirect_to request.referrer
-      return
-    end
-
+    return redirect_to request.referrer, flash: { warning: "Employee not Submitted the task yet." } unless @task.submit
+    
     if @task.approved
-      flash[:success] = "already Approved"
-      redirect_to request.referrer
+      redirect_to request.referrer, flash: { success: "already Approved" }
     else
       @task.approved = true
       @task.approved_by = current_user.id
-      if @task.save(validate: false)
-        Notification.create_notification(@task.id, "approved")
-        TaskMailerWorker.perform_async(@task.id,"approved")
-        unless admin?
-          Notification.create_notification(@task.id, "approved by")
-          TaskMailerWorker.perform_async(@task.id,"approved by")
-        end
-        flash[:success] = I18n.t "task.approve.success"
-        redirect_to request.referrer
-      end
+      return redirect_to request.referrer, flash: {success: t("task.approve.success") } if @task.save(validate: false)
     end
   end
   
   def approved_task
     return unless admin? || hr?
-
-    @tasks_approved = if admin?
-                        if !params[:priority] || params[:priority] == ""
-                          Task.approved_tasks.includes(:user, :assign_by, :category).order("created_at DESC")
-                        else
-                          Task.approved_tasks_filter(params[:priority]).includes(:user, :assign_by, :category).order("created_at DESC")
-                        end
-                      elsif hr?
-                        if !params[:priority] || params[:priority] == ""
-                          Task.notified_tasks.includes(:user, :category).order("created_at DESC")
-                        else
-                          Task.notified_tasks_filter(params[:priority]).includes(:user, :category).order("created_at DESC")
-                        end
-                      end
+    @tasks_approved = Task.filter_approved_task_by_priority(params[:priority], current_user)
   end  
   
   def user_assigned_task
-    @tasks =  if !params[:priority] || params[:priority] == ""
-                Task.my_assigned_tasks(current_user.id).includes(:user, :category).order("created_at DESC")
-              else
-                Task.my_assigned_tasks_filter(params[:priority],current_user.id).includes(:user, :category).order("created_at DESC")
-              end       
+    @tasks = Task.filter_user_assigned_task_by_priority(params[:priority], current_user)      
   end
 
   def create
     @task = Task.new(task_params)
     
-    if hr? || @task.user.admin || @task.user == current_user || @task.user.hr 
-      redirect_to root_path
-    end
+    return redirect_to root_path if hr? || @task.user.admin || @task.user == current_user || @task.user.hr
     
     @task.assign_task_by = current_user.id
-    unless task_params[:repeat] == "One_Time"
-      @task.recurring_task = true
-    end
+    @task.recurring_task = true unless task_params[:repeat] == "One_Time"
     if @task.save
       if params[:task_document].present?
         params[:task_document]["document"].each do |file|
           @task_document = @task.task_document.create(document: file, task_id: @task.id)
         end
       end
-      Notification.create_notification(@task.id, "assigned")
-      flash[:success]= I18n.t "task.success", task_name: @task.task_name, task_id: @task.id
-      redirect_to tasks_path
+      redirect_to tasks_path flash: { success: t("task.success", task_name: @task.task_name, task_id: @task.id) }
     else
-      flash[:danger] = I18n.t "task.failed"
-      render "new"
+      render "new", flash: {danger: t("task.failed") }
     end
   end
 
@@ -94,8 +59,7 @@ class TasksController < ApplicationController
     if @task.present?
       taskname= " id: " + @task.id.to_s + " " + @task.task_name
       @task.destroy
-      flash[:success] = I18n.t "task.destroy", task: taskname
-      redirect_to tasks_path
+      redirect_to tasks_path, flash: { success: t("task.destroy", task: taskname) }
     else
       flash[:danger] = I18n.t "task.not_exist"
     end
@@ -135,38 +99,16 @@ class TasksController < ApplicationController
   end
 
   def edit
-    unless @task.assign_task_by == current_user.id || admin?
-      redirect_to root_path
-    end
+    return redirect_to root_path unless @task.assign_task_by == current_user.id || admin?
   end
 
   def elastic_search
-    if params[:q].blank?
-      flash[:danger] = "Please enter a search term"
-      redirect_to tasks_path
-      return
-    end  
-    if admin?
-      @tasks = Task.all_task_search(params[:q].present? ? params[:q] : nil)
-    else
-      @tasks = Task.search((params[:q].present? ? params[:q] : nil), current_user.id)
-    end  
+    return redirect_to request.referrer, flash: { danger: "Please enter a search term" } if params[:q].blank?
+    @tasks = Task.task_search(params[:q], current_user)
   end  
 
   def index
-    @tasks =  if admin?
-                if !params[:priority] || params[:priority] == ""
-                  Task.includes(:user, :assign_by, :category).order("created_at DESC")
-                else
-                  Task.admin_task_filter(params[:priority]).includes(:user, :assign_by, :category).order("created_at DESC")
-                end    
-              else
-                if !params[:priority] || params[:priority] == ""
-                  current_user.tasks.includes(:assign_by, :category).order("created_at DESC")
-                else
-                  Task.my_task_filter(params[:priority], current_user.id).includes(:assign_by, :category).order("created_at DESC")
-                end
-              end
+    @tasks =  Task.filter_by_priority(params[:priority], current_user)
   end            
       
   def new
@@ -178,9 +120,7 @@ class TasksController < ApplicationController
     
     @task.notify_hr = true
     @task.save
-    flash[:success] = "A notification has been sent to all HR's"
-    Notification.create_notification(@task.id, "notified")
-    redirect_to request.referrer
+    redirect_to request.referrer, flash: { success: "A notification has been sent to all HR's" }
   end  
 
   def print_task_list
@@ -210,10 +150,7 @@ class TasksController < ApplicationController
   end
   
   def show
-    unless @task.assign_task_to == current_user.id || @task.assign_task_by == current_user.id || admin? || (@task.notify_hr && hr?)
-      flash[:danger] = "You are trying to visit other employees task"
-      redirect_to user_dashboard_path
-    end
+    return redirect_to user_dashboard_path, flash: { danger: "You are trying to visit other employees task" } unless @task.assign_task_to == current_user.id || @task.assign_task_by == current_user.id || admin? || (@task.notify_hr && hr?)
   end
   
   def submit_subtask
@@ -222,58 +159,37 @@ class TasksController < ApplicationController
 
     @subtask.submit = true
     @subtask.save
-    flash[:success] = I18n.t "task.submit_subtask.success", subtask: @subtask.name
-    redirect_to task_path(@subtask.task_id)
+    redirect_to task_path(@subtask.task_id), flash: { success: t("task.submit_subtask.success", subtask: @subtask.name) }
   end  
   
   def submit_task
     return unless @task.assign_task_to == current_user.id
-      
-    unless SubTask.all_subtasks_submitted(@task)
-      flash[:warning] = I18n.t "task.submit_task.failed"
-      redirect_to request.referrer
-      return
-    end  
+    return redirect_to request.referrer, flash: { warning: t("task.submit_task.failed") } unless SubTask.all_subtasks_submitted(@task)
     @task.submit = true
-    if @task.save
-      Notification.create_notification(@task.id, "submitted")
-      flash[:success] = I18n.t "task.submit_task.success"
-      redirect_to request.referrer
-    end
+    
+    return redirect_to request.referrer, flash: { success: t("task.submit_task.success") } if @task.save
   end  
   
   def update
-    unless @task.assign_task_by == current_user.id || admin?
-      redirect_to user_dashboard_path
-      return
-    end
-    if @task.approved && !admin?
-      redirect_to user_dashboard_path
-      return
-    end
-    
-    if hr? || User.find(task_params[:assign_task_to]).admin || task_params[:assign_task_to] == current_user.id
-      redirect_to root_path
-    end
+    return redirect_to user_dashboard_path unless @task.assign_task_by == current_user.id || admin?
+    return redirect_to user_dashboard_path if @task.approved && !admin?
+    return redirect_to root_path if hr? || User.find(task_params[:assign_task_to]).admin || task_params[:assign_task_to] == current_user.id
 
     if task_params[:repeat] == "One_Time"
       @task.recurring_task = false
     else
       @task.recurring_task = true unless @task.submit
     end
+
     if @task.update(task_params)
       if params[:task_document].present?
         params[:task_document]["document"].each do |file|
           @task_document = @task.task_document.create(document: file, task_id: @task.id)
         end
       end
-      Notification.create_notification(@task.id, "updated")
-      TaskMailerWorker.perform_async(@task.id,"update")
-      flash[:success] = I18n.t "task.update_success", task_name: @task.task_name
-      redirect_to tasks_path
+      redirect_to tasks_path, flash: { success: t("task.update_success", task_name: @task.task_name) }
     else
-      flash[:danger] = I18n.t "task.failed"
-      render "edit"
+      render "edit", flash: { danger: t("task.failed") }
     end
   end
 
@@ -284,6 +200,32 @@ class TasksController < ApplicationController
 
   def employee_list
     @users ||= User.all_except(current_user)
+  end
+
+  def create_approved_notification_and_email
+    Notification.create_notification(@task.id, "approved")
+    TaskMailerWorker.perform_async(@task.id,"approved")
+    unless admin?
+      Notification.create_notification(@task.id, "approved by")
+      TaskMailerWorker.perform_async(@task.id,"approved by")
+    end
+  end
+
+  def create_update_notification_and_email
+    Notification.create_notification(@task.id, "updated")
+    TaskMailerWorker.perform_async(@task.id,"update")
+  end
+
+  def create_mail_worker(task_id, type)
+    TaskMailerWorker.perform_async(task_id,type)
+  end
+
+  def create_notify_hr_notification
+    Notification.create_notification(@task.id, "notified", current_user.id )
+  end
+
+  def create_submit_task_notification
+    Notification.create_notification(@task.id, "submitted")
   end
 
   def task_params

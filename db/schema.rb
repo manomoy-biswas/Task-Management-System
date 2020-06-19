@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 2020_06_11_182555) do
 
   create_table "notifications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.integer "recipient_id", null: false
+    t.bigint "recipient_id", null: false
     t.datetime "read_at"
     t.string "action", null: false
     t.string "notifiable_type"
@@ -33,12 +33,12 @@ ActiveRecord::Schema.define(version: 2020_06_11_182555) do
 
   create_table "sub_tasks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name"
+    t.text "subtask_description"
     t.boolean "submit", default: false
     t.datetime "submitdate"
     t.bigint "task_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.text "subtask_description", size: :long
     t.index ["task_id"], name: "index_sub_tasks_on_task_id"
   end
 
@@ -53,17 +53,17 @@ ActiveRecord::Schema.define(version: 2020_06_11_182555) do
   create_table "tasks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "task_category", null: false
     t.string "task_name", null: false
+    t.text "description"
     t.bigint "assign_task_to", null: false
     t.bigint "assign_task_by", null: false
     t.string "priority", null: false
     t.string "repeat", null: false
     t.datetime "submit_date", null: false
     t.boolean "recurring_task", default: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.text "description", size: :long
     t.boolean "submit", default: false
     t.boolean "approved", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.boolean "notify_hr", default: false
     t.bigint "approved_by"
     t.index ["assign_task_by"], name: "fk_rails_d83cdb5373"
@@ -76,11 +76,11 @@ ActiveRecord::Schema.define(version: 2020_06_11_182555) do
     t.string "email"
     t.string "phone"
     t.date "dob", null: false
+    t.boolean "admin", default: false
+    t.boolean "hr", default: false
     t.string "password_digest"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.boolean "admin", default: false
-    t.boolean "hr", default: false
     t.string "avater"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["phone"], name: "index_users_on_phone", unique: true

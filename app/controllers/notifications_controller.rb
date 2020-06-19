@@ -11,8 +11,7 @@ class NotificationsController < ApplicationController
     
     if @notification.present?
       @notification.destroy
-      flash[:success] = "Notification deleted"
-      redirect_to request.referrer
+      redirect_to request.referrer, flash: { success: "Notification deleted" }
     else
       flash[:danger] = "Notification doesn't exist."
     end
@@ -27,11 +26,8 @@ class NotificationsController < ApplicationController
   def mark_as_read
     task=Task.find(@notification.notifiable_id) 
     @notification.update(read_at: Time.zone.now)
-    if task.present?
-      redirect_to task_path(task)
-    else
-      redirect to requst.referrer
-    end
+    
+    redirect_to task_path(task) if task.present?
   end
 
   private

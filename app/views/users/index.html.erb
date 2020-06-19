@@ -55,7 +55,7 @@
                 <% @users.each do |user|%>
                   <tr>
                     <th scope="row"><%= @users.index(user)+1 %></th>
-                    <td><%= user.user_name%></td>
+                    <td><%= user.name%></td>
                     <td><%= user.email %></td>
                     <td><%= user.phone %></td>
                     <td><%= DateTime.parse(user.dob.to_s).strftime("%d-%m-%Y") %></td>

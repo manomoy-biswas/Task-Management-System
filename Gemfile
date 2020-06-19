@@ -4,6 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "2.6.6"
 gem "bcrypt"
 gem "bootsnap", ">= 1.4.2"
+gem "bootstrap"
 gem "carrierwave", "~> 2.1"
 gem "elasticsearch-model"
 gem "elasticsearch-rails"
@@ -32,6 +33,9 @@ group :development, :test do
   gem "letter_opener", "~> 1.7"
   gem "letter_opener_web", "~> 1.4"
   gem 'rspec-rails', '~> 4.0', '>= 4.0.1'
+  gem "shoulda-matchers"
+  gem 'factory_bot_rails'
+  gem 'simplecov', require: false
 end
 
 group :development do
@@ -46,6 +50,7 @@ group :test do
   gem "capybara", ">= 2.15"
   gem "selenium-webdriver"
   gem "webdrivers"
+  gem 'shoulda-callback-matchers'
 end
 
 group :production do

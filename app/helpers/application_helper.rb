@@ -10,17 +10,15 @@ module ApplicationHelper
     end
   end
 
-  def check_user_is_admin
-    unless admin?
-      flash[:warning] = I18n.t "application.only_admin"
-      redirect_to root_path
-    end
+  def logged_in?
+    current_user.present?
   end
 
-  def check_user_is_hr
-    if hr?
-      flash[:warning] = I18n.t "application.only_hr"
-      redirect_to users_dashboard_path
-    end
+  def admin?
+    current_user.admin
+  end
+
+  def hr?
+    current_user.hr
   end
 end

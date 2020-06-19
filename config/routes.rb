@@ -42,8 +42,6 @@ Rails.application.routes.draw do
     end
   end
   
-  # get :admin_login, to: "sessions#new"
-  # delete :logout, to: "sessions#destroy"
   
   get :login, to: redirect("auth/google_oauth2")
   get "auth/:provider/callback", to: "omniauth_callbacks#google_oauth2"

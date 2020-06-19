@@ -1,65 +1,38 @@
 class UsersController < ApplicationController
-  include ApplicationHelper
+  include UsersHelper
   before_action :authenticate_user!
   before_action :check_user_is_admin, only: [:new, :create, :destroy]
   before_action :set_user, only: [:edit, :update, :destroy]
 
   def create
     @user = User.new(user_params) 
-    @user.provider="google_oauth2"
-    if user_params[:roles].present?
-      if user_params[:roles].include?("hr")
-        @user.hr = true
-      end
-    end
-
     if @user.save
-      UserMailer.with(user: @user).welcome_user_email.deliver
-      flash[:success] =  I18n.t "user.create_success"
-      redirect_to users_path
+      redirect_to users_path, flash: { success: t("user.create_success") }
     else
-      flash[:danger] = I18n.t "user.create_faild"
-      render "new"
+      render "new", flash: { danger: t("user.create_faild") }
     end  
   end  
   
   def destroy
     return unless admin?
-
     if @user.destroy
-      flash[:success]=I18n.t "user.destroy_success"
-      redirect_to users_path
+      redirect_to users_path, flash: {success: t("user.create_success")}
     else
-      flash[:success]=I18n.t "user.failed"
-      redirect_to users_path
+      redirect_to users_path, flash: {success: t("user.failed")}
     end
   end
 
   def edit
     unless admin?
       if @user.id != current_user.id
-        redirect_to root_path
+        redirect_to root_path 
       end
     end
   end    
 
   def index
-    unless admin? || hr?
-      redirerct_to root_path
-    end
-    @users =  if !params[:role] || params[:role] == ""
-                if admin?
-                  User.all.order("name ASC")
-                elsif hr?
-                  User.where.not(admin: 1).order("name ASC")
-                end
-              elsif params[:role] == "Admin"
-                User.all_admin.order("name ASC")
-              elsif params[:role] == "HR"
-                User.all_hr.order("name ASC")
-              else
-                User.all_employee.order("name ASC")
-              end    
+    redirerct_to root_path unless admin? || hr?
+    @users =  User.filter_by_role(params[:role], current_user) 
   end    
   
   def new
@@ -83,22 +56,17 @@ class UsersController < ApplicationController
 
   def update
     if admin? && @user != current_user
-      if @user.update(user_params) 
-        flash[:success] = I18n.t "user.update_success"
-        redirect_to users_path
+      if @user.update(user_params)
+        redirect_to users_path, flash: { success: t("user.update_success") }
       else
-        flash[:danger] = I18n.t "user.failed"
-        render "edit"
+        render "edit", flash: { danger: t("user.failed")}
       end
     elsif @user == current_user
       @user.name = user_params[:name] if user_params[:name]
       @user.dob = user_params[:dob] if user_params[:dob]
       @user.phone = user_params[:phone] if user_params[:phone]
       @user.avater = user_params[:avater] if user_params[:avater].present?
-      if @user.save
-        flash[:success] = I18n.t "user.update_success"
-        redirect_to user_path(@user)
-      end
+      redirect_to user_path(@user), flash: { success: t("user.update_success") } if @user.save
     end
   end  
 
@@ -109,6 +77,6 @@ class UsersController < ApplicationController
   end
   
   def user_params
-    params.require(:user).permit(:name, :email, :phone, :dob, :avater, roles:[])
+    params.require(:user).permit(:name, :email, :phone, :dob, :avater, :hr)
   end
 end
