@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'elasticsearch/model'
+require "zip"
 class Task < ApplicationRecord
   include SessionsHelper
   include Elasticsearch::Model
@@ -113,6 +114,63 @@ class Task < ApplicationRecord
     else
       self.search((param.present? ? param : nil), current_user.id)
     end  
+  end
+
+  def self.download_document(task_id)
+    @task = self.find(task_id)
+    if @task.task_document.count == 1
+      data = open(@task.task_document.first.document.url)
+      send_data(data.read, type: data.content_type, filename: @task.task_document.first.document.file.filename)
+    else
+      folder_path = "#{Rails.root}/public/uploads/task_document/document/#{@task.id.to_s}/"
+      filename = @task.task_name + "_TD_" + DateTime.parse(@task.created_at.to_s).strftime("%d%m%Y") +".zip"
+      temp_file = Tempfile.new(filename)
+      FileUtils.remove_dir(folder_path) if Dir.exist?(folder_path)
+      Dir.mkdir(folder_path)
+      @task.task_document.each do |file|
+        open(folder_path + "#{file.document.file.filename}", 'wb') do |f|
+          f << open("#{file.document.url}").read
+        end
+      end
+
+      begin
+        Zip::OutputStream.open(temp_file) { |zos| }
+        Zip::File.open(temp_file.path, Zip::File::CREATE) do |zip|
+          @task.task_document.each do |file|
+            zip.add(file.document.file.filename, File.join(folder_path, file.document.file.filename))
+          end
+        end
+        read_data = File.read(temp_file.path)
+        send_data(read_data, type: "application/zip", filename: filename)
+      ensure
+        FileUtils.remove_dir(folder_path) if Dir.exist?(folder_path)
+        temp_file.close
+        temp_file.unlink
+      end
+    end
+  end
+
+  def self.task_list_printing
+    @tasks = self.notified_tasks
+    respond_to do |format|
+      format.html 
+      format.pdf do
+        pdf = TaskList.new(@tasks)
+        send_data(pdf.render, filename: "Tasklist_#{DateTime.now.strftime("%d%m%Y%I%M%S")}.pdf", type: "application/pdf", disposition:"inline")
+      end
+    end
+  end
+
+  def self.task_details_printing(task_id)
+    @task = self.find(task_id)
+    return unless @task.approved
+    respond_to do |format|
+      format.html 
+      format.pdf do
+        pdf = TaskDetails.new(@task)
+        send_data(pdf.render, filename: "Task_#{@task.id}_#{DateTime.now.strftime("%d%m%Y%I%M%S")}.pdf", type: "application/pdf", disposition:"inline")
+      end
+    end
   end
 
   def self.filter_by_priority(param = nil, current_user)

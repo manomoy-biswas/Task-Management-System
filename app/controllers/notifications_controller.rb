@@ -19,15 +19,12 @@ class NotificationsController < ApplicationController
   
   def mark_all_read
     @notifications = Notification.unread(current_user.id)
-    @notifications.update_all(read_at: Time.zone.now)
-    redirect_to request.referrer
+    redirect_to request.referrer if @notifications.update_all(read_at: Time.zone.now)
   end
   
   def mark_as_read
     task=Task.find(@notification.notifiable_id) 
-    @notification.update(read_at: Time.zone.now)
-    
-    redirect_to task_path(task) if task.present?
+    redirect_to task_path(task) if @notification.update(read_at: Time.zone.now) && task.present?
   end
 
   private

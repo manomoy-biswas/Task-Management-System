@@ -31,7 +31,7 @@
 
 en:
   application:
-    authentication_error: "Please login with your credential."
+    authentication_error: "you are already logged in / Please login with your credential."
     only_admin: "You are not a ADMIN. Only ADMIN has right to login here."
     only_hr: "You are not a HR. Only HR has right login here."
     except_hr: "HR does not have this functionality"

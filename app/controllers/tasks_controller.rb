@@ -1,5 +1,4 @@
 class TasksController < ApplicationController
-  require "zip"
   include TasksHelper
   
   before_action :authenticate_user!
@@ -37,17 +36,13 @@ class TasksController < ApplicationController
 
   def create
     @task = Task.new(task_params)
-    
     return redirect_to root_path if hr? || @task.user.admin || @task.user == current_user || @task.user.hr
-    
     @task.assign_task_by = current_user.id
     @task.recurring_task = true unless task_params[:repeat] == "One_Time"
     if @task.save
-      if params[:task_document].present?
-        params[:task_document]["document"].each do |file|
-          @task_document = @task.task_document.create(document: file, task_id: @task.id)
-        end
-      end
+      params[:task_document]["document"].each do |file|
+        @task_document = @task.task_document.create(document: file, task_id: @task.id)
+      end if params[:task_document].present?
       redirect_to tasks_path flash: { success: t("task.success", task_name: @task.task_name, task_id: @task.id) }
     else
       render "new", flash: {danger: t("task.failed") }
@@ -66,36 +61,7 @@ class TasksController < ApplicationController
   end
   
   def download
-        if @task.task_document.count == 1
-      data = open(@task.task_document.first.document.url)
-      send_data(data.read, type: data.content_type, filename: @task.task_document.first.document.file.filename)
-    else
-      folder_path = "#{Rails.root}/public/uploads/task_document/document/#{@task.id.to_s}/"
-      filename = @task.task_name + "_TD_" + DateTime.parse(@task.created_at.to_s).strftime("%d%m%Y") +".zip"
-      temp_file = Tempfile.new(filename)
-      FileUtils.remove_dir(folder_path) if Dir.exist?(folder_path)
-      Dir.mkdir(folder_path)
-      @task.task_document.each do |file|
-        open(folder_path + "#{file.document.file.filename}", 'wb') do |f|
-          f << open("#{file.document.url}").read
-        end
-      end
-
-      begin
-        Zip::OutputStream.open(temp_file) { |zos| }
-        Zip::File.open(temp_file.path, Zip::File::CREATE) do |zip|
-          @task.task_document.each do |file|
-            zip.add(file.document.file.filename, File.join(folder_path, file.document.file.filename))
-          end
-        end
-        read_data = File.read(temp_file.path)
-        send_data(read_data, type: "application/zip", filename: filename)
-      ensure
-        FileUtils.remove_dir(folder_path) if Dir.exist?(folder_path)
-        temp_file.close
-        temp_file.unlink
-      end
-    end
+    Task.download_document(@task.id)    
   end
 
   def edit
@@ -117,36 +83,18 @@ class TasksController < ApplicationController
   
   def notify_hr
     return unless admin? && @task.approved
-    
     @task.notify_hr = true
-    @task.save
-    redirect_to request.referrer, flash: { success: "A notification has been sent to all HR's" }
+    redirect_to request.referrer, flash: { success: "A notification has been sent to all HR's" } if @task.save
   end  
 
   def print_task_list
     return unless hr?
-    @tasks = Task.notified_tasks
-    respond_to do |format|
-      format.html 
-      format.pdf do
-        pdf = TaskList.new(@tasks)
-        send_data(pdf.render, filename: "Tasklist_#{DateTime.now.strftime("%d%m%Y%I%M%S")}.pdf", type: "application/pdf", disposition:"inline")
-      end
-    end
+    Task.task_list_printing
   end
 
   def print_task_details
-    return unless hr? 
-    @task = Task.find(params[:task_id])
-    return unless @task.approved
-
-    respond_to do |format|
-      format.html 
-      format.pdf do
-        pdf = TaskDetails.new(@task)
-        send_data(pdf.render, filename: "Task_#{@task.id}_#{DateTime.now.strftime("%d%m%Y%I%M%S")}.pdf", type: "application/pdf", disposition:"inline")
-      end
-    end
+    return unless hr?     
+    Task.task_details_printing(params[:task_id])
   end
   
   def show
@@ -156,23 +104,19 @@ class TasksController < ApplicationController
   def submit_subtask
     @subtask = SubTask.find(params[:id])
     return unless Task.find(@subtask.task_id).assign_task_to == current_user.id
-
     @subtask.submit = true
-    @subtask.save
-    redirect_to task_path(@subtask.task_id), flash: { success: t("task.submit_subtask.success", subtask: @subtask.name) }
+    redirect_to task_path(@subtask.task_id), flash: { success: t("task.submit_subtask.success", subtask: @subtask.name) } if @subtask.save
   end  
   
   def submit_task
     return unless @task.assign_task_to == current_user.id
     return redirect_to request.referrer, flash: { warning: t("task.submit_task.failed") } unless SubTask.all_subtasks_submitted(@task)
     @task.submit = true
-    
     return redirect_to request.referrer, flash: { success: t("task.submit_task.success") } if @task.save
   end  
   
   def update
-    return redirect_to user_dashboard_path unless @task.assign_task_by == current_user.id || admin?
-    return redirect_to user_dashboard_path if @task.approved && !admin?
+    return redirect_to user_dashboard_path if @task.assign_task_by != current_user.id || !admin? || (@task.approved && !admin?)
     return redirect_to root_path if hr? || User.find(task_params[:assign_task_to]).admin || task_params[:assign_task_to] == current_user.id
 
     if task_params[:repeat] == "One_Time"
@@ -182,11 +126,9 @@ class TasksController < ApplicationController
     end
 
     if @task.update(task_params)
-      if params[:task_document].present?
-        params[:task_document]["document"].each do |file|
-          @task_document = @task.task_document.create(document: file, task_id: @task.id)
-        end
-      end
+      params[:task_document]["document"].each do |file|
+        @task_document = @task.task_document.create(document: file, task_id: @task.id)
+      end if params[:task_document].present?
       redirect_to tasks_path, flash: { success: t("task.update_success", task_name: @task.task_name) }
     else
       render "edit", flash: { danger: t("task.failed") }
@@ -194,13 +136,6 @@ class TasksController < ApplicationController
   end
 
   private
-  def category_list
-    @categories ||= Category.all
-  end
-
-  def employee_list
-    @users ||= User.all_except(current_user)
-  end
 
   def create_approved_notification_and_email
     Notification.create_notification(@task.id, "approved")

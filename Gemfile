@@ -8,6 +8,8 @@ gem "bootstrap"
 gem "carrierwave", "~> 2.1"
 gem "elasticsearch-model"
 gem "elasticsearch-rails"
+gem "fog-aws"
+gem "fog"
 gem "font-awesome-rails", "~> 4.7", ">= 4.7.0.5"
 gem "jbuilder", "~> 2.7"
 gem "mini_magick", "~> 4.10", ">= 4.10.1"
@@ -56,7 +58,6 @@ end
 group :production do
   gem 'bonsai-elasticsearch-rails', github: 'omc/bonsai-elasticsearch-rails', branch: 'master'
   gem "aws-sdk-s3", require: false
-  gem "fog"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

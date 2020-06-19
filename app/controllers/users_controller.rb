@@ -6,28 +6,18 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params) 
-    if @user.save
-      redirect_to users_path, flash: { success: t("user.create_success") }
-    else
-      render "new", flash: { danger: t("user.create_faild") }
-    end  
+    return redirect_to users_path, flash: { success: t("user.create_success") } if @user.save
+    render "new", flash: { danger: t("user.create_faild") }
   end  
   
   def destroy
     return unless admin?
-    if @user.destroy
-      redirect_to users_path, flash: {success: t("user.create_success")}
-    else
-      redirect_to users_path, flash: {success: t("user.failed")}
-    end
+    return redirect_to users_path, flash: {success: t("user.destroy_success")} if @user.destroy
+    redirect_to users_path, flash: {success: t("user.failed")}
   end
 
   def edit
-    unless admin?
-      if @user.id != current_user.id
-        redirect_to root_path 
-      end
-    end
+    redirect_to root_path if !admin? && @user.id != current_user.id
   end    
 
   def index
@@ -41,14 +31,7 @@ class UsersController < ApplicationController
   
   def print_user_list
     return unless hr?
-    @users = User.all_users_except_admin.order("name ASC")
-    respond_to do |format|
-      format.html 
-      format.pdf do
-        pdf = UserList.new(@users)
-        send_data(pdf.render, filename: "Userlist_#{DateTime.now.strftime("%d%m%Y%I%M%S")}.pdf", type: "application/pdf", disposition:"inline")
-      end
-    end
+    User.user_list_printing
   end
 
   def show

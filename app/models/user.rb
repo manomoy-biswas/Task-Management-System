@@ -56,6 +56,17 @@ class User < ApplicationRecord
     end
   end
 
+  def self.user_list_printing
+    @users = self.all_users_except_admin.order("name ASC")
+    respond_to do |format|
+      format.html 
+      format.pdf do
+        pdf = UserList.new(@users)
+        send_data(pdf.render, filename: "Userlist_#{DateTime.now.strftime("%d%m%Y%I%M%S")}.pdf", type: "application/pdf", disposition:"inline")
+      end
+    end
+  end
+
   private
 
   def valid_dob?
