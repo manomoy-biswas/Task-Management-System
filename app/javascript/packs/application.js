@@ -6,7 +6,7 @@ require("channels")
 require("bootstrap")
 require("packs/tasks")
 
-
+ 
 $(()=>$(".hide").fadeOut(4000));
 
 $(document).unbind('keydown').bind('keydown', function (event) {

@@ -14,7 +14,8 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_user!
-    return redirect_to root_path, flash: { danger: t("application.authentication_error") } if logged_in?
+    return if logged_in? 
+    redirect_to root_path, flash: { danger: t("application.authentication_error") }
   end
 
   private
