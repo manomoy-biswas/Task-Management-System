@@ -61,6 +61,7 @@ jobs:
           # tell Rails to use proper port for MySQL
           DB_PORT: ${{ job.services.mysql.ports[3306] }}
         run: |
+          sudo apt-get install libz-dev libiconv-hook1 libiconv-hook-dev
           gem install bundler --version 1.17.3
           bundle install --jobs 4 --retry 3
           bundle exec rails db:prepare --trace
