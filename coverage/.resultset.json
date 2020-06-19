@@ -142,6 +142,25 @@
           null
         ]
       },
+      "/home/manomoy/Project/Rails-Projects/Task_Management_System/config/initializers/carrierwave.rb": {
+        "lines": [
+          1,
+          1,
+          0,
+          null,
+          null,
+          null,
+          null,
+          null,
+          0,
+          null,
+          0,
+          0,
+          null,
+          null,
+          null
+        ]
+      },
       "/home/manomoy/Project/Rails-Projects/Task_Management_System/config/initializers/content_security_policy.rb": {
         "lines": [
           null,
@@ -182,6 +201,11 @@
           null,
           null,
           null,
+          1
+        ]
+      },
+      "/home/manomoy/Project/Rails-Projects/Task_Management_System/config/initializers/elasticsearch.rb": {
+        "lines": [
           1
         ]
       },
@@ -233,6 +257,11 @@
           null,
           null,
           null
+        ]
+      },
+      "/home/manomoy/Project/Rails-Projects/Task_Management_System/config/initializers/redis.rb": {
+        "lines": [
+          1
         ]
       },
       "/home/manomoy/Project/Rails-Projects/Task_Management_System/config/initializers/wrap_parameters.rb": {
@@ -308,19 +337,6 @@
         "lines": [
           1,
           1,
-          null
-        ]
-      },
-      "/home/manomoy/Project/Rails-Projects/Task_Management_System/spec/factories/task_document.rb": {
-        "lines": [
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
           null
         ]
       },
@@ -545,7 +561,7 @@
           null,
           1,
           180,
-          176,
+          179,
           null,
           null,
           1,
@@ -691,7 +707,7 @@
           null,
           null,
           1,
-          384,
+          382,
           null,
           null
         ]
@@ -730,7 +746,12 @@
           1,
           null,
           null,
+          null,
           1,
+          1,
+          null,
+          0,
+          null,
           null,
           null,
           1,
@@ -1467,7 +1488,7 @@
         "lines": [
           1,
           1,
-          203,
+          205,
           1,
           1,
           1,
@@ -1481,7 +1502,7 @@
           1,
           184,
           1,
-          1,
+          2,
           null,
           183,
           1,
@@ -1489,7 +1510,7 @@
           null,
           182,
           1,
-          1,
+          2,
           null,
           null,
           1,
@@ -2417,9 +2438,8 @@
           null,
           null,
           1,
-          null,
-          null,
           1,
+          null,
           0,
           null,
           null,
@@ -2429,8 +2449,15 @@
           null,
           null,
           null,
+          1,
+          0,
           null,
           null,
+          null,
+          1,
+          0,
+          0,
+          0,
           null,
           null,
           1,
@@ -2440,6 +2467,6 @@
         ]
       }
     },
-    "timestamp": 1592571219
+    "timestamp": 1592574314
   }
 }
