@@ -1,6 +1,6 @@
 class Category < ApplicationRecord
   before_validation :valid_name
-
+  
   validates :name, length: { in: 2..30 }
   validates_presence_of :name
   validates_uniqueness_of :name, case_sensitive: false

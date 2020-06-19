@@ -26,7 +26,7 @@ Rails.application.configure do
   # config.assets.css_compressor = :sass
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
-  config.assets.compile = false
+  config.assets.compile = true
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.action_controller.asset_host = 'http://assets.example.com'
@@ -36,12 +36,12 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  config.active_storage.service = :amazon
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
-  # config.action_cable.url = 'wss://example.com/cable'
-  # config.action_cable.allowed_request_origins = [ 'http://example.com', /http:\/\/example.*/ ]
+  config.action_cable.url = 'wss://tms-kreeti.herokuapp.com/cable'
+  config.action_cable.allowed_request_origins = [ 'https://tms-kreeti.herokuapp.com', 'http://tms-kreeti.herokuapp.com']
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
@@ -64,22 +64,22 @@ Rails.application.configure do
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  # config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = false
 
 
-  # config.action_mailer.delivery_method = :smtp
-  # host = 'localhost:3000'
-  # config.action_mailer.default_url_options = { :host => 'localhost:3000', protocol: 'http' }
+  config.action_mailer.delivery_method = :smtp
+  host = "tms-kreeti.herokuapp.com"
+  config.action_mailer.default_url_options = { :host => 'localhost:3000', protocol: 'http' }
 
-  # config.action_mailer.smtp_settings = {
-  #   address:              'smtp.gmail.com',
-  #   port:                 587,
-  #   # domain:               'localhost:3000',
-  #   user_name:            'manomoybiswas1414@gmail.com',
-  #   password:             'jbexwkezshbolbub',
-  #   authentication:       'plain',
-  #   enable_starttls_auto: true 
-  # }
+  config.action_mailer.smtp_settings = {
+    address:              'smtp.gmail.com',
+    port:                 587,
+    # domain:               'tms-kreeti.herokuapp.com',
+    user_name:            'manomoybiswas1414@gmail.com',
+    password:             'jbexwkezshbolbub',
+    authentication:       'plain',
+    enable_starttls_auto: true 
+  }
 
   
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
@@ -125,4 +125,6 @@ Rails.application.configure do
   # config.active_record.database_selector = { delay: 2.seconds }
   # config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
+  config.time_zone = "Kolkata"
+  config.active_record.default_timezone = :local
 end

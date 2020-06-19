@@ -66,20 +66,35 @@ class TasksController < ApplicationController
   end
   
   def download
-    filename = @task.task_name + "_" + DateTime.parse(@task.created_at.to_s).strftime("%d-%m-%Y") +".zip"
-    temp_file = Tempfile.new(filename)
-    begin
-      Zip::OutputStream.open(temp_file) { |zos| }
-      Zip::File.open(temp_file.path, Zip::File::CREATE) do |zip|
-        @task.task_document.each do |file|
-          zip.add(file.document.file.filename, file.document.path.to_s)
+        if @task.task_document.count == 1
+      data = open(@task.task_document.first.document.url)
+      send_data(data.read, type: data.content_type, filename: @task.task_document.first.document.file.filename)
+    else
+      folder_path = "#{Rails.root}/public/uploads/task_document/document/#{@task.id.to_s}/"
+      filename = @task.task_name + "_TD_" + DateTime.parse(@task.created_at.to_s).strftime("%d%m%Y") +".zip"
+      temp_file = Tempfile.new(filename)
+      FileUtils.remove_dir(folder_path) if Dir.exist?(folder_path)
+      Dir.mkdir(folder_path)
+      @task.task_document.each do |file|
+        open(folder_path + "#{file.document.file.filename}", 'wb') do |f|
+          f << open("#{file.document.url}").read
         end
       end
-      read_data = File.read(temp_file.path)
-      send_data(read_data, type: "application/zip", filename: filename)
-    ensure
-      temp_file.close
-      temp_file.unlink
+
+      begin
+        Zip::OutputStream.open(temp_file) { |zos| }
+        Zip::File.open(temp_file.path, Zip::File::CREATE) do |zip|
+          @task.task_document.each do |file|
+            zip.add(file.document.file.filename, File.join(folder_path, file.document.file.filename))
+          end
+        end
+        read_data = File.read(temp_file.path)
+        send_data(read_data, type: "application/zip", filename: filename)
+      ensure
+        FileUtils.remove_dir(folder_path) if Dir.exist?(folder_path)
+        temp_file.close
+        temp_file.unlink
+      end
     end
   end
 
@@ -169,7 +184,7 @@ class TasksController < ApplicationController
     if @task.update(task_params)
       if params[:task_document].present?
         params[:task_document]["document"].each do |file|
-          @task_document = @task.task_document.update(document: file, task_id: @task.id)
+          @task_document = @task.task_document.create(document: file, task_id: @task.id)
         end
       end
       redirect_to tasks_path, flash: { success: t("task.update_success", task_name: @task.task_name) }
