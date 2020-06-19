@@ -282,7 +282,7 @@ RSpec.describe Task, type: :model do
       end
       
       it "includes all approved task for param = 'High' and user_role ='Admin'" do
-        expect(Task.filter_approved_task_by_priority("igh", user1)).to_not include(task1, task3, task4, task6)
+        expect(Task.filter_approved_task_by_priority("High", user1)).to_not include(task1, task3, task4, task6)
       end
 
       it "includes all approved task for param = 'Medium' and user_role ='HR'" do

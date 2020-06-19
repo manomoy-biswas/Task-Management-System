@@ -11,7 +11,6 @@ class Task < ApplicationRecord
   has_many :sub_task, dependent: :destroy
   has_many :task_document, dependent: :destroy
   
-  # before_validation { self.task_name = task_name.to_s.squeeze(" ").strip.capitalize }
   before_validation :squeeze_task_name
 
   accepts_nested_attributes_for :sub_task, reject_if: ->(a) { a[:name].blank? }, allow_destroy: true
@@ -30,7 +29,6 @@ class Task < ApplicationRecord
   validate :valid_updated_submit_date, on: :update
   validates_uniqueness_of :task_name, case_sensitive: false
   validates_presence_of :task_name, :priority, :repeat, :assign_task_to, :task_category
-
 
   scope :my_assigned_tasks, ->(user_id=nil) { where(assign_task_by: user_id) }
   scope :my_assigned_tasks_filter, ->(param=nil,user_id=nil) { where(priority: param, assign_task_by: user_id) }

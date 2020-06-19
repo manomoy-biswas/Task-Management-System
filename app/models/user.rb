@@ -15,6 +15,8 @@ class User < ApplicationRecord
   before_validation :valid_name
   before_validation :valid_email
 
+  after_create :welcome_user_email
+
   validates :name, length: { in: 3..50 }
   validates :email, format: { with: VALID_EMAIL_REGEX }
   validates :phone, length: {is: 10}, format: { with: VALID_PHONE_REGEX }
@@ -70,5 +72,9 @@ class User < ApplicationRecord
 
   def valid_email
     self.email = email.to_s.downcase.strip
+  end
+
+  def welcome_user_email
+    UserMailerWorker.perform_async(self.id)
   end
 end

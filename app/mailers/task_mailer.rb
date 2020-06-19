@@ -5,7 +5,11 @@ class TaskMailer < ApplicationMailer
     @task = Task.find(task_id)
     @greeting = "Hi #{User.find(@task.assign_task_to).name},"
     @assign_task_by = User.find(@task.assign_task_by).name
-    @url ="http://localhost:3000/tasks/"+@task.id.to_s
+    if Rails.env.development? || Rails.env.test?
+      @url ="http://localhost:3000/tasks/" + @task.id.to_s 
+    else
+      @url ="http://tms-kreeti.herokuapp.com/tasks/" + @task.id.to_s 
+    end
 
     mail to: User.find(@task.assign_task_to).email, subject: "Task Assigned: #{@task.task_name}"
   end
@@ -14,7 +18,11 @@ class TaskMailer < ApplicationMailer
     @task = Task.find(task_id)
     @greeting = "Hi #{@task.user.name},"
     @assign_task_by = User.find(@task.assign_task_by).name
-    @url ="http://localhost:3000/tasks/"+@task.id.to_s
+    if Rails.env.development? || Rails.env.test?
+      @url ="http://localhost:3000/tasks/" + @task.id.to_s 
+    else
+      @url ="http://tms-kreeti.herokuapp.com/tasks/" + @task.id.to_s 
+    end
 
     mail to: User.find(@task.assign_task_to).email, subject: "Task Updated: #{@task.task_name}"
   end
@@ -23,7 +31,11 @@ class TaskMailer < ApplicationMailer
     @task = Task.find(task_id)
     @greeting = "Hi #{User.find(@task.assign_task_to).name},"
     @assign_task_by = User.find(@task.assign_task_by).name
-    @url ="http://localhost:3000/tasks/"+@task.id.to_s
+    if Rails.env.development? || Rails.env.test?
+      @url ="http://localhost:3000/tasks/" + @task.id.to_s 
+    else
+      @url ="http://tms-kreeti.herokuapp.com/tasks/" + @task.id.to_s 
+    end
 
     mail to: User.find(@task.assign_task_to).email, subject: "#{type} Reminder: #{@task.task_name}"
   end
@@ -32,7 +44,11 @@ class TaskMailer < ApplicationMailer
     @task = Task.find(task_id)
     @greeting = "Hi #{User.find(@task.assign_task_to).name},"
     @assign_task_by = User.find(@task.assign_task_by).name
-    @url ="http://localhost:3000/tasks/"+@task.id.to_s
+    if Rails.env.development? || Rails.env.test?
+      @url ="http://localhost:3000/tasks/" + @task.id.to_s 
+    else
+      @url ="http://tms-kreeti.herokuapp.com/tasks/" + @task.id.to_s 
+    end
 
     mail to: User.find(@task.assign_task_to).email, subject: "Task Reminder: #{@task.task_name}"
   end
@@ -41,7 +57,11 @@ class TaskMailer < ApplicationMailer
     @task = Task.find(task_id)
     @greeting = 'Hi Admin,'
     @assign_task_by = User.find(@task.assign_task_by).name
-    @url ="http://localhost:3000/tasks/"+@task.id.to_s
+    if Rails.env.development? || Rails.env.test?
+      @url ="http://localhost:3000/tasks/" + @task.id.to_s 
+    else
+      @url ="http://tms-kreeti.herokuapp.com/tasks/" + @task.id.to_s 
+    end
 
     mail to: 'manomoy26@gmail.com', subject: "Task Approved: #{@task.task_name}"
   end
@@ -50,7 +70,11 @@ class TaskMailer < ApplicationMailer
     @task = Task.find(task_id)
     @greeting = "Hi #{User.find(@task.assign_task_to).name},"
     @assign_task_by = User.find(@task.assign_task_by).name
-    @url ="http://localhost:3000/tasks/"+@task.id.to_s
+    if Rails.env.development? || Rails.env.test?
+      @url ="http://localhost:3000/tasks/" + @task.id.to_s 
+    else
+      @url ="http://tms-kreeti.herokuapp.com/tasks/" + @task.id.to_s 
+    end
 
     mail to: User.find(@task.assign_task_to).email, subject: "Task Approved: #{@task.task_name}"
   end

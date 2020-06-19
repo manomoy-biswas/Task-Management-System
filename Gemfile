@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "2.6.5"
+ruby "2.6.6"
 gem "bcrypt"
 gem "bootsnap", ">= 1.4.2"
 gem "carrierwave", "~> 2.1"

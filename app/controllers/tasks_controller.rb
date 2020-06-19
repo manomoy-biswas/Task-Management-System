@@ -206,7 +206,7 @@ class TasksController < ApplicationController
   end
 
   def create_notify_hr_notification
-    Notification.create_notification(@task.id, "notified")
+    Notification.create_notification(@task.id, "notified", current_user.id )
   end
 
   def create_submit_task_notification

@@ -7,8 +7,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params) 
     if @user.save
-      UserMailer.with(user: @user).welcome_user_email.deliver
-      redirect_to users_path, flash: { success: t(".create_success") }
+      redirect_to users_path, flash: { success: t("user.create_success") }
     else
       render "new", flash: { danger: t("user.create_faild") }
     end  

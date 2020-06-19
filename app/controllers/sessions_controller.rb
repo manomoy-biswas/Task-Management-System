@@ -12,7 +12,7 @@ class SessionsController < ApplicationController
     if user
       if @user.admin
         login(@user)
-        redirect_to user_dashboard_path, flash: { success: t("session.login_success", user: @user.user_name) }
+        redirect_to user_dashboard_path, flash: { success: t("session.login_success", user: @user.name) }
       else
         redirect_to root_path, flash: { warning: t("session.only_admin") }
       end
