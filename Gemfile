@@ -9,14 +9,12 @@ gem "elasticsearch-model"
 gem "elasticsearch-rails"
 gem "font-awesome-rails", "~> 4.7", ">= 4.7.0.5"
 gem "jbuilder", "~> 2.7"
-gem "jquery-rails", "~> 4.3", ">= 4.3.5"
 gem "mini_magick", "~> 4.10", ">= 4.10.1"
 gem "mysql2", ">= 0.4.4"
 gem "omniauth-google-oauth2", "~> 0.8.0"
 gem "prawn", "~> 2.2", ">= 2.2.2"
 gem "prawn-table", "~> 0.2.2"
-gem "popper_js", "~> 1.16"
-gem "puma", "~> 4.1"
+gem "puma", "~> 4.3"
 gem "rails", "~> 6.0.2", ">= 6.0.2.1"
 gem "redis", "~> 4.0"
 gem "rubyzip", ">= 1.0.0",require: "zip/zip"
@@ -52,6 +50,12 @@ group :test do
   gem "selenium-webdriver"
   gem "webdrivers"
   gem 'shoulda-callback-matchers'
+end
+
+group :production do
+  gem 'bonsai-elasticsearch-rails', github: 'omc/bonsai-elasticsearch-rails', branch: 'master'
+  # gem "aws-sdk-s3", require: false
+  # gem "fog"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

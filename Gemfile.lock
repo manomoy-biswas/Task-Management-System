@@ -1,3 +1,12 @@
+GIT
+  remote: https://github.com/omc/bonsai-elasticsearch-rails.git
+  revision: 942dea4a263e0b86c7dc197528ea9770c88146c8
+  branch: master
+  specs:
+    bonsai-elasticsearch-rails (0.3.0)
+      elasticsearch-model (< 99)
+      elasticsearch-rails (< 99)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -187,7 +196,6 @@ GEM
       oauth2 (~> 1.1)
       omniauth (~> 1.9)
     pdf-core (0.7.0)
-    popper_js (1.16.0)
     prawn (2.2.2)
       pdf-core (~> 0.7.0)
       ttfunk (~> 1.5)
@@ -345,6 +353,7 @@ PLATFORMS
 DEPENDENCIES
   bcrypt
   better_errors (~> 2.5, >= 2.5.1)
+  bonsai-elasticsearch-rails!
   bootsnap (>= 1.4.2)
   byebug
   capybara (>= 2.15)
@@ -355,17 +364,15 @@ DEPENDENCIES
   faker (~> 1.9, >= 1.9.6)
   font-awesome-rails (~> 4.7, >= 4.7.0.5)
   jbuilder (~> 2.7)
-  jquery-rails (~> 4.3, >= 4.3.5)
   letter_opener (~> 1.7)
   letter_opener_web (~> 1.4)
   listen (>= 3.0.5, < 3.2)
   mini_magick (~> 4.10, >= 4.10.1)
   mysql2 (>= 0.4.4)
   omniauth-google-oauth2 (~> 0.8.0)
-  popper_js (~> 1.16)
   prawn (~> 2.2, >= 2.2.2)
   prawn-table (~> 0.2.2)
-  puma (~> 4.1)
+  puma (~> 4.3)
   rails (~> 6.0.2, >= 6.0.2.1)
   redis (~> 4.0)
   rspec-rails (~> 4.0, >= 4.0.1)
