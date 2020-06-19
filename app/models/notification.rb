@@ -10,7 +10,7 @@ class Notification < ApplicationRecord
 
   def self.create_notification(notifiable_id, action, notified_by=nil)
     task=Task.find(notifiable_id)
-    if action == "approved"
+    if action == "approved"if logged_in?
       Notification.create(recipient_id: task.user.id, user_id: task.approved_by, action: action, notifiable_type: "Task", notifiable_id:task.id)
     elsif action == "approved by"
       User.where(admin: true).each do |user|

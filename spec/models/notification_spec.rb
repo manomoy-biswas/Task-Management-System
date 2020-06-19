@@ -48,7 +48,7 @@ RSpec.describe Notification, type: :model do
         user3 = create(:employee)
         category = create(:category)
         task = create(:assigned_task1, task_category: category.id, assign_task_to: user2.id, assign_task_by: user3.id, submit: true, approved: true, approved_by: user1.id)
-        expect{ Notification.create_notification(task.id, "approved by")}.to change{Notification.count}.by(1)
+        expect{ Notification.create_notification(task.id, "approved by")}.to change{Notification.count}.by(2)
       end
       
       it "is expected to create task notified notification" do
@@ -69,7 +69,7 @@ RSpec.describe Notification, type: :model do
         category = create(:category)
         task = create(:assigned_task1, task_category: category.id, assign_task_to: user2.id, assign_task_by: user3.id, submit: true)
         expect{ Notification.create_notification(task.id, "submitted")
-        }.to change{Notification.count}.by(2)
+        }.to change{Notification.count}.by(3)
       end
       
       it "is expected to create task assigned notification" do
