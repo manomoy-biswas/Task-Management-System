@@ -30,7 +30,13 @@ jobs:
           --health-interval=10s 
           --health-timeout=5s 
           --health-retries=10
-    steps:   
+    steps:  
+      - name: Setup ubuntu
+        run: |
+        sudo apt-get install build-essential libcurl4-openssl-dev
+        sudo apt-get install libz-dev libiconv-hook1 libiconv-hook-dev
+        sudo apt-get update
+
       - name: Set up Ruby
         uses: actions/setup-ruby@v1
         with:
