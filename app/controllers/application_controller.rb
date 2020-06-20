@@ -4,7 +4,6 @@ class ApplicationController < ActionController::Base
   before_action :set_cache_headers
   helper_method :current_user
   
-  protected
   def check_user_is_admin
     redirect_to root_path,  flash: { warning: t("application.only_admin") } unless admin?
   end

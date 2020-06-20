@@ -19,7 +19,7 @@
               <div class="form-group row">
                 <%= form.label :task_category,"Category", for: "task_category", class:"col-12 col-sm-4 col-md-3 col-form-label"%>
                 <div class="col-12 col-sm-8 col-md-9">
-                  <%= form.select :task_category, options_from_collection_for_select(@categories, :id, :name, form.object.task_category), { prompt: "Choose..." }, {autofocus: true, required: true, class:"custom-select d-block w-100"} %>
+                  <%= form.select :task_category, options_from_collection_for_select(Category.all, :id, :name, form.object.task_category), { prompt: "Choose..." }, {autofocus: true, required: true, class:"custom-select d-block w-100"} %>
                 </div>
               </div>
             </div>
@@ -76,15 +76,11 @@
           <div class="form-group row">
             <%= form.label :assign_task_to, "Assign To", for: "assign_task_to", class:"col-12 col-sm-4 col-md-2 col-form-label"%>
             <div class="col-12 col-sm-8 col-md-10 ">
-              <% if @users.present? %>
-                <% if admin? %>
-                  <%= form.select :assign_task_to, options_from_collection_for_select(User.where.not(id: current_user.id).where.not(hr: true) , :id, :name, form.object.assign_task_to), { prompt: "choose..."}, {  required: "", class: "custom-select d-block w-100" } %>
-                <%else%>    
-                  <%= form.select :assign_task_to, options_from_collection_for_select(User.where.not(id:current_user.id).where.not(admin: true).where.not(hr: true) , :id, :name, form.object.assign_task_to), { prompt: "Choose..."}, {  required: true , class: "form-control scustom-select d-block w-100" } %>  
-                <%end%>          
-              <%else%>
-                <%= form.select :assign_task_to, {}, { prompt: "No Employee Present", required: true }, { class: "form-control custom-select d-block w-100" } %>
-              <% end %>
+              <% if admin? %>
+                <%= form.select :assign_task_to, options_from_collection_for_select(User.where.not(id: current_user.id).where.not(hr: true) , :id, :name, form.object.assign_task_to), { prompt: "choose..."}, {  required: "", class: "custom-select d-block w-100" } %>
+              <%else%>    
+                <%= form.select :assign_task_to, options_from_collection_for_select(User.where.not(id:current_user.id).where.not(admin: true).where.not(hr: true) , :id, :name, form.object.assign_task_to), { prompt: "Choose..."}, {  required: true , class: "form-control scustom-select d-block w-100" } %>  
+              <%end%>          
             </div>
           </div>
           <hr>

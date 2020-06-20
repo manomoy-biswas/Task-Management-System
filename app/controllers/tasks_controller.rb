@@ -4,7 +4,6 @@ class TasksController < ApplicationController
   before_action :authenticate_user!
   before_action :check_user_is_hr, except: [:approved_task, :print_task_list, 
                 :print_task_details, :show]
-  before_action :category_list, :employee_list, only: [:new, :create, :edit, :update]
   before_action :set_task, only: [:approve, :destroy, :download, :edit, :notify_hr, :show,
                 :submit_task, :update]
   after_action :create_approved_notification_and_email, only: [:approve]
@@ -61,40 +60,44 @@ class TasksController < ApplicationController
   end
   
   def download
-    if @task.task_document.count == 1
-      data = open(@task.task_document.first.document.url)
-      send_data(data.read, type: data.content_type, filename: @task.task_document.first.document.file.filename)
-    else
-      folder_path = "#{Rails.root}/public/uploads/task_document/document/#{@task.id.to_s}/"
-      filename = @task.task_name + "_TD_" + DateTime.parse(@task.created_at.to_s).strftime("%d%m%Y") +".zip"
-      temp_file = Tempfile.new(filename)
-      FileUtils.remove_dir(folder_path) if Dir.exist?(folder_path)
-      Dir.mkdir(folder_path)
-      @task.task_document.each do |file|
-        open(folder_path + "#{file.document.file.filename}", 'wb') do |f|
-          f << open("#{file.document.url}").read
-        end
-      end
-
-      begin
-        Zip::OutputStream.open(temp_file) { |zos| }
-        Zip::File.open(temp_file.path, Zip::File::CREATE) do |zip|
-          @task.task_document.each do |file|
-            zip.add(file.document.file.filename, File.join(folder_path, file.document.file.filename))
+    begin
+      if @task.task_document.count == 1
+        data = open(@task.task_document.first.document.url)
+        send_data(data.read, type: data.content_type, filename: @task.task_document.first.document.file.filename)
+      else
+        folder_path = "#{Rails.root}/public/uploads/task_document/document/#{@task.id.to_s}/"
+        filename = @task.task_name + "_TD_" + DateTime.parse(@task.created_at.to_s).strftime("%d%m%Y") +".zip"
+        temp_file = Tempfile.new(filename)
+        FileUtils.remove_dir(folder_path) if Dir.exist?(folder_path)
+        Dir.mkdir(folder_path)
+        @task.task_document.each do |file|
+          open(folder_path + "#{file.document.file.filename}", 'wb') do |f|
+            f << open("#{file.document.url}").read
           end
         end
-        read_data = File.read(temp_file.path)
-        send_data(read_data, type: "application/zip", filename: filename)
-      ensure
-        FileUtils.remove_dir(folder_path) if Dir.exist?(folder_path)
-        temp_file.close
-        temp_file.unlink
-      end
-    end 
+
+        begin
+          Zip::OutputStream.open(temp_file) { |zos| }
+          Zip::File.open(temp_file.path, Zip::File::CREATE) do |zip|
+            @task.task_document.each do |file|
+              zip.add(file.document.file.filename, File.join(folder_path, file.document.file.filename))
+            end
+          end
+          read_data = File.read(temp_file.path)
+          send_data(read_data, type: "application/zip", filename: filename)
+        ensure
+          FileUtils.remove_dir(folder_path) if Dir.exist?(folder_path)
+          temp_file.close
+          temp_file.unlink
+        end
+      end 
+    rescue OpenURI::HTTPError
+      redirect_to request.referrer, flash: { danger: "Somthing went wrong / File not found" }
+    end
   end
 
   def edit
-    return redirect_to root_path unless @task.assign_task_by == current_user.id || admin?
+    redirect_to root_path unless @task.assign_task_by == current_user.id || admin?
   end
 
   def elastic_search
@@ -118,12 +121,27 @@ class TasksController < ApplicationController
 
   def print_task_list
     return unless hr?
-    Task.task_list_printing
+    @tasks = self.notified_tasks
+    respond_to do |format|
+      format.html 
+      format.pdf do
+        pdf = TaskList.new(@tasks)
+        send_data(pdf.render, filename: "Tasklist_#{DateTime.now.strftime("%d%m%Y%I%M%S")}.pdf", type: "application/pdf", disposition:"inline")
+      end
+    end
   end
 
   def print_task_details
     return unless hr?     
-    Task.task_details_printing(params[:task_id])
+    @task = self.find(params[:task_id])
+    return unless @task.approved
+    respond_to do |format|
+      format.html 
+      format.pdf do
+        pdf = TaskDetails.new(@task)
+        send_data(pdf.render, filename: "Task_#{@task.id}_#{DateTime.now.strftime("%d%m%Y%I%M%S")}.pdf", type: "application/pdf", disposition:"inline")
+      end
+    end
   end
   
   def show
@@ -155,9 +173,12 @@ class TasksController < ApplicationController
     end
 
     if @task.update(task_params)
-      params[:task_document]["document"].each do |file|
-        @task_document = @task.task_document.create(document: file, task_id: @task.id)
-      end if params[:task_document].present?
+      if params[:task_document].present?
+        @task.task_document.destroy_all
+        params[:task_document]["document"].each do |file|
+          @task_document = @task.task_document.create(document: file, task_id: @task.id)
+        end 
+      end
       redirect_to tasks_path, flash: { success: t("task.update_success", task_name: @task.task_name) }
     else
       render "edit", flash: { danger: t("task.failed") }

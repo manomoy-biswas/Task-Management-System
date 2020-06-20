@@ -116,29 +116,6 @@ class Task < ApplicationRecord
     end  
   end
 
-  def self.task_list_printing
-    @tasks = self.notified_tasks
-    respond_to do |format|
-      format.html 
-      format.pdf do
-        pdf = TaskList.new(@tasks)
-        send_data(pdf.render, filename: "Tasklist_#{DateTime.now.strftime("%d%m%Y%I%M%S")}.pdf", type: "application/pdf", disposition:"inline")
-      end
-    end
-  end
-
-  def self.task_details_printing(task_id)
-    @task = self.find(task_id)
-    return unless @task.approved
-    respond_to do |format|
-      format.html 
-      format.pdf do
-        pdf = TaskDetails.new(@task)
-        send_data(pdf.render, filename: "Task_#{@task.id}_#{DateTime.now.strftime("%d%m%Y%I%M%S")}.pdf", type: "application/pdf", disposition:"inline")
-      end
-    end
-  end
-
   def self.filter_by_priority(param = nil, current_user)
     if current_user.admin
       if !param || param == ""

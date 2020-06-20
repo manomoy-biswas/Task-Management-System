@@ -130,6 +130,28 @@ RSpec.describe User, type: :model do
         expect(User.all_except(user2)).to_not include(user2)
       end
     end
+
+    describe "#from_omniauth" do
+      it "using omniauth" do
+        user1 = create(:employee, email: "manomoy@gmail.com")
+        OmniAuth.config.test_mode = true
+        expect(User.from_omniauth(OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new({
+          provider: "google_oauth2",
+            uid: "12345678910",
+            info: {
+              email: "manomoy@gmail.com",
+              first_name: "Manomoy",
+              last_name: "Biswas"
+            },
+            credentials: {
+              token: "abcdefg12345",
+              refresh_token: "abcdefg12345",
+              expires_at: DateTime.now,
+            }
+          }))).to eq(user1)
+      end
+    end
+    
     describe "#filter_by_role" do
       it "Display All user for paramiter = '' and user_role = 'Admin'" do
         expect(User.filter_by_role("", user1)).to include(user1, user2, user3, user4)

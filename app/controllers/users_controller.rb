@@ -31,7 +31,14 @@ class UsersController < ApplicationController
   
   def print_user_list
     return unless hr?
-    User.user_list_printing
+    @users = User.all_users_except_admin.order("name ASC")
+    respond_to do |format|
+      format.html 
+      format.pdf do
+        pdf = UserList.new(@users)
+        send_data(pdf.render, filename: "Userlist_#{DateTime.now.strftime("%d%m%Y%I%M%S")}.pdf", type: "application/pdf", disposition:"inline")
+      end
+    end
   end
 
   def show
