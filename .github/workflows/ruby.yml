@@ -45,20 +45,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v1
         with:
-          fetch-depth: 1
-
-      - name: Verify MySQL connection from host
-        run: |
-          sudo apt-get install -y mysql-client libmysqlclient-dev
-          sudo service mysql start
-          sudo mysql --host localhost --port ${{ job.services.mysql.ports[3306] }} -uroot -proot -e "SHOW GRANTS FOR 'root'@'localhost'"
-      
-      - name: Verify Elasticsearch connection from host
-        env:
-          ELASTIC_SEARCH_URL: http://localhost:${{ job.services.elasticsearch.ports[9200] }}
-        run: |
-          echo $ELASTIC_SEARCH_URL
-          curl -fsSL "$ELASTIC_SEARCH_URL/_cat/health?h=status"            
+          fetch-depth: 1           
       
       - name: Bundle Install and Create DB
         env:
@@ -69,6 +56,13 @@ jobs:
           gem install bundler --version 1.17.3
           bundle install --jobs 4 --retry 3
           bundle exec rails db:prepare --trace
+
+      - name: Verify Elasticsearch connection from host
+        env:
+          ELASTIC_SEARCH_URL: http://localhost:${{ job.services.elasticsearch.ports[9200] }}
+        run: |
+          echo $ELASTIC_SEARCH_URL
+          curl -fsSL "$ELASTIC_SEARCH_URL/_cat/health?h=status" 
           
       - name: Run tests
         env:
