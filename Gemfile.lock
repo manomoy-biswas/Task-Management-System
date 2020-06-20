@@ -616,7 +616,6 @@ DEPENDENCIES
   factory_bot_rails
   faker (~> 1.9, >= 1.9.6)
   fog
-  fog-aws
   font-awesome-rails (~> 4.7, >= 4.7.0.5)
   jbuilder (~> 2.7)
   letter_opener (~> 1.7)
