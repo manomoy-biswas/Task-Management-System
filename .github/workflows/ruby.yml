@@ -64,10 +64,8 @@ jobs:
         env:
           RAILS_ENV: test
           DB_PASSWORD: root
-          # tell Rails to use proper port for MySQL
           DB_PORT: ${{ job.services.mysql.ports[3306] }}
         run: |
-          sudo apt-get install libz-dev libiconv-hook1 libiconv-hook-dev
           gem install bundler --version 1.17.3
           bundle install --jobs 4 --retry 3
           bundle exec rails db:prepare --trace
@@ -75,7 +73,7 @@ jobs:
       - name: Run tests
         env:
           DB_PASSWORD: root
-          DB_PORT: ${{ job.services.mysql.ports[3306] }} # get randomly assigned published port
+          DB_PORT: ${{ job.services.mysql.ports[3306] }}
           REDIS_PORT: ${{ job.services.redis.ports[6379] }}
           ELASTIC_SEARCH_URL: http://localhost:${{ job.services.elasticsearch.ports[9200] }}
           RAILS_ENV: test
