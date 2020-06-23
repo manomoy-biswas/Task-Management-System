@@ -19,7 +19,7 @@
               <div class="form-group row">
                 <%= form.label :task_category,"Category", for: "task_category", class:"col-12 col-sm-4 col-md-3 col-form-label"%>
                 <div class="col-12 col-sm-8 col-md-9">
-                  <%= form.select :task_category, options_from_collection_for_select(Category.all, :id, :name, form.object.task_category), { prompt: "Choose..." }, {autofocus: true, required: true, class:"custom-select d-block w-100"} %>
+                  <%= form.select :task_category, options_from_collection_for_select(Category.all.order("name ASC"), :id, :name, form.object.task_category), { prompt: "Choose..." }, {autofocus: true, required: true, class:"custom-select d-block w-100"} %>
                 </div>
               </div>
             </div>

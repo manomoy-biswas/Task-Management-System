@@ -3,11 +3,11 @@ class AvaterUploader < CarrierWave::Uploader::Base
 
   # Choose what kind of storage to use for this uploader:
     
-  # if Rails.env.development? || Rails.env.test?
-  #   storage :file
-  # else
-  storage :fog
-  # end
+  if Rails.env.development? || Rails.env.test?
+    storage :file
+  else
+    storage :aws
+  end
 
   # Override the directory where uploaded files will be stored.
   def store_dir

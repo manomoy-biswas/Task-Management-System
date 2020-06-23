@@ -142,18 +142,6 @@
           </div>
         </div>
         <div class="row task-item-row">
-          <% if @task.assign_task_to == current_user.id && !@task.submit %>
-            <div class="col-12 col-sm-6">
-              <div class="row">
-                <div class="col-6 col-md-4">
-                  <span class="task-item">Submit Task</span>
-                </div>
-                <div class="col-6 col-md-8 ">
-                  <p class="task-item-details"><%= link_to "SUBMIT", submit_task_task_path(@task), class: "btn btn-success", data: { disable_with: "submitting..." }%></p>
-                </div>
-              </div>
-            </div>
-          <% end %>
           <div class="col-12 col-sm-6">
             <div class="row">
               <div class="col-6 col-md-4">
@@ -170,6 +158,18 @@
               </div>
             </div>
           </div>
+          <% if @task.assign_task_to == current_user.id && !@task.submit %>
+            <div class="col-12 col-sm-6">
+              <div class="row">
+                <div class="col-6 col-md-4">
+                  <span class="task-item">Submit Task</span>
+                </div>
+                <div class="col-6 col-md-8 ">
+                  <p class="task-item-details"><%= link_to "SUBMIT", submit_task_task_path(@task), class: "btn btn-success", data: { disable_with: "submitting..." }%></p>
+                </div>
+              </div>
+            </div>
+          <% end %>
         </div>
         <div class="row task-item-row">
           <div class="col-12 col-sm-6">
@@ -205,12 +205,12 @@
           <% else %>
             <% if @task.submit %>
               <div class="col text-center" >
-                <%= link_to  " Print", print_task_details_tasks_path(task_id: @task.id, format: "pdf"), class: "fa fa-print btn btn-outline-success btn-lg", data: { disable_with: "printing..." } %>
+                <%= link_to  " Print", print_task_details_tasks_path(task_id: @task.id, format: "pdf"), class: "fa fa-print btn btn-outline-success btn-lg", target: "_blank" %>
               </div>
             <% end %>
           <% end %>
           <div class="col text-center">
-            <%= link_to  " Back", request.referrer, class: "fa fa-hand-o-left btn btn-outline-secondary btn-lg" %>
+            <%= link_to  " Back", session.delete(:return_to), class: "fa fa-hand-o-left btn btn-outline-secondary btn-lg" %>
           </div>
         </div>
       </div>

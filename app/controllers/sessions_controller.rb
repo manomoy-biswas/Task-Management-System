@@ -1,5 +1,6 @@
 class SessionsController < ApplicationController
   before_action :set_user, only: [:create]
+  before_action :set_redirect_path, only: [:new]
 
   def create
     return redirect_to user_dashboard_path, flash: { warning: t("session.logged_in") } if logged_in?
@@ -13,7 +14,7 @@ class SessionsController < ApplicationController
     if user
       if @user.admin
         login(@user)
-        redirect_to user_dashboard_path, flash: { success: t("session.login_success", user: @user.name) }
+          redirect_to user_dashboard_path, flash: { success: t("session.login_success", user: @user.name) }
       else
         redirect_to root_path, flash: { warning: t("session.only_admin") }
       end
@@ -32,6 +33,9 @@ class SessionsController < ApplicationController
   end  
 
   private
+  def set_redirect_path
+    session[:return_to] = request.referer
+  end
   def set_user
     @user = User.find_by_email(params[:login][:email])
   end

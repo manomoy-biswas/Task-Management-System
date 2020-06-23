@@ -79,9 +79,13 @@
                       <td class="text-center">
                         <%= link_to "", task_path(task), class:"fa fa-eye", data: { disable_with: "..." } %>
                       </td>
-                      <% if admin? %>
+                      <% if admin?%>
                         <td class= "text-center">
-                          <%= link_to "Notify HR", notify_hr_task_path(task), class:"btn btn-success", data: { disable_with: "notifying.." } if task.submit%>
+                          <% if !task.notify_hr %>
+                            <%= link_to "Notify HR", notify_hr_task_path(task), class:"btn btn-success", data: { disable_with: "notifying.." } %>
+                          <%else%>
+                            <i class="fa fa-check-circle"></i>
+                          <%end%>
                         </td>
                         <td class="text-center">
                           <%= link_to "", task_path(task), data: {confirm: "Are you sure to delete?" }, method: :delete, data: { disable_with: "..." },class:"fa fa-trash"%>

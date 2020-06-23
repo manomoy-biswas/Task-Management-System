@@ -10,6 +10,7 @@ class TasksController < ApplicationController
   after_action :create_update_notification_and_email, only: [:update]
   after_action :create_notify_hr_notification, only: [:notify_hr]
   after_action :create_submit_task_notification, only: [:submit_task]
+  before_action :redirect_path, only: [:new, :edit, :show]
   
   def approve
     return if @task.assign_task_to == current_user.id
@@ -42,7 +43,7 @@ class TasksController < ApplicationController
       params[:task_document]["document"].each do |file|
         @task_document = @task.task_document.create(document: file, task_id: @task.id)
       end if params[:task_document].present?
-      redirect_to tasks_path flash: { success: t("task.success", task_name: @task.task_name, task_id: @task.id) }
+      redirect_to session.delete(:return_to) || tasks_path, flash: { success: t("task.success", task_name: @task.task_name, task_id: @task.id) }
     else
       render "new", flash: {danger: t("task.failed") }
     end
@@ -62,17 +63,22 @@ class TasksController < ApplicationController
   def download
     begin
       if @task.task_document.count == 1
-        data = open(@task.task_document.first.document.url)
-        send_data(data.read, type: data.content_type, filename: @task.task_document.first.document.file.filename)
+        data =  if Rails.env.production?
+                  open(@task.task_document.first.document.url)
+                else
+                  open(@task.task_document.first.document.path)
+                end
+        send_data(data.read, filename: @task.task_document.first.document.file.filename)
       else
-        folder_path = "#{Rails.root}/public/uploads/task_document/document/#{@task.id.to_s}/"
+        folder_path = "#{Rails.root}/public/uploads/task_document/document/download/#{@task.id.to_s}/"
         filename = @task.task_name + "_TD_" + DateTime.parse(@task.created_at.to_s).strftime("%d%m%Y") +".zip"
         temp_file = Tempfile.new(filename)
         FileUtils.remove_dir(folder_path) if Dir.exist?(folder_path)
         Dir.mkdir(folder_path)
         @task.task_document.each do |file|
           open(folder_path + "#{file.document.file.filename}", 'wb') do |f|
-            f << open("#{file.document.url}").read
+            f << open("#{file.document.path}").read if Rails.env.development?
+            f << open("#{file.document.url}").read if Rails.env.production?
           end
         end
 
@@ -98,6 +104,7 @@ class TasksController < ApplicationController
 
   def edit
     redirect_to root_path unless @task.assign_task_by == current_user.id || admin?
+    session[:return_to] = request.referer
   end
 
   def elastic_search
@@ -121,7 +128,7 @@ class TasksController < ApplicationController
 
   def print_task_list
     return unless hr?
-    @tasks = self.notified_tasks
+    @tasks = Task.notified_tasks
     respond_to do |format|
       format.html 
       format.pdf do
@@ -133,7 +140,7 @@ class TasksController < ApplicationController
 
   def print_task_details
     return unless hr?     
-    @task = self.find(params[:task_id])
+    @task = Task.find(params[:task_id])
     return unless @task.approved
     respond_to do |format|
       format.html 
@@ -163,8 +170,8 @@ class TasksController < ApplicationController
   end  
   
   def update
-    return redirect_to user_dashboard_path if @task.assign_task_by != current_user.id || !admin? || (@task.approved && !admin?)
-    return redirect_to root_path if hr? || User.find(task_params[:assign_task_to]).admin || task_params[:assign_task_to] == current_user.id
+    return redirect_to tasks_path, flash: { success: t("You dont have access to update this task") } if @task.assign_task_by != current_user.id && !admin?
+    return redirect_to root_path, flash: { success: t("Can't assign task to yourself or HR or ADMIN") } if hr? || User.find(task_params[:assign_task_to]).admin || task_params[:assign_task_to] == current_user.id
 
     if task_params[:repeat] == "One_Time"
       @task.recurring_task = false
@@ -179,13 +186,17 @@ class TasksController < ApplicationController
           @task_document = @task.task_document.create(document: file, task_id: @task.id)
         end 
       end
-      redirect_to tasks_path, flash: { success: t("task.update_success", task_name: @task.task_name) }
+      redirect_to session.delete(:return_to), flash: { success: t("task.update_success", task_name: @task.task_name) }
     else
       render "edit", flash: { danger: t("task.failed") }
     end
   end
 
   private
+
+  def redirect_path
+    session[:return_to] = request.referer
+  end
 
   def create_approved_notification_and_email
     Notification.create_notification(@task.id, "approved")
