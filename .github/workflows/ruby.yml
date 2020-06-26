@@ -33,9 +33,9 @@ jobs:
     steps:  
       - name: Setup ubuntu
         run: |
+          sudo apt-get update
           sudo apt-get install build-essential libcurl4-openssl-dev
           sudo apt-get install libz-dev libiconv-hook1 libiconv-hook-dev
-          sudo apt-get update
 
       - name: Set up Ruby
         uses: actions/setup-ruby@v1
