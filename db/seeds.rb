@@ -1,4 +1,4 @@
-admin = User.new(id: 1, name: "Admin", email: "admin@gmail.com", phone:"7123456789", dob: "01-01-2000", password: "admin", password_confirmation: "admin", admin: true, hr: false).save(validate: false)
+# admin = User.new(id: 1, name: "Admin", email: "admin@gmail.com", phone:"7123456789", dob: "01-01-2000", password: "admin", password_confirmation: "admin", admin: true, hr: false).save(validate: false)
 # User.new(id: 2, name: "Arnab Roy", email: "arnab.roy@kreeti.com", phone: "7894561230", dob: "01-01-1996").save(validate: false)
 # User.new(id: 3, name: "Manomoy Biswas", email: "manomoy26@gmail.com", phone: "7894561231", dob: "10-09-1995").save(validate: false)
 # User.new(id: 4, name: Faker::Name.name, email: "manomoybiswas1414@gmail.com", phone: "7894561232", dob: "10-09-1995").save(validate: false)
