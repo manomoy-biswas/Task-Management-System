@@ -10,17 +10,18 @@ class Notification < ApplicationRecord
 
   def self.create_notification(notifiable_id, action, notified_by=nil)
     task=Task.find(notifiable_id)
-    if action == "approved"
+    case action
+    when "approved"
       Notification.create(recipient_id: task.user.id, user_id: task.approved_by, action: action, notifiable_type: "Task", notifiable_id:task.id)
-    elsif action == "approved by"
+    when "approved by"
       User.where(admin: true).each do |user|
         Notification.create(recipient_id: user.id, user_id: task.assign_task_by, action: action, notifiable_type: "Task", notifiable_id:task.id)
       end
-    elsif action == "notified"
+    when "notified"
       User.where(hr: true).each do |user|
         Notification.create(recipient_id: user.id, user_id: notified_by , action: action, notifiable_type: "Task", notifiable_id:task.id)
       end
-    elsif action == "submitted"
+    when "submitted"
       User.where(admin: true).each do |user|
         Notification.create(recipient_id: user.id, user_id: task.assign_task_to, action: action, notifiable_type: "Task", notifiable_id:task.id)
       end
@@ -28,8 +29,10 @@ class Notification < ApplicationRecord
       unless User.find(task.assign_task_by).admin
         Notification.create(recipient_id: task.assign_task_by, user_id: task.assign_task_to, action: action, notifiable_type: "Task", notifiable_id:task.id)
       end
-    else
+    when "assigned", "updated"
       Notification.create(recipient_id: task.user.id, user_id: task.assign_by.id, action: action, notifiable_type: "Task", notifiable_id:task.id)
+    else
+      return
     end
   end
 end

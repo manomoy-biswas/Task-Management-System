@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :admin, class: User do
     name { Faker::Name.name }
-    email {"arnab.roy@kreet.com"}
+    email {"manomoybiswas1414@gmail.com"}
     phone  {rand(7000000000..9999999999)}
     dob {"01-01-1996"}
     password_digest {"admin"}
