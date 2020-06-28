@@ -10,19 +10,19 @@ RSpec.describe Notification, type: :model do
   let (:notification1) { create(:notification, recipient_id: user2.id, user_id: user1.id, notifiable_id:task.id) }
   let (:notification2) { create(:notification, recipient_id: user2.id, user_id: user1.id, notifiable_id:task.id, read_at:"2020-05-09 18:32:38.0") }
 
-  context "Association tests: " do
+  describe "Model association test " do
     it { is_expected.to belong_to(:task).with_foreign_key("notifiable_id")}
     it { is_expected.to belong_to(:user).with_foreign_key("user_id")}
     it { is_expected.to belong_to(:recipient).class_name("User").with_foreign_key("recipient_id")}
   end
 
   describe ".unread" do
-    context "for unread notiofication" do
+    context "with unread notiofication" do
       it "includes notification with unread flag" do
         expect(Notification.unread(user2.id)).to include(notification1)
       end
     end
-    context "for read notiofication" do
+    context "with read notiofication" do
       it "includes notification with unread flag" do
         expect(Notification.unread(user2.id)).to_not include(notification2)
       end
@@ -30,7 +30,7 @@ RSpec.describe Notification, type: :model do
   end 
 
   describe ".all_notification" do
-    context "for all notification" do
+    context "with all notification" do
       it "includes all notification" do
         expect(Notification.all_notification(user2.id)).to include(notification1, notification2)
       end

@@ -10,7 +10,7 @@ RSpec.describe TaskMailer, type: :mailer do
   
   describe "#task_create_email" do
     let (:mail) { TaskMailer.task_create_email(task1.id) }
-    context "Is valid emal data?" do
+    context "with valid email data" do
       it "is expected to return valid subject" do
         expect(mail.subject).to eq("Task Assigned: #{task1.task_name}")
       end
@@ -42,7 +42,7 @@ RSpec.describe TaskMailer, type: :mailer do
       end
     end
 
-    context "Is invalid emal data?" do
+    context "With invalid email data" do
       it "is expected  not to return invalid subject" do
         expect(mail.subject).to_not eq("Task Assigned: #{task2.task_name}")
       end
@@ -77,7 +77,7 @@ RSpec.describe TaskMailer, type: :mailer do
 
   describe "#task_update_email" do
     let (:mail) { TaskMailer.task_update_email(task1.id) }
-    context "Is valid emal data?" do
+    context "with valid email data" do
       it "is expected to return valid subject" do
         expect(mail.subject).to eq("Task Updated: #{task1.task_name}")
       end
@@ -108,7 +108,7 @@ RSpec.describe TaskMailer, type: :mailer do
         expect(mail.body.encoded).to match("http://tms-kreeti.herokuapp.com/tasks/" + task1.id.to_s)
       end
     end
-    context "Is invalid emal data?" do
+    context "with invalid email data" do
       it "is expected not to return invalid subject" do
         expect(mail.subject).to_not eq("Task Updated: #{task2.task_name}")
       end
@@ -143,7 +143,7 @@ RSpec.describe TaskMailer, type: :mailer do
 
   describe "#reminder_email" do
     let (:mail) { TaskMailer.reminder_email(task1.id, "Weekly") }
-    context "Is valid emal data?" do 
+    context "with valid email data" do 
       it "is expected to return valid subject" do
         expect(mail.subject).to eq("Weekly Reminder: #{task1.task_name}")
       end
@@ -174,7 +174,7 @@ RSpec.describe TaskMailer, type: :mailer do
         expect(mail.body.encoded).to match("http://tms-kreeti.herokuapp.com/tasks/" + task1.id.to_s)
       end
     end
-    context "Is invalid emal data?" do
+    context "with invalid email data" do
       it "is expected not to return invalid subject" do
         expect(mail.subject).to_not eq("Task Updated: #{task2.task_name}")
       end
@@ -209,7 +209,7 @@ RSpec.describe TaskMailer, type: :mailer do
   
   describe "#task_reminder_email" do
     let (:mail) { TaskMailer.task_reminder_email(task1.id) }
-    context "Is valid emal data?" do
+    context "with valid email data" do
       it "is expected to return valid subject" do
         expect(mail.subject).to eq("Task Reminder: #{task1.task_name}")
       end
@@ -236,7 +236,7 @@ RSpec.describe TaskMailer, type: :mailer do
       end
     end
 
-    context "Is invalid email data?" do
+    context "with invalid email data" do
       it "is expected not to return invalid subject" do
         expect(mail.subject).to_not eq("Task Updated: #{task2.task_name}")
       end
@@ -271,7 +271,7 @@ RSpec.describe TaskMailer, type: :mailer do
 
   describe "#task_approval_email_to_admin" do
     let (:mail) { TaskMailer.task_approval_email_to_admin(task2.id) }
-    context "IS valid email data?" do
+    context "with valid email data" do
       it "is expected to return valid subject" do
         expect(mail.subject).to eq("Task Approved: #{task2.task_name}")
       end
@@ -298,7 +298,7 @@ RSpec.describe TaskMailer, type: :mailer do
       end
     end
 
-    context "Is invalid email data?" do
+    context "with invalid email data" do
       it "is expected not to return invalid subject" do
         expect(mail.subject).to_not eq("Task Approved: #{task1.task_name}")
       end
@@ -333,7 +333,7 @@ RSpec.describe TaskMailer, type: :mailer do
   
   describe "#task_approved_email" do
     let (:mail) { TaskMailer.task_approved_email(task2.id) }
-    context "Is valid email data?" do
+    context "with valid email data" do
       it "is expected to return valid subject" do
         expect(mail.subject).to eq("Task Approved: #{task2.task_name}")
       end
@@ -360,7 +360,7 @@ RSpec.describe TaskMailer, type: :mailer do
       end
     end
 
-    context "Is invalid email data?" do
+    context "with invalid email data" do
       it "is expected not to return invalid subject" do
         expect(mail.subject).to_not eq("Task Approved: #{task1.task_name}")
       end

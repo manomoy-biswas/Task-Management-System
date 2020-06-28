@@ -7,13 +7,13 @@ RSpec.describe NotificationsChannel, type: :channel do
   before { stub_connection current_user: user1 }
   
   describe "#subscribed" do
-    context "for subscribed" do
+    context "when subscribed" do
       it "successfully subscribes" do
         subscribe()
         expect(subscription).to have_stream_from("notifications_channel_#{user1.id}")
       end
     end 
-    context "for not subscribed" do
+    context "when not subscribed" do
       it "is expexted to not subscribe" do
         subscribe()
         expect(subscription).to_not have_stream_from("notifications_channel_#{user2.id}")
@@ -22,7 +22,7 @@ RSpec.describe NotificationsChannel, type: :channel do
   end
   
   describe "#unsubscribed" do
-    context "for unsubscribe channel" do
+    context "with unsubscribe channel" do
       it "is extected to successfully unsubscribed" do
         subscribe()
         unsubscribe

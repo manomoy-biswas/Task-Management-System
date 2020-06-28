@@ -20,7 +20,7 @@ RSpec.describe TasksHelper, type: :helper do
   end
   
   describe "#find_uesr_name" do
-    context "for finding user name" do
+    context "When finding user name" do
       it "is expected to return user name" do
         expect(helper.find_user_name(user1.id)).to eq(user1.name)
       end
