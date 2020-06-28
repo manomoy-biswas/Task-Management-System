@@ -8,14 +8,14 @@ RSpec.describe TaskReminderWorker, type: :worker do
   let (:task2) { create(:assigned_task2, task_category: category1.id, assign_task_to: user2.id, assign_task_by: user1.id, approved: true, priority: "Low")}
   
   describe "#perform" do
-    context "for task reminder" do
+    context "with task reminder" do
       it "is expected to send an email" do
         TaskReminderWorker.new.perform(task2.id)
         expect(ActionMailer::Base.deliveries.length).to eq(1)
       end
     end
     
-    context "for not task reminder" do
+    context "with not task reminder" do
       it "is expected to not send an email" do
         TaskReminderWorker.new.perform(task1.id)
         expect(ActionMailer::Base.deliveries.length).to eq(0)

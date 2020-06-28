@@ -9,11 +9,11 @@ RSpec.describe SubTask, type: :model do
   let! (:subtask1) {create(:assigned_subtask, task_id: task1.id)}
   let! (:subtask2) {create(:assigned_subtask, task_id: task1.id, submit: true)}
   
-  context "Assiciation tests:" do
+  describe "Model Assiciation test" do
     it { is_expected.to belong_to(:task) }
   end
 
-  context "Validation tests:" do
+  describe "Model Validation test" do
     it { is_expected.to validate_presence_of(:name)}
     it { is_expected.to validate_length_of(:name).is_at_least(3).is_at_most(255) }
   end

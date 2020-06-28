@@ -8,14 +8,14 @@ RSpec.describe ApplicationController, type: :controller do
 
   #method test
   describe "#authenticate_user!" do
-    context "for authentication error" do
+    context "with authentication error" do
       it "is expected to redirect to root path" do
         expect(controller).to receive(:redirect_to).with(root_path, {:flash=> {:danger=> "you are already logged in / Please login with your credential."}})
         controller.send(:authenticate_user!)
       end
     end
 
-    context "for successfull authentication" do
+    context "with successfull authentication" do
       it "is expected to not redirect to root path" do
         allow(controller).to receive(:current_user).and_return(user1)
         expect(controller).to_not receive(:redirect_to).with(root_path, {:flash=> {:danger=> "you are already logged in / Please login with your credential."}})

@@ -4,7 +4,7 @@ RSpec.describe UserMailer, type: :mailer do
   let (:user1) {create(:employee)}
   
   describe "#welcome_user_email" do
-    context "Is valid email data?" do
+    context "with valid email data" do
       let (:mail) { UserMailer.welcome_user_email(user1.id) }
       it "is expected to return valid subject" do
         expect(mail.subject).to eq("Welcome To Task Management System")
@@ -28,7 +28,7 @@ RSpec.describe UserMailer, type: :mailer do
       end
     end
 
-    context "Is invalid email data?" do
+    context "with invalid email data" do
       let (:mail) { UserMailer.welcome_user_email(user1.id) }
       it "is expected not to return invalid subject" do
         expect(mail.subject).to_not eq("Welcome To")
