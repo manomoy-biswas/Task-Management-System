@@ -6,7 +6,7 @@
       <div class="card-body">
         <div class="task-list">
           <div class="row">
-            <% if admin?%>
+            <% if current_user.admin%>
               <div class="col-12 col-sm-6">
                 <div class="row">
                   <div class="col-8 text-left">
@@ -51,11 +51,11 @@
                   <th scope= "col">Assigned By</th>
                   <th scope= "col">Status</th>
                   <th scope= "col">View</th>
-                  <% if admin? %>
+                  <% if current_user.admin %>
                     <th scope= "col">Send to HR</th>
                     <th scope= "col">Delete</th>
                   <% end %>
-                  <% if hr? %>
+                  <% if current_user.hr %>
                     <th scope= "col">Print</th>
                   <% end %>
                 </tr>
@@ -79,7 +79,7 @@
                       <td class="text-center">
                         <%= link_to "", task_path(task), class:"fa fa-eye", data: { disable_with: "..." } %>
                       </td>
-                      <% if admin?%>
+                      <% if current_user.admin%>
                         <td class= "text-center">
                           <% if !task.notify_hr %>
                             <%= link_to "Notify HR", notify_hr_task_path(task), class:"btn btn-success", data: { disable_with: "notifying.." } %>
@@ -91,7 +91,7 @@
                           <%= link_to "", task_path(task), data: {confirm: "Are you sure to delete?" }, method: :delete, data: { disable_with: "..." },class:"fa fa-trash"%>
                         </td>
                       <% end%>
-                      <% if hr?%>
+                      <% if current_user.hr%>
                         <td class="text-center">
                           <%= link_to "",print_task_details_tasks_path(task_id: task.id, format: "pdf"), target: "_blank", class: "fa fa-print" %>
                         </td>

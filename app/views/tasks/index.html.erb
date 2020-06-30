@@ -1,5 +1,5 @@
 <% content_for :title, "Tasks" %>
-<% if admin?%>
+<% if current_user.admin%>
   <h1 class="text-center">ALL TASKS</h1>
 <% else %>
   <h1 class="text-center">MY TASKS</h1>

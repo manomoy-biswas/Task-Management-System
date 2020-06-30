@@ -1,4 +1,4 @@
-<% if logged_in? %>
+<% if current_user %>
   <% Notification.unread(current_user.id).includes(:user, :recipient, :task).reverse.each do |notification| %>
     <% if notification.notifiable_type == "Task" %>
       <%= link_to mark_as_read_notification_path(notification.id), class:"dropdown-item" do%>

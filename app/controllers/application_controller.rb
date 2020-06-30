@@ -4,6 +4,26 @@ class ApplicationController < ActionController::Base
   before_action :set_cache_headers
   helper_method :current_user
   
+  def current_user
+    if session[:user_id]
+      @current_user ||= User.find(session[:user_id])
+    else
+      @current_user = nil
+    end
+  end
+
+  def logged_in?
+    current_user.present?
+  end
+
+  def admin?
+    current_user.admin
+  end
+
+  def hr?
+    current_user.hr
+  end
+
   def check_user_is_admin
     redirect_to root_path,  flash: { warning: t("application.only_admin") } unless admin?
   end

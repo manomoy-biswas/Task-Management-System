@@ -20,17 +20,17 @@ RSpec.describe UsersHelper, type: :helper do
     end
   end
 
-  describe "#current_user" do
-    context "with current user" do
-      it "is expected to return current_user" do
-        helper.login(user1)
-        expect(helper.current_user.id).to eq(user1.id)
-      end
-    end
-    context "with no current user" do
-      it "is expected to return current_user nil" do
-        expect(helper.current_user).to eq(nil)
-      end
-    end    
-  end
+  # describe "#current_user" do
+  #   context "with current user" do
+  #     it "is expected to return current_user" do
+  #       helper.login(user1)
+  #       expect(helper.current_user.id).to eq(user1.id)
+  #     end
+  #   end
+  #   context "with no current user" do
+  #     it "is expected to return current_user nil" do
+  #       expect(helper.current_user).to eq(nil)
+  #     end
+  #   end    
+  # end
 end

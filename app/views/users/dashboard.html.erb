@@ -9,7 +9,7 @@
   <% end %>
   <br />
   <div class="dashboard">
-    <% if admin? %>
+    <% if current_user.admin %>
       <div class="row">
         <div class="col-sm-12 col-md-6">
           <div class="text-center">
@@ -57,7 +57,7 @@
           </div>
         </div>
       </div>
-    <% elsif hr? %>
+    <% elsif current_user.hr %>
       <div class="row">
         <div class="col-sm-12 col-md-6">
           <div class="text-center">

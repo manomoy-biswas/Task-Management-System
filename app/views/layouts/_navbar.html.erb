@@ -14,12 +14,12 @@
             </a>
         </li>
         <li class="nav-item">
-          <% if hr? %>
+          <% if current_user.hr %>
             <a class="nav-link" href="<%= approved_task_tasks_path %>"><strong> Approved Task</strong></a>
           <% else %>
             <a class="nav-link" href="<%= tasks_path %>">
               <strong>
-                <% if admin? %>
+                <% if current_user.admin %>
                   All Tasks
                 <% else %>
                   My Task
@@ -30,13 +30,13 @@
         </li>
       </ul>
       <ul class="navbar-nav text-center ml-auto">
-        <% unless hr? %>
+        <% unless current_user.hr %>
           <li class="nav-item search-field">
             <%= render "layouts/search" %>
           </li>
         <% end %>
         <% unless current_page?("/notifications")%>
-          <% count = (Notification.unread(current_user.id)).count if logged_in? %>
+          <% count = (Notification.unread(current_user.id)).count if current_user %>
           <li class="nav-item">
             <a class="nav-link notification-icon" id="notify" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <i class="fa fa-bell"></i><span class="red" id="unread-count">(<%= count%>)</span>

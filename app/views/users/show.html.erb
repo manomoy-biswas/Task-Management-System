@@ -30,9 +30,9 @@
           <div class="col-sm-12 col-md-7" >
               <h1 class="user-name"><%= current_user.name%></h1>
               <h5 class="user-position">An 
-                <% if admin? %>
+                <% if current_user.admin %>
                   ADMIN
-                <% elsif hr? %>
+                <% elsif current_user.admin %>
                   HR
                 <% else %>
                   Employee

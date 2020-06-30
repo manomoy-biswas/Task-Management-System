@@ -182,7 +182,7 @@
                   <% if @task.submit && @task.approved  %>
                     <span class="green">Approved</span>
                   <% else %>
-                    <% unless hr? || @task.assign_task_to == current_user.id %> 
+                    <% unless current_user.hr || @task.assign_task_to == current_user.id %> 
                       <%= link_to "APPROVE", approve_task_path(@task), class: "btn btn-warning", data: {disable_with: "Approving..."} if @task.submit%>
                     <% end %>
                   <% end %>
@@ -193,12 +193,12 @@
           <div class="col-12 col-sm-6"></div>
         </div>
         <div class="row task-item-row">
-          <% if !hr? %>
+          <% if !current_user.hr %>
             <div class="col text-center">
               <%= link_to " Create", new_task_path, class: "fa fa-pencil btn btn-outline-primary btn-lg", data: {turbolinks: false, disable_with: "creating..."} %>
             </div>
             <div class="col text-center">
-              <% if (@task.assign_task_by == current_user.id && !@task.approved) || admin? %>
+              <% if (@task.assign_task_by == current_user.id && !@task.approved) || current_user.admin %>
                 <%= link_to " Edit", edit_task_path(@task), class: "fa fa-edit btn btn-outline-warning btn-lg",data: { disable_with: "wait.." } %>
               <% end %>
             </div>
@@ -210,7 +210,9 @@
             <% end %>
           <% end %>
           <div class="col text-center">
-            <%= link_to  " Back", session.delete(:return_to), class: "fa fa-hand-o-left btn btn-outline-secondary btn-lg" %>
+            <%= link_to  " Back", tasks_path, class: "fa fa-hand-o-left btn btn-outline-secondary btn-lg"  unless current_user.hr%>
+            <%= link_to  " Back", approved_task_tasks_path, class: "fa fa-hand-o-left btn btn-outline-secondary btn-lg"  if current_user.hr%>
+
           </div>
         </div>
       </div>

@@ -29,6 +29,7 @@ class User < ApplicationRecord
   scope :all_hr, -> { where(hr: true) }
   scope :all_admin, -> { where(admin: true) }
   scope :all_employee, -> {where(admin: false, hr: false)}
+  scope :all_employee_except, -> (user_id) {where.not(id: user_id, admin:true, hr:true)}
 
   def self.from_omniauth(auth)
     data = auth.info

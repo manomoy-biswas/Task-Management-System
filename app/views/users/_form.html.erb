@@ -25,7 +25,7 @@
           <div class="form-group row">
             <%= form.label :email, for: "email", class:"col-sm-2 col-form-label"%>
             <div class="col-sm-10">
-              <% if ["edit"].include?(params[:action]) && !admin? %>
+              <% if ["edit"].include?(params[:action]) && !current_user.admin %>
                 <%= form.label :email, @user.email, class: "form-control" %>  
               <% else %>
                 <%= form.email_field :email, class: "form-control", placeholder: "Enter your Gmail ID", required: true %>
@@ -60,7 +60,7 @@
               </div>
             </div>
           </div>
-          <% unless ["edit"].include?(params[:action]) && ((admin? && @user.admin) || !admin?) %>
+          <% unless ["edit"].include?(params[:action]) && ((current_user.admin && @user.admin) || !current_user.admin) %>
             <div class="form-group row">
               <%= form.label :employee_type, 'Employee Type :', for: "Employee type", class:"col-3 col-form-label"%>
               <div class="col-9">

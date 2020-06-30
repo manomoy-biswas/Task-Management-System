@@ -7,18 +7,18 @@
       <th scope= "col">Category</th>
       <th scope= "col">Priority</th>
       <th scope= "col">Deadline</th>
-      <% if admin?%>
+      <% if current_user.admin%>
         <th scope= "col">Assigned To</th>
       <% end %>
       <th scope= "col">Assigned By</th>
-      <% if admin? %>
+      <% if current_user.admin %>
         <th scope= "col"> Status</th>
       <% else %>
         <th scope= "col"> Submit Task</th>
       <% end %>
       <th scope= "col">View Task</th>
       <th scope= "col"> Approval</th>
-      <% if admin? %>
+      <% if current_user.admin %>
         <th scope= "col">Edit</th>
         <th scope= "col">Delete</th>
       <%end%>
@@ -41,12 +41,12 @@
           <td class= "text-center"><%= task.category.name%></td>
           <td id="priority" class= "text-center"><%= task.priority%></td>
           <td class= "text-center"><%= DateTime.parse(task.submit_date.to_s).strftime("%d-%m-%Y - %I:%M %p") %></td>
-          <% if admin? %>
+          <% if current_user.admin %>
             <td class="text-center"><%= task.user.name %></td>
           <% end %>
           <td class= "text-center"><%= task.assign_by.name %></td>
           <td class= "text-center">
-            <% if admin? %>
+            <% if current_user.admin %>
               <% if task.submit%>
                 Submitted
               <% else %>
@@ -67,7 +67,7 @@
             <% if task.approved%>
               Approved
             <% else %>
-              <% if admin? || task.assign_task_by == current_user.id %>
+              <% if current_user.admin || task.assign_task_by == current_user.id %>
                 <%= link_to "approve", approve_task_path(task),data: { disable_with: "wait..." }, class:"btn btn-success" if task.submit%>
               <% else %>
                 <% if task.submit %>
@@ -76,7 +76,7 @@
               <% end %>
             <% end %>
           </td>
-          <% if admin? || task.assign_task_by == current_user.id %>
+          <% if current_user.admin || task.assign_task_by == current_user.id %>
             <td class="text-center">
               <%= link_to "", edit_task_path(task), class:"fa fa-edit" %>
             </td>

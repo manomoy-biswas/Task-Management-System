@@ -76,10 +76,10 @@
           <div class="form-group row">
             <%= form.label :assign_task_to, "Assign To", for: "assign_task_to", class:"col-12 col-sm-4 col-md-2 col-form-label"%>
             <div class="col-12 col-sm-8 col-md-10 ">
-              <% if admin? %>
-                <%= form.select :assign_task_to, options_from_collection_for_select(User.where.not(id: current_user.id).where.not(hr: true) , :id, :name, form.object.assign_task_to), { prompt: "choose..."}, {  required: "", class: "custom-select d-block w-100" } %>
+              <% if current_user.admin %>
+                <%= form.select :assign_task_to, options_from_collection_for_select(User.all_employee , :id, :name, form.object.assign_task_to), { prompt: "choose..."}, {  required: "", class: "custom-select d-block w-100" } %>
               <%else%>    
-                <%= form.select :assign_task_to, options_from_collection_for_select(User.where.not(id:current_user.id).where.not(admin: true).where.not(hr: true) , :id, :name, form.object.assign_task_to), { prompt: "Choose..."}, {  required: true , class: "form-control scustom-select d-block w-100" } %>  
+                <%= form.select :assign_task_to, options_from_collection_for_select(User.all_employee_except(current_user.id) , :id, :name, form.object.assign_task_to), { prompt: "Choose..."}, {  required: true , class: "form-control scustom-select d-block w-100" } %>  
               <%end%>          
             </div>
           </div>

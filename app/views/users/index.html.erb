@@ -7,9 +7,9 @@
       <div class="card-body">
         <div class="row">
           <div class="col-6 col-sm-4 text-left">
-            <% if admin? %>
+            <% if current_user.admin %>
               <%= link_to  "Add User", new_user_path, class: "btn btn-primary btn-lg" %>
-            <% elsif hr? %>
+            <% elsif current_user.hr %>
               <%= link_to  "Print", print_user_list_users_path(format: "pdf"), target: "_blank", class: "btn btn-primary btn-lg" %>
             <% end %>
           </div>
@@ -19,8 +19,8 @@
           <div class="col-12 col-sm-4 task-index-col text-center">
             <%=form_tag(users_path, action:"index", method: :get) do %>
               <div class="form-group row">
-                <% priorities=["Admin", "HR", "Employee"] if admin? %>
-                <% priorities=["HR", "Employee"] if hr? %>
+                <% priorities=["Admin", "HR", "Employee"] if current_user.admin %>
+                <% priorities=["HR", "Employee"] if current_user.hr %>
                 <span class="fa fa-filter col-2 text-right"></span>
                 <div class="col-7 text-right">
                   <%= select_tag(:role, options_for_select(priorities, params[:role]), prompt:"All", class:"form-control text-center") %>
@@ -44,7 +44,7 @@
                 <th scope="col">Phone No.</th>
                 <th scope="col">D.O.B</th>
                 <th scope="col">Role</th>
-                <%if admin? %>
+                <%if current_user.admin %>
                   <th scope="col">Edit</th>
                   <th scope="col">Delete</th>
                 <% end %>
@@ -68,7 +68,7 @@
                         EMPLOYEE
                       <%end%>
                     </td>
-                    <% if admin? %>
+                    <% if current_user.admin %>
                       <% unless user.admin %>
                         <td class="text-center">
                           <%= link_to "", edit_user_path(user), class:"fa fa-edit"%>

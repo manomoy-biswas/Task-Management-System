@@ -59,4 +59,68 @@ RSpec.describe ApplicationController, type: :controller do
       end
     end
   end
+
+  describe "#current_user" do
+    context "with current user" do
+      it "is expected to return current_user" do
+        session[:user_id] = user1.id
+        expect(controller.current_user.id).to eq(user1.id)
+      end
+    end
+
+    context "with no current user" do
+      it "is expected to return current_user nil" do
+        expect(controller.current_user).to eq(nil)
+      end
+    end    
+  end
+
+  describe "#logged_in?" do
+    context "when loggind in " do
+      it "is expected to return true" do
+        session[:user_id] = user1.id
+        # allow(controller).to receive(:current_user).and_return(user1)
+        expect(controller.logged_in?).to eq(true)
+      end
+    end
+    context "when not logged in" do
+      it "is expected to return false" do
+        expect(controller.logged_in?).to eq(false)
+      end
+    end
+  end
+  
+  describe "#admin?" do
+    context "when current user is admin" do
+      it "is expected to return true" do
+        session[:user_id] = user3.id
+        # allow(controller).to receive(:current_user).and_return(user1)
+        expect(controller.admin?).to eq(true)
+      end
+    end
+    context "when current user is not an admin" do
+      it "is expected to return false" do
+        session[:user_id] = user2.id
+        # allow(controller).to receive(:current_user).and_return(user2)
+        expect(controller.admin?).to eq(false)
+      end
+    end
+  end
+  
+  describe "#hr?" do
+    context "when current user is a HR" do
+      it "is expected to return true" do
+        session[:user_id] = user2.id
+        # allow(controller).to receive(:current_user).and_return(user2)
+        expect(controller.hr?).to eq(true)
+      end
+    end
+    context "when current user is not a HR" do
+      it "is expected to return false" do
+        session[:user_id] = user1.id
+        # allow(controller).to receive(:current_user).and_return(user1)
+        expect(controller.hr?).to eq(false)
+      end
+    end
+  end
 end
