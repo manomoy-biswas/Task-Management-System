@@ -1,4 +1,5 @@
 class OmniauthCallbacksController < ApplicationController
+  include SessionsHelper
   
   def google_oauth2
     begin
@@ -12,7 +13,7 @@ class OmniauthCallbacksController < ApplicationController
         redirect_to root_path, flash: { danger: t("omniauth_callbacks.failed") }
       end
     rescue
-      logout if logged_in?
+      logout if current_user.present?
       return redirect_to root_path, flash: { danger: t("omniauth_callbacks.error") }
     end
   end

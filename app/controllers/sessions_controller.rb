@@ -1,9 +1,10 @@
 class SessionsController < ApplicationController
+  include SessionsHelper
   before_action :set_user, only: [:create]
   before_action :set_redirect_path, only: [:new]
 
   def create
-    return redirect_to user_dashboard_path, flash: { warning: t("session.logged_in") } if logged_in?
+    return redirect_to user_dashboard_path, flash: { warning: t("session.logged_in") } if current_user.present?
     begin
       user = @user && @user.authenticate(params[:login][:password])
     rescue BCrypt::Errors::InvalidHash
@@ -29,7 +30,7 @@ class SessionsController < ApplicationController
   end
 
   def new
-    return redirect_to user_dashboard_path, flash: { warning: t("session.logged_in") } if logged_in?
+    return redirect_to user_dashboard_path, flash: { warning: t("session.logged_in") } if current_user.present?
   end  
 
   private

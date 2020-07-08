@@ -70,7 +70,7 @@
                       <td id="priority" class= "text-center"><%= task.priority%></td>
                       <td class= "text-center"><%= DateTime.parse(task.submit_date.to_s).strftime("%d-%m-%Y - %I:%M %p") %></td>
                       <td class="text-center"><%= task.user.name %></td>
-                      <td class= "text-center"><%= find_user_name(task.assign_task_by)%></td>
+                      <td class= "text-center"><%= task.assign_by.name %></td>
                       <td class= "text-center">
                         <% if task.approved%>
                           Approved

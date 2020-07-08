@@ -11,17 +11,17 @@ class UsersController < ApplicationController
   end  
   
   def destroy
-    return unless admin?
+    return unless current_user.admin
     return redirect_to users_path, flash: {success: t("user.destroy_success")} if @user.destroy
     redirect_to users_path, flash: {success: t("user.failed")}
   end
 
   def edit
-    redirect_to root_path if !admin? && @user.id != current_user.id
+    redirect_to root_path if !current_user.admin && @user.id != current_user.id
   end    
 
   def index
-    redirerct_to root_path unless admin? || hr?
+    redirerct_to root_path unless current_user.admin || current_user.hr
     @users =  User.filter_by_role(params[:role], current_user) 
   end    
   
@@ -30,7 +30,7 @@ class UsersController < ApplicationController
   end  
   
   def print_user_list
-    return unless hr?
+    return unless current_user.hr
     @users = User.all_users_except_admin.order("name ASC")
     respond_to do |format|
       format.html 
@@ -45,7 +45,7 @@ class UsersController < ApplicationController
   end  
 
   def update
-    if admin? && @user != current_user
+    if current_user.admin && @user != current_user
       if @user.update(user_params)
         redirect_to users_path, flash: { success: t("user.update_success") }
       else

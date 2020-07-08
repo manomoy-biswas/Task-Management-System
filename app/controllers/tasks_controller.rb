@@ -26,7 +26,7 @@ class TasksController < ApplicationController
   end
   
   def approved_task
-    return unless admin? || hr?
+    return unless current_user.admin || current_user.hr
     @tasks_approved = Task.filter_approved_task_by_priority(params[:priority], current_user)
   end  
   
@@ -36,7 +36,7 @@ class TasksController < ApplicationController
 
   def create
     @task = Task.new(task_params)
-    return redirect_to root_path if hr? || @task.user.admin || @task.user == current_user || @task.user.hr
+    return redirect_to root_path if current_user.hr || @task.user.admin || @task.user == current_user || @task.user.hr
     @task.assign_task_by = current_user.id
     @task.recurring_task = true unless task_params[:repeat] == "One_Time"
     if @task.save
@@ -50,7 +50,7 @@ class TasksController < ApplicationController
   end
 
   def destroy
-    return unless admin? || @task.assign_task_to == current_user.id
+    return unless current_user.admin || @task.assign_task_to == current_user.id
     if @task.present?
       taskname= " id: " + @task.id.to_s + " " + @task.task_name
       @task.destroy
@@ -103,7 +103,7 @@ class TasksController < ApplicationController
   end
 
   def edit
-    redirect_to root_path unless @task.assign_task_by == current_user.id || admin?
+    redirect_to root_path unless @task.assign_task_by == current_user.id || current_user.admin
     session[:return_to] = request.referer
   end
 
@@ -121,13 +121,13 @@ class TasksController < ApplicationController
   end
   
   def notify_hr
-    return unless admin? && @task.approved
+    return unless current_user.admin && @task.approved
     @task.notify_hr = true
     redirect_to request.referrer, flash: { success: "A notification has been sent to all HR's" } if @task.save
   end  
 
   def print_task_list
-    return unless hr?
+    return unless current_user.hr
     @tasks = Task.notified_tasks
     respond_to do |format|
       format.html 
@@ -139,7 +139,7 @@ class TasksController < ApplicationController
   end
 
   def print_task_details
-    return unless hr?     
+    return unless current_user.hr     
     @task = Task.find(params[:task_id])
     return unless @task.approved
     respond_to do |format|
@@ -152,7 +152,7 @@ class TasksController < ApplicationController
   end
   
   def show
-    return redirect_to user_dashboard_path, flash: { danger: "You are trying to visit other employees task" } unless @task.assign_task_to == current_user.id || @task.assign_task_by == current_user.id || admin? || (@task.notify_hr && hr?)
+    return redirect_to user_dashboard_path, flash: { danger: "You are trying to visit other employees task" } unless @task.assign_task_to == current_user.id || @task.assign_task_by == current_user.id || current_user.admin || (@task.notify_hr && current_user.hr)
   end
   
   def submit_subtask
@@ -170,8 +170,8 @@ class TasksController < ApplicationController
   end  
   
   def update
-    return redirect_to tasks_path, flash: { success: t("You dont have access to update this task") } if @task.assign_task_by != current_user.id && !admin?
-    return redirect_to root_path, flash: { success: t("Can't assign task to yourself or HR or ADMIN") } if hr? || User.find(task_params[:assign_task_to]).admin || task_params[:assign_task_to] == current_user.id
+    return redirect_to tasks_path, flash: { success: t("You dont have access to update this task") } if @task.assign_task_by != current_user.id && !current_user.admin
+    return redirect_to root_path, flash: { success: t("Can't assign task to yourself or HR or ADMIN") } if current_user.hr || User.find(task_params[:assign_task_to]).admin || task_params[:assign_task_to] == current_user.id
 
     if task_params[:repeat] == "One_Time"
       @task.recurring_task = false
@@ -201,7 +201,7 @@ class TasksController < ApplicationController
   def create_approved_notification_and_email
     Notification.create_notification(@task.id, "approved")
     TaskMailerWorker.perform_async(@task.id,"approved")
-    unless admin?
+    unless current_user.admin
       Notification.create_notification(@task.id, "approved by")
       TaskMailerWorker.perform_async(@task.id,"approved by")
     end

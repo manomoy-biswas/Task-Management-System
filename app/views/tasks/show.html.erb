@@ -133,7 +133,7 @@
               <div class="col-6 col-md-8">
                 <p class="task-item-details">
                 <% unless @task.assign_task_by == current_user.id %>
-                  <%= find_user_name(@task.assign_task_by) %></p>
+                  <%= @task.assign_by.name %></p>
                 <% else %>
                   You
                 <% end %>

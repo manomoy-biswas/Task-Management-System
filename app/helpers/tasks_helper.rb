@@ -7,12 +7,4 @@ module TasksHelper
     end
     link_to(name, '#', class: 'add-fields ' + args[:class], data: {id: id, fields: fields.delete("\n")})
   end
-
-  def find_task(task_id)
-    Task.find_by(id: task_id)
-  end
-  
-  def find_user_name(user_id)
-      User.find(user_id).name
-  end
 end

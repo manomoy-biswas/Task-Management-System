@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  include SessionsHelper
+  # include SessionsHelper
   include ApplicationHelper
   before_action :set_cache_headers
   helper_method :current_user
@@ -12,28 +12,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def logged_in?
-    current_user.present?
-  end
-
-  def admin?
-    current_user.admin
-  end
-
-  def hr?
-    current_user.hr
-  end
-
   def check_user_is_admin
-    redirect_to root_path,  flash: { warning: t("application.only_admin") } unless admin?
+    redirect_to root_path,  flash: { warning: t("application.only_admin") } unless current_user.admin
   end
 
   def check_user_is_hr
-    redirect_to users_dashboard_path,  flash: { warning: t("application.only_hr") } if hr?
+    redirect_to users_dashboard_path,  flash: { warning: t("application.only_hr") } if current_user.hr
   end
 
   def authenticate_user!
-    return if logged_in? 
+    return if current_user.present? 
     redirect_to root_path, flash: { danger: t("application.authentication_error") }
   end
 
