@@ -6,8 +6,6 @@ class TasksController < ApplicationController
                 :print_task_details, :show]
   before_action :set_task, only: [:approve, :destroy, :download, :edit, :notify_hr, :show,
                 :submit_task, :update]
-  after_action :create_approved_notification_and_email, only: [:approve]
-  after_action :create_update_notification_and_email, only: [:update]
   after_action :create_notify_hr_notification, only: [:notify_hr]
   before_action :redirect_path, only: [:new, :edit, :show]
   
@@ -20,7 +18,15 @@ class TasksController < ApplicationController
     else
       @task.approved = true
       @task.approved_by = current_user.id
-      return redirect_to request.referrer, flash: {success: t("task.approve.success") } if @task.save(validate: false)
+      if @task.save(validate: false)
+        redirect_to request.referrer, flash: {success: t("task.approve.success") }
+        Notification.create_notification(@task.id, "approved")
+        TaskMailerWorker.perform_async(@task.id,"approved")
+        unless current_user.admin
+          Notification.create_notification(@task.id, "approved by")
+          TaskMailerWorker.perform_async(@task.id,"approved by")
+        end
+      end
     end
   end
   
@@ -190,6 +196,8 @@ class TasksController < ApplicationController
           @task_document = @task.task_document.create(document: file, task_id: @task.id)
         end 
       end
+      Notification.create_notification(@task.id, "updated")
+      TaskMailerWorker.perform_async(@task.id, "update")
       redirect_to session.delete(:return_to), flash: { success: t("task.update_success", task_name: @task.task_name) }
     else
       render "edit", flash: { danger: t("task.failed") }
@@ -200,20 +208,6 @@ class TasksController < ApplicationController
 
   def redirect_path
     session[:return_to] = request.referer
-  end
-
-  def create_approved_notification_and_email
-    Notification.create_notification(@task.id, "approved")
-    TaskMailerWorker.perform_async(@task.id,"approved")
-    unless current_user.admin
-      Notification.create_notification(@task.id, "approved by")
-      TaskMailerWorker.perform_async(@task.id,"approved by")
-    end
-  end
-
-  def create_update_notification_and_email
-    Notification.create_notification(@task.id, "updated")
-    TaskMailerWorker.perform_async(@task.id, "update")
   end
 
   def create_notify_hr_notification

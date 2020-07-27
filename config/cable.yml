@@ -4,7 +4,9 @@ development:
 
 test:
   adapter: test
+
 production:
   adapter: redis
-  url: redis://h:pa0a1a710d2e5dea95b97cc0c682287b4a82fc5e1360c741ef0b6171d124a5e3d@ec2-54-157-5-88.compute-1.amazonaws.com:31869
-  channel_prefix: Task_Management_System_production
+  url: <%= ENV['REDIS_URL'] %>
+  # redis://h:p6671d6df4ff182731cd19d956301aa60cf06c3b3b86be43b7025b4c0cdb418a7@ec2-52-203-239-11.compute-1.amazonaws.com:11309
+  # channel_prefix: Task_Management_System_production
