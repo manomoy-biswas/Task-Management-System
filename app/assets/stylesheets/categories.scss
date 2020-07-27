@@ -3,8 +3,8 @@
 // You can use Sass (SCSS) here: https://sass-lang.com/..
 
 .page-wrapper {
-    min-height: 100vh;
-    padding-top: 20px;
+    // min-height: calc(100vh - 60px - 45px - 10px);
+    padding-top: 30px;
     padding-bottom: 100px;
 }
 .category-wrapper{

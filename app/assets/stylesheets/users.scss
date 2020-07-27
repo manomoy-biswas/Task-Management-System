@@ -2,6 +2,7 @@
 //   min-height: 100vh;
 // }
 @import "font-awesome";
+
 .card-4{
   border-radius: 10px;
   box-shadow: 0 8px 20px 0 rgba(0,0,0,0.15);
@@ -15,6 +16,9 @@
 .dashboard-wrapper{
   margin: 15px 5px;
   vertical-align: middle;
+}
+.header-text{
+  margin-bottom: 20px;
 }
 .user-icon, .user-text{
   display: inline-block;

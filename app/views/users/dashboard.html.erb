@@ -1,14 +1,7 @@
 <% content_for :title, "Dashboard" %>
 <div class="container">
-  <% if current_user.admin %>
-    <h1 class="text-center">Admin Dashboard</h1>
-  <% elsif current_user.hr %>
-    <h1 class="text-center">HR Dashboard</h1>
-  <% else %>
-    <h1 class="text-center">Employee Dashboard</h1>
-  <% end %>
-  <br />
   <div class="dashboard">
+    <h1 class="header-text text-center">Dashboard</h1>
     <% if current_user.admin %>
       <div class="row">
         <div class="col-sm-12 col-md-6">

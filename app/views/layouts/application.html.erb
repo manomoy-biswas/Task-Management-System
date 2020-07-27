@@ -26,8 +26,13 @@
   </head>
 
   <body>
-    <%= render "layouts/navbar" %>
-    <%= render "layouts/alert" %>
-    <%= yield %>
+    <header>
+      <%= render "layouts/navbar" %>
+      <%= render "layouts/alert" %>
+    </header>
+    <main>
+      <%= yield %>
+    </main>
+    <%= render "layouts/footer" %>
   </body>
 </html>
