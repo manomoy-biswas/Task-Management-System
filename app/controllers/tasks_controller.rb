@@ -9,7 +9,6 @@ class TasksController < ApplicationController
   after_action :create_approved_notification_and_email, only: [:approve]
   after_action :create_update_notification_and_email, only: [:update]
   after_action :create_notify_hr_notification, only: [:notify_hr]
-  after_action :create_submit_task_notification, only: [:submit_task]
   before_action :redirect_path, only: [:new, :edit, :show]
   
   def approve
@@ -104,7 +103,6 @@ class TasksController < ApplicationController
 
   def edit
     redirect_to root_path unless @task.assign_task_by == current_user.id || current_user.admin
-    session[:return_to] = request.referer
   end
 
   def elastic_search
@@ -123,7 +121,10 @@ class TasksController < ApplicationController
   def notify_hr
     return unless current_user.admin && @task.approved
     @task.notify_hr = true
-    redirect_to request.referrer, flash: { success: "A notification has been sent to all HR's" } if @task.save
+    if @task.save
+      Notification.create_notification(@task.id, "notified", current_user.id )
+      redirect_to request.referrer, flash: { success: "A notification has been sent to all HR's" }
+    end
   end  
 
   def print_task_list
@@ -165,8 +166,11 @@ class TasksController < ApplicationController
   def submit_task
     return unless @task.assign_task_to == current_user.id
     return redirect_to request.referrer, flash: { warning: t("task.submit_task.failed") } unless SubTask.all_subtasks_submitted(@task)
-    @task.submit = true
-    return redirect_to request.referrer, flash: { success: t("task.submit_task.success") } if @task.save
+    @task.submit = true 
+    if @task.save 
+      Notification.create_notification(@task.id, "submitted")
+      return redirect_to request.referrer, flash: { success: t("task.submit_task.success") }
+    end
   end  
   
   def update
@@ -209,19 +213,11 @@ class TasksController < ApplicationController
 
   def create_update_notification_and_email
     Notification.create_notification(@task.id, "updated")
-    TaskMailerWorker.perform_async(@task.id,"update")
-  end
-
-  def create_mail_worker(task_id, type)
-    TaskMailerWorker.perform_async(task_id,type)
+    TaskMailerWorker.perform_async(@task.id, "update")
   end
 
   def create_notify_hr_notification
     Notification.create_notification(@task.id, "notified", current_user.id )
-  end
-
-  def create_submit_task_notification
-    Notification.create_notification(@task.id, "submitted")
   end
 
   def task_params
