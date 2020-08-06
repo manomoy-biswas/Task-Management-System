@@ -11,4 +11,11 @@ class UserMailer < ApplicationMailer
 
     mail to: @user.email, subject: "Welcome To Task Management System"
   end
+
+  def password_reset(user_id)
+    @user = User.find(user_id)
+    @greeting = "Hi"
+    @url = "http://localhost:3000/#{@user.password_reset_token}/edit"
+    mail to: @user.email, Subject: "Password Resset | Article"
+  end
 end

@@ -1,91 +1,86 @@
-<div class="page-wrapper">
-  <div class="wrapper">
-    <div class="card">
-      <div class="card-body">
-        <% if["edit"].include?(params[:action])%>
-          <h1 class="title text-center"> Update Employee Details </h1>
-        <% else %>
-          <h1 class="title text-center"> Employee Registration Form</h1>
-        <% end %>
-        <%= form_for @user do |form| %>
-
-          <% if @user.errors.any? %>
-            <% @user.errors.full_messages.each do |msg| %>
-              <div class="alert alert-danger"><%= msg %></div>
-            <%end%>
+<div class="row justify-content-center">
+  <div class="col-12 col-md-11 col-lg-9 col-xl-7">
+    <div class="white-box bg-light">
+      <% if["edit"].include?(params[:action])%>
+        <h1 class="title text-center"> Update Employee Details </h1>
+      <% else %>
+        <h1 class="title text-center"> Employee Registration Form</h1>
+      <% end %>
+      <%= form_for @user do |form| %>
+        <% if @user.errors.any? %>
+          <% @user.errors.full_messages.each do |msg| %>
+            <div class="alert alert-danger"><%= msg %></div>
           <%end%>
+        <%end%>
 
-          <div class="form-group row">
-            <%= form.label :name, for: "name", class:"col-sm-2 col-form-label"%>
-            <div class="col-sm-10">
-              <%= form.text_field :name, autofocus: true, class: "form-control", placeholder: "Enter name", required: true %>  
-            </div>
+        <div class="form-group row">
+          <%= form.label :name, for: "name", class:"col-12 col-sm-2 col-form-label font-weight-bolder"%>
+          <div class="col-12 col-sm-10">
+            <%= form.text_field :name, autofocus: true, class: "form-control", placeholder: "Enter name", required: true %>  
           </div>
+        </div>
 
-          <div class="form-group row">
-            <%= form.label :email, for: "email", class:"col-sm-2 col-form-label"%>
-            <div class="col-sm-10">
-              <% if ["edit"].include?(params[:action]) && !current_user.admin %>
-                <%= form.label :email, @user.email, class: "form-control" %>  
-              <% else %>
-                <%= form.email_field :email, class: "form-control", placeholder: "Enter your Gmail ID", required: true %>
-                <div>
-                  <small class="note">* Please Provide Goggle account only</small>
-                </div>
-              <% end %>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-sm-12 col-md-6">
-              <div class="form-group row">
-                <%= form.label :mobile_no, for: "phone", class:"col-sm-4 col-form-label"%>
-                <div class="col-sm-8">
-                  <%= form.text_field :phone, class: "form-control", placeholder: "Enter 10 digit mobile no", required: true %>  
-                </div>
+        <div class="form-group row">
+          <%= form.label :email, for: "email", class:"col-sm-2 col-form-label font-weight-bolder"%>
+          <div class="col-sm-10">
+            <% if ["edit"].include?(params[:action]) && !current_user.admin %>
+              <%= form.label :email, @user.email, class: "form-control" %>  
+            <% else %>
+              <%= form.email_field :email, class: "form-control", placeholder: "Enter your Gmail ID", required: true %>
+              <div>
+                <small class="note">* Please Provide Goggle account only</small>
               </div>
-            </div>
-
-            <div class="col-sm-12 col-md-6">
-              <div class="form-group row">
-                <%= form.label :dob, 'D.O.B',for: "dob", class:"col-sm-3 col-form-label"%>
-                <div class="col-sm-9">
-                  <div class="input-group date" id="datepicker1" data-target="#datepicker1" data-toggle="datetimepicker" data-target-input="nearest">
-                    <%= form.text_field :dob, for: "dob", class:"form-control datetimepicker-input", value: (@user.dob.blank? ? "" : @user.dob.strftime("%d/%m/%Y")), placeholder: "dd/mm/yyyy", required: true %>
-                    <div class="input-group-append">
-                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                    </div>
-                  </div>  
-                </div>
-              </div>
-            </div>
+            <% end %>
           </div>
-          <% unless ["edit"].include?(params[:action]) && ((current_user.admin && @user.admin) || !current_user.admin) %>
+        </div>
+
+        <div class="row">
+          <div class="col-12 col-sm-12 col-md-6">
             <div class="form-group row">
-              <%= form.label :employee_type, 'Employee Type :', for: "Employee type", class:"col-3 col-form-label"%>
-              <div class="col-9">
-                <%=form.hidden_field :hr, value: "false"%>
-                <%= form.check_box :hr, { multiple: false },"true", false %>
-                <%= form.label :hr, 'HR',for: "hr", class:"col-form-label"%>
-              </div> 
-            </div>
-          <% end %>
-
-          <div class="row">
-            <div class="col-6">
-              <strong><%= link_to  "BACK", request.referrer, class: "btn btn-danger btn-lg btn-block" %></strong>
-            </div>
-            <div class="col-6">
-              <% unless["edit"].include?(params[:action])%>
-                <strong><%=form.submit( "CREATE",{ class: "btn btn-primary btn-lg btn-block", data:{disable_with: "Creating.."}})%></strong>
-              <% else %>
-                <strong><%=form.submit( "UPDATE",{ class: "btn btn-primary btn-lg btn-block", data:{disable_with: "Updating..."}})%></strong>
-              <% end %>
+              <%= form.label :mobile_no, for: "phone", class:"col-12 col-sm-2 col-md-4 col-form-label font-weight-bolder"%>
+              <div class="col-12 col-sm-10 col-md-8">
+                <%= form.text_field :phone, class: "form-control", placeholder: "Enter 10 digit mobile no", required: true %>  
+              </div>
             </div>
           </div>
-          
+
+          <div class=" col-12 col-sm-12 col-md-6">
+            <div class="form-group row">
+              <%= form.label :dob, 'D.O.B',for: "dob", class:"col-12 col-sm-2 col-md-4 col-form-label font-weight-bolder"%>
+              <div class="col-12 col-sm-10 col-md-8">
+                <div class="input-group date" id="datepicker1" data-target="#datepicker1" data-toggle="datetimepicker" data-target-input="nearest">
+                  <%= form.text_field :dob, for: "dob", class:"form-control datetimepicker-input", value: (@user.dob.blank? ? "" : @user.dob.strftime("%d/%m/%Y")), placeholder: "dd/mm/yyyy", required: true %>
+                  <div class="input-group-append">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                  </div>
+                </div>  
+              </div>
+            </div>
+          </div>
+        </div>
+        <% unless ["edit"].include?(params[:action]) && ((current_user.admin && @user.admin) || !current_user.admin) %>
+          <div class="form-group row">
+            <% user_role = %w[Admin Reguler HR] %>
+            <%= form.label :user_type, 'User Type', for: "User type", class:"col-12 col-sm-2 col-form-label font-weight-bolder"%>
+            <div class="col-12 col-sm-4">
+              <%= form.select :role, options_for_select(user_role ,@user.role), {prompt: "Choose..."},{required: true, class: "form-control custom-select d-block w-100"} %>
+            </div>
+          </div>
         <% end %>
-      </div>
+        <br />
+        <div class="row">
+          <div class="col-6">
+            <strong><%= link_to  "BACK", users_path, class: "btn btn-danger btn-lg btn-block" %></strong>
+          </div>
+          <div class="col-6">
+            <% unless["edit"].include?(params[:action])%>
+              <%=form.submit( "CREATE",{ class: "btn btn-primary btn-lg btn-block", data:{disable_with: "Creating.."}})%>
+            <% else %>
+              <%=form.submit( "UPDATE",{ class: "btn btn-primary btn-lg btn-block", data:{disable_with: "Updating..."}})%>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>

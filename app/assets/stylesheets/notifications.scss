@@ -10,11 +10,11 @@
 }
 .align-center{
   display: grid;
-align-items: center;  
+  align-items: center;  
 }
 .notification-row{
   border-bottom: 1px solid #606061;
 }
-.notification-row:nth-last-child(1){
+.notification-row:last-child(1){
   border-bottom: none;
 }

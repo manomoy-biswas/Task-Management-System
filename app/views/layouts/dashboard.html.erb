@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Manomoy Biswas">
+    
+    <title><%= full_title(yield(:title)) %></title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= action_cable_meta_tag %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <script 
+      type="text/javascript" 
+      src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js">
+    </script>
+    <script 
+      type="text/javascript" 
+      src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js">
+    </script>
+    <link 
+      rel="stylesheet" 
+      href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
+  </head>
+
+  <body>
+    <header>
+      <%= render "layouts/navbar" %>
+      <%= render "layouts/alert" %>
+      <%= render "layouts/side_navbar" %>
+    </header>
+    <main id="main">
+      <%= render "layouts/work_area" %>
+    </main>
+    <%= render "layouts/footer" %>
+  </body>
+</html>

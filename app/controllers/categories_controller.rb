@@ -1,4 +1,5 @@
 class CategoriesController < ApplicationController
+  layout "dashboard"
   before_action :authenticate_user!, :check_user_is_admin
   before_action :set_category, only: [:edit, :update, :destroy]
 

@@ -1,29 +1,35 @@
 <% content_for :title, "Admin Login" %>
 <%= form_for :login, url: :sessions do |form| %>
-  <div class="page-wrapper">
-    <div class="wrapper">
-      <div class="card">
-        <div class="card-body">
-          <h1 class="title text-center">ADMIN LOGIN</h1>
-          <div class="form-group row">
-            <%= form.label :email, for: "email", class:"col-sm-2 col-form-label"%>
-            <div class="col-sm-10">
-              <%= form.email_field :email,for: "email", class: "form-control", autofocus: true, autocomplete: "email", placeholder: "Enter Email ID", required: true %>
-            </div>
+  <div class="row justify-content-center signup-wrapper bg-dark">
+    <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+      <div class="white-box bg-light">
+        <h1 class="title text-center">ADMIN LOGIN</h1>
+        <div class="form-group row">
+          <%= form.label :email, for: "email", class:"col-sm-2 col-form-label"%>
+          <div class="col-sm-10">
+            <%= form.email_field :email,for: "email", class: "form-control", autofocus: true, autocomplete: "email", placeholder: "Enter Email ID", required: true %>
           </div>
-          <div class="form-group row">
-            <%= form.label :password, for: "password", class:"col-sm-2 col-form-label" %>
-            <div class="col-sm-10">
-              <%= form.password_field :password, for: "password", class: "form-control", autocomplete: "current-password", placeholder: "Enter Password", required: true %>
-            </div>
+        </div>
+        <div class="form-group row">
+          <%= form.label :password, for: "password", class:"col-12 col-sm-2 col-form-label" %>
+          <div class="col-12 col-sm-10">
+            <%= form.password_field :password, for: "password", class: "form-control", autocomplete: "current-password", placeholder: "Enter Password", required: true %>
           </div>
-          <div class="row">
-            <div class="col-6">
-              <strong><%= link_to "BACK", root_path, class: "btn btn-danger btn-lg btn-block my-2 my-sm-0" %></strong>
-            </div>
-            <div class="col-6">
-              <strong><%= form.submit "LOGIN", class:"btn btn-primary btn-lg btn-block my-2 my-sm-0" %></strong>
-            </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-2"></div>
+          <div class="col-sm-10">
+            <%= check_box_tag :remember_me, 1, params[:remember_me], class: "" %>
+            <%= label_tag :remember_me %>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-8 text-left">
+            <div class="col-12"><p class="reg-text text-left font-weight-bold">Forget password?</p></div>
+            <div class="col-12"><%= link_to "RESET", new_password_reset_path, class: "btn btn-success btn-md font-weight-bold" %></div>
+          </div>
+          <div class="col-4 text-right">
+            <%= form.submit "LOGIN", class:"btn btn-primary btn-lg font-weight-bold" %>
           </div>
         </div>
       </div>

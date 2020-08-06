@@ -1,31 +1,27 @@
-<div class="page-wrapper">
-  <div class="wrapper">
-    <div class="card">
-      <div class="card-body">
-        <% unless["edit"].include?(params[:action])%>
-          <h1 class="title text-center">Create Catagory</h1>
-          <% content_for :title, "Create Category" %>
-        <% else %>
-          <h1 class="title text-center">Update Category</h1>
-          <% content_for :title, "Update Category" %>
-        <% end %>
-        <%= form_for @category do |form| %>
-          <div class="form-group row">
-            <%= form.label :name,"Categoty Name :", for: "category name", class:"col-sm-3 col-form-label"%>
-            <div class="col-sm-9">
-              <%= form.text_field :name, for: "category name", class: "form-control", autofocus: true, autocomplete: "email", placeholder: "Enter category name", required: true %>
-            </div>
+<div class="row justify-content-center">
+  <div class="col-12 col-md-11 col-lg-10 col-xl-9">
+    <div class="white-box bg-light">
+      <% unless["edit"].include?(params[:action])%>
+        <h1 class="title text-center">Create Catagory</h1>
+      <% else %>
+        <h1 class="title text-center">Update Category</h1>
+      <% end %>
+      <%= form_for @category do |form| %>
+        <div class="form-group row">
+          <%= form.label :name,"Categoty Name :", for: "category name", class:"col-sm-3 col-form-label"%>
+          <div class="col-sm-9">
+            <%= form.text_field :name, for: "category name", class: "form-control", autofocus: true, autocomplete: "email", placeholder: "Enter category name", required: true %>
           </div>
-          <div class="row">
-            <div class="col-6">
-              <strong><%= link_to "BACK", categories_path, class: "btn btn-danger btn-lg btn-block my-2 my-sm-0" %></strong>
-            </div>
-            <div class="col-6">
-              <strong><%= form.submit "CREATE", class:"btn btn-primary btn-lg btn-block my-2 my-sm-0" %></strong>
-            </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <strong><%= link_to "BACK", categories_path, class: "btn btn-danger btn-lg btn-block my-2 my-sm-0" %></strong>
           </div>
-        <% end %>
-      </div>
+          <div class="col-6">
+            <strong><%= form.submit "CREATE", class:"btn btn-primary btn-lg btn-block my-2 my-sm-0" %></strong>
+          </div>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>

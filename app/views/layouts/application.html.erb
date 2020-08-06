@@ -30,8 +30,14 @@
       <%= render "layouts/navbar" %>
       <%= render "layouts/alert" %>
     </header>
-    <main>
-      <%= yield %>
+    <main id="main">
+      <%
+=begin%>
+ <%= render "layouts/side_navbar" %>
+      <%= render "layouts/work_area" %> 
+<%
+=end%>
+    <%= yield %>
     </main>
     <%= render "layouts/footer" %>
   </body>

@@ -1,79 +1,78 @@
 <% content_for :title, "Notifications" %>
-<div class="container">
-<div class="page-wrapper">
-  <h1 class="header-text text-center">ALL NOTIFICATIONS</h1>
-    <div class="task-wrapper">
-      <div class="card card-5">
-        <div class="card-body">
-          <% @notifications.each do |notification| %>
-            <% if notification.notifiable_type == "Task" %>
-              <div class="row notification-row">
-                <div class= "col-11">
-                  <%= link_to mark_as_read_notification_path(notification.id), class:"dropdown-item" do%>
-                    <div class="notify-content">
-                      <div class="notify-image">
-                        <% if notification.action == "assigned" %>
-                            <i class="fa fa-tasks"></i>
-                          </div>
-                          <div class="notify-info">
-                            <div><strong><%= notification.user.name%></strong></div>
-                            <p><%=notification.action + " a task to You."%></p>
-                        <% elsif notification.action == "approved" %>
-                          <i class="fa fa-check-circle"></i>
-                          </div>
-                          <div class="notify-info">
-                            <div><strong><%= notification.user.name %></strong></div>
-                            <p><%= notification.action + " a task, assigned to You."%></p>
-                        <% elsif notification.action == "approved by" %>
-                            <i class="fa fa-check-square"></i>
-                          </div>
-                          <div class="notify-info">
-                            <h5><%= notification.user.name%></h5>
-                            <p><%="Approved a task, assigned to " + notification.task.user.name %></p>
-                        <% elsif ["Daily","Weekly", "Monthly", "Quarterly", "Half yearly", "Yearly"].include?(notification.action) %>
-                            <i class="fa fa-bullhorn"></i>
-                          </div>
-                          <div class="notify-info">
-                          <div><strong><%= notification.action + " reminder "%></strong></div>
-                            <p><%= "Please submit your task on or before " +  DateTime.parse(notification.task.submit_date.to_s).strftime("%d-%m-%Y %I:%M %p") + "." %></p>
-                        <% elsif notification.action == "submitted" %>
-                          <i class="fa fa-check-circle"></i>
-                          </div>
-                          <div class="notify-info">
-                            <div><strong><%= notification.user.name %></strong></div>
-                            <% if notification.recipient == notification.task.assign_by %>
-                              <p><%= notification.action + " a task, assigned by You."%></p>
-                            <% else %>
-                              <p><%="#{notification.action} a task, assigned by #{notification.task.assign_by.name}"%></p>
-                            <% end %>
-                        <% else %>
-                            <i class="fa fa-tasks"></i>
-                          </div>
-                          <div class="notify-info">
-                            <h5><strong><%= notification.user.name%></strong></di5>
-                            <p><%= notification.action + " a task, assigned to You."%></p>
-                        <% end %>
-                        <span class="notify-time">  
-                          <% if DateTime.parse(notification.created_at.to_s).in_time_zone("Kolkata").day != DateTime.now.in_time_zone("Kolkata").day %>
-                            <%= DateTime.parse(notification.created_at.to_s).strftime("%d-%m-%Y %I:%M %p")%>
-                          <% elsif ((DateTime.now.in_time_zone("Kolkata") - DateTime.parse(notification.created_at.to_s).in_time_zone("Kolkata")) / 1.minute).to_i < 60 %>
-                            <%= ((DateTime.now.in_time_zone("Kolkata") - DateTime.parse(notification.created_at.to_s).in_time_zone("Kolkata")) / 1.minute).to_i %> minutes ago
+<div class="row justify-content-center">
+  <div class="col-12 col-md-9 col-lg-8 col-xl-7">
+    <div class="white-box bg-light">
+      <% if @notifications.present? %>
+        <% @notifications.each do |notification| %>
+          <% if notification.notifiable_type == "Task" %>
+            <div class="row notification-row">
+              <div class= "col-11">
+                <%= link_to mark_as_read_notification_path(notification.id), class:"dropdown-item" do%>
+                  <div class="notify-content">
+                    <div class="notify-image">
+                      <% if notification.action == "assigned" %>
+                          <i class="fa fa-tasks"></i>
+                        </div>
+                        <div class="notify-info">
+                          <div><strong><%= notification.user.name%></strong></div>
+                          <p><%=notification.action + " a task to You."%></p>
+                      <% elsif notification.action == "approved" %>
+                        <i class="fa fa-check-circle"></i>
+                        </div>
+                        <div class="notify-info">
+                          <div><strong><%= notification.user.name %></strong></div>
+                          <p><%= notification.action + " a task, assigned to You."%></p>
+                      <% elsif notification.action == "approved by" %>
+                          <i class="fa fa-check-square"></i>
+                        </div>
+                        <div class="notify-info">
+                          <h5><%= notification.user.name%></h5>
+                          <p><%="Approved a task, assigned to " + notification.task.user.name %></p>
+                      <% elsif ["Daily","Weekly", "Monthly", "Quarterly", "Half yearly", "Yearly"].include?(notification.action) %>
+                          <i class="fa fa-bullhorn"></i>
+                        </div>
+                        <div class="notify-info">
+                        <div><strong><%= notification.action + " reminder "%></strong></div>
+                          <p><%= "Please submit your task on or before " +  DateTime.parse(notification.task.submit_date.to_s).strftime("%d-%m-%Y %I:%M %p") + "." %></p>
+                      <% elsif notification.action == "submitted" %>
+                        <i class="fa fa-check-circle"></i>
+                        </div>
+                        <div class="notify-info">
+                          <div><strong><%= notification.user.name %></strong></div>
+                          <% if notification.recipient == notification.task.assign_by %>
+                            <p><%= notification.action + " a task, assigned by You."%></p>
                           <% else %>
-                            <%= ((DateTime.now.in_time_zone("Kolkata") - DateTime.parse(notification.created_at.to_s).in_time_zone("Kolkata")) / 1.hour).to_i %> hours ago
+                            <p><%="#{notification.action} a task, assigned by #{notification.task.assign_by.name}"%></p>
                           <% end %>
-                        </span>
-                      </div>
+                      <% else %>
+                          <i class="fa fa-tasks"></i>
+                        </div>
+                        <div class="notify-info">
+                          <h5><strong><%= notification.user.name%></strong></di5>
+                          <p><%= notification.action + " a task, assigned to You."%></p>
+                      <% end %>
+                      <span class="notify-time">  
+                        <% if DateTime.parse(notification.created_at.to_s).in_time_zone("Kolkata").day != DateTime.now.in_time_zone("Kolkata").day %>
+                          <%= DateTime.parse(notification.created_at.to_s).strftime("%d-%m-%Y %I:%M %p")%>
+                        <% elsif ((DateTime.now.in_time_zone("Kolkata") - DateTime.parse(notification.created_at.to_s).in_time_zone("Kolkata")) / 1.minute).to_i < 60 %>
+                          <%= ((DateTime.now.in_time_zone("Kolkata") - DateTime.parse(notification.created_at.to_s).in_time_zone("Kolkata")) / 1.minute).to_i %> minutes ago
+                        <% else %>
+                          <%= ((DateTime.now.in_time_zone("Kolkata") - DateTime.parse(notification.created_at.to_s).in_time_zone("Kolkata")) / 1.hour).to_i %> hours ago
+                        <% end %>
+                      </span>
                     </div>
-                  <% end %>
-                </div>
-                <div class="col-1 align-center text-center">
-                  <%= link_to "", notification_path(notification), data: {confirm: "Are you sure to delete?" }, method: :delete, class:"fa fa-trash" %>
-                </div>
+                  </div>
+                <% end %>
               </div>
-            <%end%>
-          <% end %>
-        </div>
-      </div>
+              <div class="col-1 align-center text-center">
+                <%= link_to "", notification_path(notification), data: {confirm: "Are you sure to delete?" }, method: :delete, class:"fa fa-trash" %>
+              </div>
+            </div>
+          <%end%>
+        <% end %>
+      <% else %>
+        <h2 class="text-center">No Notification Available</h2>\
+      <% end %>
     </div>
   </div>
 </div>

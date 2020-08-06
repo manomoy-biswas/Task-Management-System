@@ -1,221 +1,214 @@
-<% content_for :title, "View" %>
-<div class="page-wrapper">
-  <div class="task-show-wrapper">
-    <div class="card card-6">
-      <div class="card-body">
-        <h1 class="text-center"><%= @task.task_name %></h1>
-        <div class="row task-item-row">
-          <div class="col-12 col-sm-4">
-            <div class="row">
-              <div class="col-6">
-                <span class="task-item">Catagory </span>
-              </div>
-              <div class="col-6 ">
-                <p class="task-item-details"><%= @task.category.name%></p>
-              </div>
+<% content_for :title, "View Task" %>
+<div class="row justify-content-center">
+  <div class="col-12 col-xl-10">
+    <div class="white-box bg-light">
+      <h1 class="text-center"><%= @task.task_name %></h1>
+      <div class="row task-item-row">
+        <div class="col-12 col-sm-4">
+          <div class="row">
+            <div class="col-6">
+              <span class="task-item">Catagory </span>
             </div>
-          </div>
-          <div class="col-12 col-sm-4">
-            <div class="row">
-              <div class="col-6 col-md-5">
-                <span class="task-item">Priority </span>
-              </div>
-              <div class="col-6">
-                <p class="task-item-details"><%= @task.priority%></p>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-sm-4">
-            <div class="row">
-              <div class="col-6 col-md-5">
-                <span class="task-item">Assign Date :</span>
-              </div>
-              <div class="col-6">
-                <p class="task-item-details"><%= DateTime.parse(@task.created_at.to_s).strftime("%d-%m-%Y %I:%M %p")%></p>
-              </div>
+            <div class="col-6 ">
+              <p class="task-item-details"><%= @task.category.name%></p>
             </div>
           </div>
         </div>
-        <div class="row task-item-row">
-          <div class="col-6 col-sm-4 col-md-2">
-            <span class="task-item">Task Name </span>
-          </div>
-          <div class="col-6 col-sm-8 col-md-10">
-            <p class="task-item-details"><%= @task.task_name%></p>
-          </div>
-        </div>
-        <div class="row task-item-row">
-          <div class="col-12 col-sm-4 col-md-2">
-            <span class="task-item">Task Description</span>
-          </div>
-          <div class="col-12 col-sm-8 col-md-10">
-            <p class="task-item-details"><%= @task.description%></p>
+        <div class="col-12 col-sm-4">
+          <div class="row">
+            <div class="col-6 col-md-5">
+              <span class="task-item">Priority </span>
+            </div>
+            <div class="col-6">
+              <p class="task-item-details"><%= @task.priority%></p>
+            </div>
           </div>
         </div>
-        <% if @task.sub_task.present? %>
-          <% @task.sub_task.each do |subtask|%>
-            <div class="row sub-task-row task-item-row">
-              <div class="col-12 col-sm-4 col-md-2">
-                <h5 class="red">Sub task <%= @task.sub_task.index(subtask)+1 %> :</h5>
+        <div class="col-12 col-sm-4">
+          <div class="row">
+            <div class="col-6 col-md-5">
+              <span class="task-item">Assign Date :</span>
+            </div>
+            <div class="col-6">
+              <p class="task-item-details"><%= DateTime.parse(@task.created_at.to_s).strftime("%d-%m-%Y %I:%M %p")%></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row task-item-row">
+        <div class="col-6 col-sm-4 col-md-2">
+          <span class="task-item">Task Name </span>
+        </div>
+        <div class="col-6 col-sm-8 col-md-10">
+          <p class="task-item-details"><%= @task.task_name%></p>
+        </div>
+      </div>
+      <div class="row task-item-row">
+        <div class="col-12 col-sm-4 col-md-2">
+          <span class="task-item">Task Description</span>
+        </div>
+        <div class="col-12 col-sm-8 col-md-10">
+          <p class="task-item-details"><%= @task.description%></p>
+        </div>
+      </div>
+      <% if @task.sub_task.present? %>
+        <% @task.sub_task.each do |subtask|%>
+          <div class="row sub-task-row task-item-row">
+            <div class="col-12 col-sm-4 col-md-2">
+              <h5 class="red">Sub task <%= @task.sub_task.index(subtask)+1 %> :</h5>
+            </div>
+            <div class="col-5 col-sm-3 col-md-2">
+              <span class="task-item">Subtask Name</span>
+            </div>
+            <div class="col- col-sm-4 col-md-7">
+              <p class="subtask-item-details"><%= subtask.name%></p>
+            </div>
+            <div class="col-1 col-sm-1 col-md-1 text-right">
+              <% if @task.assign_task_to == current_user.id %>
+                <% if subtask.submit %>
+                  <span class="green"><i class="btn btn-outline-success btn-sm fa fa-check-circle"></i></span> 
+                <% else %>
+                  <span class="red"><%= link_to  "", submit_subtask_task_path(subtask), class: "btn btn-outline-danger btn-sm fa fa-circle-o" %></span>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+          <div class="row sub-task-row task-item-row">
+            <div class="col-12 col-sm-4 col-md-2"></div>
+            <div class="col-11 col-sm-4 col-md-2">
+              <span class="task-item">Description</span>
+            </div>
+            <div class="col-11 col-sm-4 col-md-8">
+              <p class="subtask-item-details"><%= subtask.subtask_description%></p>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+      <div class="row task-item-row">
+        <div class="col-12 col-sm-6">
+          <div class="row">
+            <div class="col-6 col-md-4">
+              <span class="task-item">Submit Date</span>
+            </div>
+            <div class="col-6 col-md-8 ">
+              <p class="task-item-details"><%= DateTime.parse(@task.submit_date.to_s).strftime("%d-%m-%Y %I:%M %p")%></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6">
+          <div class="row">
+            <div class="col-6 col-md-4">
+              <span class="task-item">Status</span>
+            </div>
+            <div class="col-6 col-md-8">
+              <p class="task-item-details">
+                <%if @task.submit%>
+                  <span class="green">Submited<span>
+                <% else %>
+                  <span class="red">In progress...</span>
+                <% end %>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row task-item-row">
+        <% if @task.assign_task_to != current_user.id %>
+          <div class="col-12 col-sm-6">
+            <div class="row">
+              <div class="col-6 col-md-4">
+                <span class="task-item">Assigned To</span>
               </div>
-              <div class="col-5 col-sm-3 col-md-2">
-                <span class="task-item">Subtask Name</span>
+              <div class="col-6 col-md-8 ">
+                <p class="task-item-details"><%= @task.user.name%></p>
               </div>
-              <div class="col- col-sm-4 col-md-7">
-                <p class="subtask-item-details"><%= subtask.name%></p>
+            </div>
+          </div>
+        <% end %>
+        <div class="col-12 col-sm-6">
+          <div class="row">
+            <div class="col-6 col-md-4">
+              <span class="task-item">Assigned By</span>
+            </div>
+            <div class="col-6 col-md-8">
+              <p class="task-item-details">
+              <% unless @task.assign_task_by == current_user.id %>
+                <%= @task.assign_by.name %></p>
+              <% else %>
+                You
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row task-item-row">
+        <div class="col-12 col-sm-6">
+          <div class="row">
+            <div class="col-6 col-md-4">
+              <span class="task-item">Download Document</span>
+            </div>
+            <div class="col-6 col-md-8 ">
+              <p class="task-item-details">
+                <% if @task.task_document.present?%>
+                  <%= link_to "DOWNLOAD", download_task_path(@task), class: "btn btn-success" %>
+                <% else %>
+                  No document availavle...
+                <%end%>
+              </p>
+            </div>
+          </div>
+        </div>
+        <% if @task.assign_task_to == current_user.id && !@task.submit %>
+          <div class="col-12 col-sm-6">
+            <div class="row">
+              <div class="col-6 col-md-4">
+                <span class="task-item">Submit Task</span>
               </div>
-              <div class="col-1 col-sm-1 col-md-1 text-right">
-                <% if @task.assign_task_to == current_user.id %>
-                  <% if subtask.submit %>
-                    <span class="green"><i class="btn btn-outline-success btn-sm fa fa-check-circle"></i></span> 
-                  <% else %>
-                    <span class="red"><%= link_to  "", submit_subtask_task_path(subtask), class: "btn btn-outline-danger btn-sm fa fa-circle-o" %></span>
+              <div class="col-6 col-md-8 ">
+                <p class="task-item-details"><%= link_to "SUBMIT", submit_task_task_path(@task), class: "btn btn-success", data: { disable_with: "submitting..." }%></p>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      <div class="row task-item-row">
+        <div class="col-12 col-sm-6">
+          <div class="row">
+            <div class="col-6 col-md-4">
+              <span class="task-item">Approval Status</span>
+            </div>
+            <div class="col-6 col-md-8 ">
+              <p class="task-item-details">
+                <% if @task.submit && @task.approved  %>
+                  <span class="green">Approved</span>
+                <% else %>
+                  <% unless current_user.hr || @task.assign_task_to == current_user.id %> 
+                    <%= link_to "APPROVE", approve_task_path(@task), class: "btn btn-warning", data: {disable_with: "Approving..."} if @task.submit%>
                   <% end %>
                 <% end %>
-              </div>
+              </p>
             </div>
-            <div class="row sub-task-row task-item-row">
-              <div class="col-12 col-sm-4 col-md-2"></div>
-              <div class="col-11 col-sm-4 col-md-2">
-                <span class="task-item">Description</span>
-              </div>
-              <div class="col-11 col-sm-4 col-md-8">
-                <p class="subtask-item-details"><%= subtask.subtask_description%></p>
-              </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6"></div>
+      </div>
+      <div class="row justify-content-center task-item-row">
+        <% if !current_user.hr %>
+          <div class="col text-center">
+            <%= link_to " Create", new_task_path, class: "fa fa-pencil btn btn-outline-primary btn-lg", data: {turbolinks: false, disable_with: "creating..."} %>
+          </div>
+          <div class="col text-center">
+            <% if (@task.assign_task_by == current_user.id && !@task.approved) || current_user.admin %>
+              <%= link_to " Edit", edit_task_path(@task), class: "fa fa-edit btn btn-outline-warning btn-lg",data: { disable_with: "wait.." } %>
+            <% end %>
+          </div>
+        <% else %>
+          <% if @task.submit %>
+            <div class="col text-center" >
+              <%= link_to  " Print", print_task_details_tasks_path(task_id: @task.id, format: "pdf"), class: "fa fa-print btn btn-outline-success btn-lg", target: "_blank" %>
             </div>
           <% end %>
         <% end %>
-        <div class="row task-item-row">
-          <div class="col-12 col-sm-6">
-            <div class="row">
-              <div class="col-6 col-md-4">
-                <span class="task-item">Submit Date</span>
-              </div>
-              <div class="col-6 col-md-8 ">
-                <p class="task-item-details"><%= DateTime.parse(@task.submit_date.to_s).strftime("%d-%m-%Y %I:%M %p")%></p>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-sm-6">
-            <div class="row">
-              <div class="col-6 col-md-4">
-                <span class="task-item">Status</span>
-              </div>
-              <div class="col-6 col-md-8">
-                <p class="task-item-details">
-                  <%if @task.submit%>
-                    <span class="green">Submited<span>
-                  <% else %>
-                    <span class="red">In progress...</span>
-                  <% end %>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row task-item-row">
-          <% if @task.assign_task_to != current_user.id %>
-            <div class="col-12 col-sm-6">
-              <div class="row">
-                <div class="col-6 col-md-4">
-                  <span class="task-item">Assigned To</span>
-                </div>
-                <div class="col-6 col-md-8 ">
-                  <p class="task-item-details"><%= @task.user.name%></p>
-                </div>
-              </div>
-            </div>
-          <% end %>
-          <div class="col-12 col-sm-6">
-            <div class="row">
-              <div class="col-6 col-md-4">
-                <span class="task-item">Assigned By</span>
-              </div>
-              <div class="col-6 col-md-8">
-                <p class="task-item-details">
-                <% unless @task.assign_task_by == current_user.id %>
-                  <%= @task.assign_by.name %></p>
-                <% else %>
-                  You
-                <% end %>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row task-item-row">
-          <div class="col-12 col-sm-6">
-            <div class="row">
-              <div class="col-6 col-md-4">
-                <span class="task-item">Download Document</span>
-              </div>
-              <div class="col-6 col-md-8 ">
-                <p class="task-item-details">
-                  <% if @task.task_document.present?%>
-                    <%= link_to "DOWNLOAD", download_task_path(@task), class: "btn btn-success" %>
-                  <% else %>
-                    No document availavle...
-                  <%end%>
-                </p>
-              </div>
-            </div>
-          </div>
-          <% if @task.assign_task_to == current_user.id && !@task.submit %>
-            <div class="col-12 col-sm-6">
-              <div class="row">
-                <div class="col-6 col-md-4">
-                  <span class="task-item">Submit Task</span>
-                </div>
-                <div class="col-6 col-md-8 ">
-                  <p class="task-item-details"><%= link_to "SUBMIT", submit_task_task_path(@task), class: "btn btn-success", data: { disable_with: "submitting..." }%></p>
-                </div>
-              </div>
-            </div>
-          <% end %>
-        </div>
-        <div class="row task-item-row">
-          <div class="col-12 col-sm-6">
-            <div class="row">
-              <div class="col-6 col-md-4">
-                <span class="task-item">Approval Status</span>
-              </div>
-              <div class="col-6 col-md-8 ">
-                <p class="task-item-details">
-                  <% if @task.submit && @task.approved  %>
-                    <span class="green">Approved</span>
-                  <% else %>
-                    <% unless current_user.hr || @task.assign_task_to == current_user.id %> 
-                      <%= link_to "APPROVE", approve_task_path(@task), class: "btn btn-warning", data: {disable_with: "Approving..."} if @task.submit%>
-                    <% end %>
-                  <% end %>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-sm-6"></div>
-        </div>
-        <div class="row task-item-row">
-          <% if !current_user.hr %>
-            <div class="col text-center">
-              <%= link_to " Create", new_task_path, class: "fa fa-pencil btn btn-outline-primary btn-lg", data: {turbolinks: false, disable_with: "creating..."} %>
-            </div>
-            <div class="col text-center">
-              <% if (@task.assign_task_by == current_user.id && !@task.approved) || current_user.admin %>
-                <%= link_to " Edit", edit_task_path(@task), class: "fa fa-edit btn btn-outline-warning btn-lg",data: { disable_with: "wait.." } %>
-              <% end %>
-            </div>
-          <% else %>
-            <% if @task.submit %>
-              <div class="col text-center" >
-                <%= link_to  " Print", print_task_details_tasks_path(task_id: @task.id, format: "pdf"), class: "fa fa-print btn btn-outline-success btn-lg", target: "_blank" %>
-              </div>
-            <% end %>
-          <% end %>
-          <div class="col text-center">
-            <%= link_to  " Back", tasks_path, class: "fa fa-hand-o-left btn btn-outline-secondary btn-lg"  unless current_user.hr%>
-            <%= link_to  " Back", approved_task_tasks_path, class: "fa fa-hand-o-left btn btn-outline-secondary btn-lg"  if current_user.hr%>
-
-          </div>
-        </div>
       </div>
     </div>
   </div>

@@ -1,137 +1,135 @@
-<div class="page-wrapper">
-  <div class="task-wrapper">
-    <div class="card card-5">
-      <div class="card-body">
-        <% if ["edit"].include?(params[:action])%>
-          <h1 class="title text-center"> Update Task </h1>
-        <% else %>
-          <h1 class="title text-center"> Assign Task To Employee</h1>
-        <% end %>
-        <hr>
-        <%= form_for @task, html: { multipart: true } do |form| %>
-          <% if @task.errors.any? %>
-            <% @task.errors.full_messages.each do |msg| %>
-              <div class="alert alert-danger"><%= msg %></div>
-            <%end%>
+<div class="row justify-content-center">
+  <div class="col-12 col-xl-8">
+    <div class="white-box bg-light">
+      <% if ["edit"].include?(params[:action])%>
+        <h1 class="title text-center"> Update Task </h1>
+      <% else %>
+        <h1 class="title text-center"> Assign Task To Employee</h1>
+      <% end %>
+      <hr>
+      <%= form_for @task, html: { multipart: true } do |form| %>
+        <% if @task.errors.any? %>
+          <% @task.errors.full_messages.each do |msg| %>
+            <div class="alert alert-danger"><%= msg %></div>
           <%end%>
-          <div class="row">
-            <div class="col-sm-12 col-md-8">
-              <div class="form-group row">
-                <%= form.label :task_category,"Category", for: "task_category", class:"col-12 col-sm-4 col-md-3 col-form-label"%>
-                <div class="col-12 col-sm-8 col-md-9">
-                  <%= form.select :task_category, options_from_collection_for_select(Category.all.order("name ASC"), :id, :name, form.object.task_category), { prompt: "Choose..." }, {autofocus: true, required: true, class:"custom-select d-block w-100"} %>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-4">
-              <div class="form-group row">
-              <% priorities= %w[Low Medium High] %>
-                <%= form.label :priority, "Priority",for: "priority", class:"col-12 col-sm-4 col-md-4 col-form-label"%>
-                <div class="col-12 col-sm-8 col-md-8">
-                <%= form.select :priority, options_for_select(priorities ,@task.priority), {prompt: "Choose..."},{required: true, class: "form-control custom-select d-block w-100"} %>
-                </div>
+        <%end%>
+        <div class="row">
+          <div class="col-sm-12 col-md-8">
+            <div class="form-group row">
+              <%= form.label :task_category,"Category", for: "task_category", class:"col-12 col-sm-4 col-md-3 col-form-label font-weight-bolder"%>
+              <div class="col-12 col-sm-8 col-md-9">
+                <%= form.select :task_category, options_from_collection_for_select(Category.all.order("name ASC"), :id, :name, form.object.task_category), { prompt: "Choose..." }, {autofocus: true, required: true, class:"custom-select d-block w-100"} %>
               </div>
             </div>
           </div>
-          <hr>
-          <div class="form-group row">
-            <%= form.label :task_name,"Task Name", for: "name", class:"col-12 col-sm-4 col-md-2 col-form-label"%>
-            <div class="col-12 col-sm-8 col-md-10">
-              <%= form.text_field :task_name, class: "form-control", placeholder: "Enter task name", required: true %>  
-            </div>
-          </div>
-          <div class="form-group row">
-            <%= form.label :description,"Description", for: "name", class:"col-12 col-sm-4 col-md-2 col-form-label"%>
-            <div class="col-12 col-sm-8 col-md-10">
-              <%= form.text_area :description, class: "form-control", placeholder: "Enter task description", required: true %>  
-            </div>
-          </div>
-          <hr>
-          <div class="row">
-            <div class="col-sm-12 col-md-6">
-              <div class="form-group row">
-                <%= form.label :assign_date, for: "task_assign_date", class:"col-12 col-sm-4 col-md-4 col-form-label"%>
-                <div class="col-12 col-sm-8 col-md-8">
-                  <%= form.label :assign_date, (@task.created_at.blank? ? DateTime.now.strftime("%d/%m/%Y %I:%M %p") : @task.created_at.strftime("%d/%m/%Y %I:%M %p")), class: "form-control" %>  
-                </div>
+          <div class="col-sm-12 col-md-4">
+            <div class="form-group row">
+            <% priorities= %w[Low Medium High] %>
+              <%= form.label :priority, "Priority",for: "priority", class:"col-12 col-sm-4 col-md-4 col-form-label font-weight-bolder"%>
+              <div class="col-12 col-sm-8 col-md-8">
+              <%= form.select :priority, options_for_select(priorities ,@task.priority), {prompt: "Choose..."},{required: true, class: "form-control custom-select d-block w-100"} %>
               </div>
             </div>
-            <div class="col-sm-12 col-md-6">
-              <div class="form-group row">
-                <%= form.label :submit_date, "Submit Date",for: "Last date to submit", class:"col-12 col-sm-4 col-md-4 col-form-label"%>
-                <div class="col-12 col-sm-8 col-md-8">
-                  <div class="input-group date" id="datetimepicker1" data-target="#datetimepicker1" data-toggle="datetimepicker" data-target-input="nearest">
-                    <%= form.text_field :submit_date, for: "submit_date", class:"form-control datetimepicker-input", value: (@task.submit_date.blank? ? "" : @task.submit_date.strftime("%d%m%Y %I:%M %p")), placeholder: "dd/mm/yyyy HH:MM AM/PM", required: true %>
-                    <div class="input-group-append">
-                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                    </div>
-                  </div>
-                  <div>
-                    <small class="note">* Should be 1 day after assign date</small>
+          </div>
+        </div>
+        <hr>
+        <div class="form-group row">
+          <%= form.label :task_name,"Task Name", for: "name", class:"col-12 col-sm-4 col-md-2 col-form-label font-weight-bolder"%>
+          <div class="col-12 col-sm-8 col-md-10">
+            <%= form.text_field :task_name, class: "form-control", placeholder: "Enter task name", required: true %>  
+          </div>
+        </div>
+        <div class="form-group row">
+          <%= form.label :description,"Description", for: "name", class:"col-12 col-sm-4 col-md-2 col-form-label font-weight-bolder"%>
+          <div class="col-12 col-sm-8 col-md-10">
+            <%= form.text_area :description, class: "form-control", placeholder: "Enter task description", rows: "5", required: true %>  
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-12 col-md-6">
+            <div class="form-group row">
+              <%= form.label :assign_date, for: "task_assign_date", class:"col-12 col-sm-4 col-md-4 col-form-label font-weight-bolder"%>
+              <div class="col-12 col-sm-8 col-md-8">
+                <%= form.label :assign_date, (@task.created_at.blank? ? DateTime.now.strftime("%d/%m/%Y %I:%M %p") : @task.created_at.strftime("%d/%m/%Y %I:%M %p")), class: "form-control" %>  
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6">
+            <div class="form-group row">
+              <%= form.label :submit_date, "Submit Date",for: "Last date to submit", class:"col-12 col-sm-4 col-md-4 col-form-label font-weight-bolder"%>
+              <div class="col-12 col-sm-8 col-md-8">
+                <div class="input-group date" id="datetimepicker1" data-target="#datetimepicker1" data-toggle="datetimepicker" data-target-input="nearest">
+                  <%= form.text_field :submit_date, for: "submit_date", class:"form-control datetimepicker-input", value: (@task.submit_date.blank? ? "" : @task.submit_date.strftime("%d%m%Y %I:%M %p")), placeholder: "dd/mm/yyyy HH:MM AM/PM", required: true %>
+                  <div class="input-group-append">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                   </div>
                 </div>
+                <div>
+                  <small class="note">* Should be 1 day after assign date</small>
+                </div>
               </div>
             </div>
           </div>
-          <div class="form-group row">
-            <%= form.label :assign_task_to, "Assign To", for: "assign_task_to", class:"col-12 col-sm-4 col-md-2 col-form-label"%>
-            <div class="col-12 col-sm-8 col-md-10 ">
-              <% if current_user.admin %>
-                <%= form.select :assign_task_to, options_from_collection_for_select(User.all_employee , :id, :name, form.object.assign_task_to), { prompt: "choose..."}, {  required: "", class: "custom-select d-block w-100" } %>
-              <%else%>    
-                <%= form.select :assign_task_to, options_from_collection_for_select(User.all_employee_except(current_user.id) , :id, :name, form.object.assign_task_to), { prompt: "Choose..."}, {  required: true , class: "form-control scustom-select d-block w-100" } %>  
-              <%end%>          
+        </div>
+        <div class="form-group row">
+          <%= form.label :assign_task_to, "Assign To", for: "assign_task_to", class:"col-12 col-sm-4 col-md-2 col-form-label font-weight-bolder"%>
+          <div class="col-12 col-sm-8 col-md-10 ">
+            <% if current_user.admin %>
+              <%= form.select :assign_task_to, options_from_collection_for_select(User.all_user_except(current_user.id) , :id, :name, form.object.assign_task_to), { prompt: "choose..."}, {  required: "", class: "custom-select d-block w-100" } %>
+            <%else%>    
+              <%= form.select :assign_task_to, options_from_collection_for_select(User.all_user_except_admin_and(current_user.id) , :id, :name, form.object.assign_task_to), { prompt: "Choose..."}, {  required: true , class: "form-control scustom-select d-block w-100" } %>  
+            <%end%>          
+          </div>
+        </div>
+        <hr>
+        <div class="form-group row">
+          <% repeats = ["One_Time", "Daily", "Weekly", "Monthly", "Quarterly", "Half_yearly", "Yearly"]%>
+          <%= form.label :repeat_interval, for: "repeat", class:"col-12 col-sm-4 col-md-2 col-form-label font-weight-bolder"%>
+          <div class="col-12 col-sm-8 col-md-10">
+            <div class="row">
+              <% repeats.each do |repeat|%>
+                <div class="col-12 col-sm-6 col-md-3">
+                  <%= form.radio_button :repeat, repeat, required: true%>   
+                  <%= form.label repeat, for: "repeat"%>
+                </div>
+              <%end%>
             </div>
           </div>
-          <hr>
-          <div class="form-group row">
-            <% repeats = ["One_Time", "Daily", "Weekly", "Monthly", "Quarterly", "Half_yearly", "Yearly"]%>
-            <%= form.label :repeat_interval, for: "repeat", class:"col-12 col-sm-4 col-md-2 col-form-label"%>
-            <div class="col-12 col-sm-8 col-md-10">
-              <div class="row">
-                <% repeats.each do |repeat|%>
-                  <div class="col-12 col-sm-6 col-md-3">
-                    <%= form.radio_button :repeat, repeat, required: true%>   
-                    <%= form.label repeat, for: "repeat"%>
-                  </div>
-                <%end%>
-              </div>
+        </div>
+        <div class="form-group row">
+          <%= form.fields_for :task_document do |p| %>
+            <div class="col-4 col-md-2 attach-lebel">
+              <%= p.label :document, "Attach file", for: "document", class: "col-form-label font-weight-bolder"%>
+              <small class="note"> (*if required)</small>
             </div>
+            <div class="col-8 col-md-10">
+            <%= p.file_field :document, :multiple => true, class: "form-control attach-control", name: "task_document[document][]" %>
+            </div>
+          <% end %>
+        </div>
+        <hr>
+        <div class="subtask-container">
+          <h4 class="add-subtask">Add Sub Task</h4>
+          <%= link_to_add_subtask("", form, :sub_task, class: "fa fa-plus float-right") %>
+          <%= form.fields_for :sub_task do |builder| %>
+            <%= render "tasks/sub_task", f: builder%>
+          <% end %>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-6">
+            <strong><%= link_to  "CANCEL", tasks_path, class: "btn btn-danger btn-lg btn-block" %></strong>
           </div>
-          <div class="form-group row">
-            <%= form.fields_for :task_document do |p| %>
-              <div class="col-4 col-md-2 attach-lebel col-form-label">
-                <%= p.label :document, "Attach file", for: "document" %>
-                <small class="note"> (*if required)</small>
-              </div>
-              <div class="col-8 col-md-10">
-              <%= p.file_field :document, :multiple => true, class: "form-control attach-control", name: "task_document[document][]" %>
-              </div>
+          <div class="col-6">
+            <% if ["edit"].include?(params[:action])%>
+              <strong><%=form.submit( "UPDATE",{ class: "btn btn-primary btn-lg btn-block", data:{disable_with: "Updating.."}})%></strong>
+            <% else %>
+              <strong><%=form.submit( "ASSIGN",{ class: "btn btn-success btn-lg btn-block", data: {disable_with: "Assigning.."}})%></strong>
             <% end %>
           </div>
-          <hr>
-          <div class="subtask-container">
-            <h4 class="add-subtask">Add Sub Task</h4>
-            <%= link_to_add_subtask("", form, :sub_task, class: "fa fa-plus float-right") %>
-            <%= form.fields_for :sub_task do |builder| %>
-              <%= render "tasks/sub_task", f: builder%>
-            <% end %>
-          </div>
-          <hr>
-          <div class="row">
-            <div class="col-6">
-              <strong><%= link_to  "CANCEL", tasks_path, class: "btn btn-danger btn-lg btn-block" %></strong>
-            </div>
-            <div class="col-6">
-              <% if ["edit"].include?(params[:action])%>
-                <strong><%=form.submit( "UPDATE",{ class: "btn btn-primary btn-lg btn-block", data:{disable_with: "Updating.."}})%></strong>
-              <% else %>
-                <strong><%=form.submit( "ASSIGN",{ class: "btn btn-success btn-lg btn-block", data: {disable_with: "Assigning.."}})%></strong>
-              <% end %>
-            </div>
-          </div>
-        <% end %>
-      </div>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>

@@ -1,12 +1,10 @@
 class TasksController < ApplicationController
   include TasksHelper
-  
+  layout "dashboard"
   before_action :authenticate_user!
-  before_action :check_user_is_hr, except: [:approved_task, :print_task_list, 
-                :print_task_details, :show]
+  before_action :check_user_is_hr, only: [:print_task_list, :print_task_details]
   before_action :set_task, only: [:approve, :destroy, :download, :edit, :notify_hr, :show,
                 :submit_task, :update]
-  after_action :create_notify_hr_notification, only: [:notify_hr]
   before_action :redirect_path, only: [:new, :edit, :show]
   
   def approve
@@ -31,8 +29,7 @@ class TasksController < ApplicationController
   end
   
   def approved_task
-    return unless current_user.admin || current_user.hr
-    @tasks_approved = Task.filter_approved_task_by_priority(params[:priority], current_user)
+    @tasks = Task.filter_approved_task_by_priority(params[:priority], current_user)
   end  
   
   def user_assigned_task
@@ -41,7 +38,7 @@ class TasksController < ApplicationController
 
   def create
     @task = Task.new(task_params)
-    return redirect_to root_path if current_user.hr || @task.user.admin || @task.user == current_user || @task.user.hr
+    return redirect_to root_path if @task.user.admin || @task.user == current_user
     @task.assign_task_by = current_user.id
     @task.recurring_task = true unless task_params[:repeat] == "One_Time"
     if @task.save
@@ -112,8 +109,13 @@ class TasksController < ApplicationController
   end
 
   def elastic_search
-    return redirect_to request.referrer, flash: { danger: "Please enter a search term" } if params[:q].blank?
-    @tasks = Task.task_search(params[:q], current_user)
+    return redirect_to tasks_path, flash: { danger: "Please enter a search term" } if params[:q].blank?
+    tasks = Task.task_search(params[:q], current_user)
+    task_list = []
+    tasks.each do |task|
+      task_list << task.id
+    end
+    @tasks =  Task.where(id: task_list).includes(:user, :category, :assign_by).order("id desc")
   end  
 
   def index
@@ -134,7 +136,6 @@ class TasksController < ApplicationController
   end  
 
   def print_task_list
-    return unless current_user.hr
     @tasks = Task.notified_tasks
     respond_to do |format|
       format.html 
@@ -145,8 +146,7 @@ class TasksController < ApplicationController
     end
   end
 
-  def print_task_details
-    return unless current_user.hr     
+  def print_task_details   
     @task = Task.find(params[:task_id])
     return unless @task.approved
     respond_to do |format|
@@ -159,14 +159,14 @@ class TasksController < ApplicationController
   end
   
   def show
-    return redirect_to user_dashboard_path, flash: { danger: "You are trying to visit other employees task" } unless @task.assign_task_to == current_user.id || @task.assign_task_by == current_user.id || current_user.admin || (@task.notify_hr && current_user.hr)
+    return redirect_to overview_path, flash: { danger: "You are trying to visit other employees task" } unless @task.assign_task_to == current_user.id || @task.assign_task_by == current_user.id || current_user.admin || (@task.notify_hr && current_user.hr)
   end
   
   def submit_subtask
     @subtask = SubTask.find(params[:id])
-    return unless Task.find(@subtask.task_id).assign_task_to == current_user.id
+    return unless @subtask.task.assign_task_to == current_user.id
     @subtask.submit = true
-    redirect_to task_path(@subtask.task_id), flash: { success: t("task.submit_subtask.success", subtask: @subtask.name) } if @subtask.save
+    redirect_to task_path(@subtask.task.id), flash: { success: t("task.submit_subtask.success", subtask: @subtask.name) } if @subtask.save
   end  
   
   def submit_task
@@ -180,8 +180,8 @@ class TasksController < ApplicationController
   end  
   
   def update
-    return redirect_to tasks_path, flash: { success: t("You dont have access to update this task") } if @task.assign_task_by != current_user.id && !current_user.admin
-    return redirect_to root_path, flash: { success: t("Can't assign task to yourself or HR or ADMIN") } if current_user.hr || User.find(task_params[:assign_task_to]).admin || task_params[:assign_task_to] == current_user.id
+    return redirect_to tasks_path, flash: { success: "You dont have access to update this task" } unless @task.assign_task_by == current_user.id || current_user.admin
+    return redirect_to tasks_path, flash: { success: "Can't assign task to yourself or ADMIN" } if (User.find(@task.assign_task_to).admin && !current_user.admin) || @task.assign_task_to == current_user.id
 
     if task_params[:repeat] == "One_Time"
       @task.recurring_task = false
@@ -208,10 +208,6 @@ class TasksController < ApplicationController
 
   def redirect_path
     session[:return_to] = request.referer
-  end
-
-  def create_notify_hr_notification
-    Notification.create_notification(@task.id, "notified", current_user.id )
   end
 
   def task_params

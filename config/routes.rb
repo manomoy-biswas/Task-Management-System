@@ -1,9 +1,10 @@
 
 Rails.application.routes.draw do
+  get 'passwoed_resets/new'
   require "sidekiq/web"
   
   root "home#index"
-  get :user_dashboard, "users/dashboard"
+  get :overview, "home/overview"
   
   resources :categories
   
@@ -37,16 +38,20 @@ Rails.application.routes.draw do
   resources :sessions
   
   resources :users do
+    resources :change_password
     collection do
       get :print_user_list
     end
   end
+
+  resources :password_resets
   
   
   get :login, to: redirect("auth/google_oauth2")
   get "auth/:provider/callback", to: "omniauth_callbacks#google_oauth2"
   get "auth/failure", to: redirect("/")
   
+  default_url_options host: "localhost:3000" if Rails.env.development?
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
   mount Sidekiq::Web, at: "/sidekiq"
 end

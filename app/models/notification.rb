@@ -18,11 +18,11 @@ class Notification < ApplicationRecord
         Notification.create(recipient_id: user.id, user_id: task.assign_task_by, action: action, notifiable_type: "Task", notifiable_id:task.id)
       end
     when "notified"
-      User.where(hr: true).each do |user|
+      User.all_hr.each do |user|
         Notification.create(recipient_id: user.id, user_id: notified_by , action: action, notifiable_type: "Task", notifiable_id:task.id)
       end
     when "submitted"
-      User.where(admin: true).each do |user|
+      User.all_admin.each do |user|
         Notification.create(recipient_id: user.id, user_id: task.assign_task_to, action: action, notifiable_type: "Task", notifiable_id:task.id)
       end
 

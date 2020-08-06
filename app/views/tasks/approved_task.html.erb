@@ -1,106 +1,28 @@
 <% content_for :title, "Approved Task" %>
-<div class="page-wrapper">
-  <h1 class="header-text text-center">LIST OF APPROVED TASK </h1>
-  <div class="tasklist-wrapper">
-    <div class="card card-6">
-      <div class="card-body">
-        <div class="task-list">
-          <div class="row">
-            <% if current_user.admin%>
-              <div class="col-12 col-sm-6">
-                <div class="row">
-                  <div class="col-8 text-left">
-                    <%= link_to "CREATE TASK", new_task_path, class: "btn btn-primary btn-lg", data: {turbolinks: false, disable_with: "creating..." } %>
-                  </div>
-                  <div class="col-4 text-right">
-                    <%= link_to "BACK", users_dashboard_path, class: "btn btn-secondary btn-lg" %>
-                  </div>
-                </div>
-              </div>
-            <% else %>
-              <div class="col-12 col-sm-6 text-center">
-                <%= link_to " Print Task List",print_task_list_tasks_path(format: "pdf"), target: "_blank", class: "fa fa-print btn btn-outline-primary" %>
-              </div>
-            <% end %>
-            <div class="col-12 col-sm-6 task-index-col text-center">
-              <%=form_tag(approved_task_tasks_path, action: "approved_task", method: :get) do %>
-                <div class="form-group row">
-                  <% priorities=["Low", "Medium", "High"]%>
-                  <span class="fa fa-filter col-2 text-right"></span>
-                  <div class="col-7 text-right">
-                    <%= select_tag(:priority, options_for_select(priorities, params[:priority]), prompt:"All", class:"form-control select-center") %>
-                  </div>
-                  <div class="col-3">
-                    <%= submit_tag "Filter", class:"btn btn-dark", data: { disable_with: "filtering..." } %>
-                  </div>
-                </div>  
-              <% end %>
+<div class="row justify-content-center">
+  <div class="col-12 col-xl-10">
+    <div class="white-box bg-light">
+      <div class="task-list">
+        <div class="row justify-content-between">
+          <% if current_user.hr %>
+            <div class="col-12 col-sm-6 text-left">
+              <%= link_to " Print Task List",print_task_list_tasks_path(format: "pdf"), target: "_blank", class: "fa fa-print btn btn-outline-primary" %>
             </div>
+          <% end %>
+          <div class="col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3 text-right">
+            <%=form_tag(approved_task_tasks_path, action: "approved_task", method: :get) do %>
+              <div class="form-group row">
+                <% priorities=["Low", "Medium", "High"]%>
+                <span class="fa fa-filter col-2 text-right"></span>
+                <div class="col-10 text-right">
+                  <%= select_tag(:priority, options_for_select(priorities, params[:priority]), prompt:"All", class:"form-control select-center", id: "filter_input") %>
+                </div>
+              </div>  
+            <% end %>
           </div>
+        </div>
           <div class="index-table">
-            <table class="table table-striped table-bordered table-hover table-dark" data-toggle="table">
-              <caption class="text-center"> List of Tasks Assigned by You</caption>
-              <thead>
-                <tr class="text-center">
-                  <th scope= "col">#</th>
-                  <th scope= "col">Task Name</th>
-                  <th scope= "col">Category</th>
-                  <th scope= "col">Priority</th>
-                  <th scope= "col">Deadline</th>
-                  <th scope= "col">Assigned To</th>
-                  <th scope= "col">Assigned By</th>
-                  <th scope= "col">Status</th>
-                  <th scope= "col">View</th>
-                  <% if current_user.admin %>
-                    <th scope= "col">Send to HR</th>
-                    <th scope= "col">Delete</th>
-                  <% end %>
-                  <% if current_user.hr %>
-                    <th scope= "col">Print</th>
-                  <% end %>
-                </tr>
-              </thead>
-              <% if @tasks_approved.present? %>
-                <tbody id="task_table">
-                  <% @tasks_approved.each do |task|%>
-                    <tr class="green">
-                      <td><%= @tasks_approved.index(task)+1 %></td>
-                      <td class= "text-center"><%= task.task_name%></td>
-                      <td class= "text-center"><%= task.category.name%></td>
-                      <td id="priority" class= "text-center"><%= task.priority%></td>
-                      <td class= "text-center"><%= DateTime.parse(task.submit_date.to_s).strftime("%d-%m-%Y - %I:%M %p") %></td>
-                      <td class="text-center"><%= task.user.name %></td>
-                      <td class= "text-center"><%= task.assign_by.name %></td>
-                      <td class= "text-center">
-                        <% if task.approved%>
-                          Approved
-                        <% end%>
-                      </td>
-                      <td class="text-center">
-                        <%= link_to "", task_path(task), class:"fa fa-eye", data: { disable_with: "..." } %>
-                      </td>
-                      <% if current_user.admin%>
-                        <td class= "text-center">
-                          <% if !task.notify_hr %>
-                            <%= link_to "Notify HR", notify_hr_task_path(task), class:"btn btn-success", data: { disable_with: "notifying.." } %>
-                          <%else%>
-                            <i class="fa fa-check-circle"></i>
-                          <%end%>
-                        </td>
-                        <td class="text-center">
-                          <%= link_to "", task_path(task), data: {confirm: "Are you sure to delete?" }, method: :delete, data: { disable_with: "..." },class:"fa fa-trash"%>
-                        </td>
-                      <% end%>
-                      <% if current_user.hr%>
-                        <td class="text-center">
-                          <%= link_to "",print_task_details_tasks_path(task_id: task.id, format: "pdf"), target: "_blank", class: "fa fa-print" %>
-                        </td>
-                      <% end %>
-                    </tr>
-                  <% end %>
-                </tbody>
-              <% end %>
-            </table>
+            <%= render "tasks/task_list"%>
           </div>
         </div>
       </div>

@@ -1,11 +1,17 @@
 class UsersController < ApplicationController
   include UsersHelper
+  layout "dashboard"
   before_action :authenticate_user!
   before_action :check_user_is_admin, only: [:new, :create, :destroy]
   before_action :set_user, only: [:edit, :update, :destroy]
 
   def create
     @user = User.new(user_params) 
+    if user_params[:role] == "Admin"
+      @user.admin = true
+    elsif user_params[:role] == "HR"
+      @user.hr = true
+    end
     return redirect_to users_path, flash: { success: t("user.create_success") } if @user.save
     render "new", flash: { danger: t("user.create_faild") }
   end  
@@ -67,6 +73,6 @@ class UsersController < ApplicationController
   end
   
   def user_params
-    params.require(:user).permit(:name, :email, :phone, :dob, :avater, :hr)
+    params.require(:user).permit(:name, :email, :phone, :dob, :avater, :role)
   end
 end

@@ -7,6 +7,8 @@ class User < ApplicationRecord
   has_many :notifications, foreign_key: "user_id"
   
   mount_uploader :avater, AvaterUploader
+
+  attr_accessor :role
   
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i.freeze
                       #/\A([a-zA-Z0-9]+)([.{1}])?([a-zA-Z0-9]+)@g(oogle)?mail([.])com\z/.freeze
@@ -29,7 +31,8 @@ class User < ApplicationRecord
   scope :all_hr, -> { where(hr: true) }
   scope :all_admin, -> { where(admin: true) }
   scope :all_employee, -> {where(admin: false, hr: false)}
-  scope :all_employee_except, -> (user_id) {where.not(id: user_id, admin:true, hr:true)}
+  scope :all_user_except, -> (user_id) {where.not(id: user_id)}
+  scope :all_user_except_admin_and, -> (user_id) {where.not(id: user_id, admin:true)}
 
   def self.from_omniauth(auth)
     data = auth.info
@@ -55,6 +58,23 @@ class User < ApplicationRecord
     else
       self.all_employee.order("name ASC")
     end
+  end  
+
+  def send_password_reset
+    generate_token(:password_reset_token)
+    self.password_reset_sent_at = Time.zone.now
+    save!
+    ResetPasswordWorker.perform_async(self.id)
+  end
+  def generate_token(column)
+    begin
+      self[column] = SecureRandom.urlsafe_base64
+    end while User.exists?(column => self[column])
+  end
+
+  def self.generate_auth_token(column, user)
+    user[column] = SecureRandom.urlsafe_base64
+    user.save!
   end
 
   private

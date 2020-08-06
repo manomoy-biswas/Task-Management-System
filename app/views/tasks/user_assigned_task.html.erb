@@ -1,106 +1,23 @@
 <% content_for :title, "Assigned by me" %>
-<div class="page-wrapper">
-  <h1 class="header-text text-center">TASKS ASSIGNED BY ME</h1>
-  <div class="tasklist-wrapper">
-    <div class="card card-6">
-      <div class="card-body">
-        <div class="task-list">
-          <div class="row">
-            <% unless current_user.hr %>
-              <div class="col-12 col-sm-8">
-                <div class="row">
-                  <div class="col-8 text-left">
-                    <%= link_to "CREATE TASK", new_task_path, class: "btn btn-primary btn-lg", data: {turbolinks: false} %>
-                  </div>
-                  <div class="col-4 text-right">
-                    <%= link_to "BACK", users_dashboard_path, class: "btn btn-secondary btn-lg" %>
-                  </div>
+<div class="row justify-content-center">
+  <div class="col-12 col-xl-10">
+    <div class="white-box bg-light">
+      <div class="task-list">
+        <div class="row justify-content-end">
+          <div class="col-12 col-sm-8 col-md-5 col-lg-4 col-xl-3">
+            <%=form_tag(user_assigned_task_tasks_path, action:"assign_by_me", method: :get) do %>
+              <div class="form-group row">
+                <% priorities=["Low", "Medium", "High"]%>
+                <span class="fa fa-filter col-2 text-right"></span>
+                <div class="col-10 text-center">
+                  <%= select_tag(:priority, options_for_select(priorities, params[:priority]), prompt:"All", class:"form-control text-center select-center", id:"filter_input") %>
                 </div>
-              </div>
+              </div>  
             <% end %>
-            <div class="col-12 col-sm-4 task-index-col text-center">
-              <%=form_tag(user_assigned_task_tasks_path, action:"assigned_by_me", method: :get) do %>
-                <div class="form-group row">
-                  <% priorities=["Low", "Medium", "High"]%>
-                  <span class="fa fa-filter col-2 text-right"></span>
-                  <div class="col-7 text-right">
-                    <%= select_tag(:priority, options_for_select(priorities, params[:priority]), prompt:"All", class:"form-control text-center") %>
-                  </div>
-                  <div class="col-3">
-                    <%= submit_tag "Filter", class:"btn btn-dark" %>
-                  </div>
-                </div>  
-              <% end %>
-            </div>
           </div>
-          <div class="index-table">
-            <table class="table table-striped table-bordered table-hover table-dark" data-toggle="table">
-              <caption class="text-center"> List of Tasks Assigned by You</caption>
-              <thead>
-                <tr class="text-center">
-                  <th scope= "col">#</th>
-                  <th scope= "col">Task Name</th>
-                  <th scope= "col">Category</th>
-                  <th scope= "col">Priority</th>
-                  <th scope= "col">Deadline</th>
-                  <th scope= "col">Assigned To</th>
-                  <th scope= "col">Status</th>
-                  <th scope= "col">View</th>
-                  <th scope= "col">Approve</th>
-                  <th scope= "col">Edit</th>
-                  <th scope= "col">Delete</th>
-                </tr>
-              </thead>
-              <% if @tasks.present? %>
-                <tbody id="task_table">
-                  <% @tasks.each do |task|%>
-                    <tr class="
-                      <% if task.submit && task.approved %>
-                        green
-                      <% elsif task.submit && !task.approved %>
-                        yellow
-                      <% else %>
-                        red
-                      <% end %>">
-                      <td><%= @tasks.index(task)+1 %></td>
-                      <td class= "text-center"><%= task.task_name%></td>
-                      <td class= "text-center"><%= task.category.name%></td>
-                      <td id="priority" class= "text-center"><%= task.priority%></td>
-                      <td class= "text-center"><%= DateTime.parse(task.submit_date.to_s).strftime("%d-%m-%Y - %I:%M %p") %></td>
-                      <td class="text-center"><%= task.user.name %></td>
-                      <td class= "text-center">
-                        <% if task.submit%>
-                          Submitted
-                        <% else %>
-                          In Progress
-                        <% end%>
-                      </td>
-                      <td class="text-center">
-                        <%= link_to "", task_path(task), class:"fa fa-eye" %>
-                      </td>
-                      <% if task.assign_task_by == current_user.id %>
-                        <td class="text-center">
-                          <% unless task.approved%>
-                            <%= link_to "approve", approve_task_path(task), class:"btn btn-success" if task.submit%>
-                          <%else%>
-                            Approved
-                          <%end%>
-                        </td>
-                        <td class="text-center">
-                          <% unless task.approved%>
-                            <%= link_to "", edit_task_path(task), class:"fa fa-edit"%>
-                          <%end%>
-                        </td>
-                        <td class="text-center">
-                          <%= link_to "", task_path(task), data: {confirm: "Are you sure to delete?" }, method: :delete, class:"fa fa-trash"%>
-                        </td>
-                      <% end %>
-                    </tr>
-                  <% end %>
-                </tbody>
-              <% end %>
-            </table>
-          </div>
+        </div>
+        <div class="index-table">
+          <%= render "tasks/task_list"%>
         </div>
       </div>
     </div>

@@ -5,6 +5,8 @@ require("@rails/activestorage").start()
 require("channels")
 require("bootstrap")
 require("packs/tasks")
+require("packs/sidebar")
+require("packs/home")
 
  
 $(()=>$(".hide").fadeOut(4000));
@@ -42,8 +44,17 @@ $(document).ready(function(){
     $('#update_avater').submit(); 
   });
 
+  $('#filter_input').on('change', function() { 
+    $(this.form).submit(); 
+  });
+
   $('#datepicker1').datetimepicker({
     format: "DD/MM/YYYY"
+  });
+  $("#user_phone").keypress(function(event){
+    var key = event.charCode
+    if ((event.location == 3 && key >= 96 && key <= 105) || (key >= 48 && key <= 57) || key == 8) {}
+    else{ event.preventDefault(); }
   });
   
 });

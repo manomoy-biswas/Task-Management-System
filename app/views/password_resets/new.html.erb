@@ -1,0 +1,24 @@
+<% content_for :title, "Verify Email" %>
+<%= form_tag password_resets_path, :method => :post do %>
+  <div class="page-wrapper bg-dark">
+    <div class="wrapper login-wrapper">
+      <div class="card">
+        <div class="card-body">
+          <h1 class="title text-center">VERIFY EMAIL</h1>
+          <br />
+          <div class="form-group row">
+            <%= label_tag :email, "Email", class:"col-sm-2 col-form-label font-weight-bold" %>
+            <div class="col-sm-10">
+              <%= email_field_tag :email, params[:email], class: "form-control", autocomplete: "false", placeholder: "Enter your email id", required: true %>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 text-center">
+              <%= submit_tag "Reset Password", { class:"btn btn-primary btn-lg"} %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

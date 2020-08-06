@@ -1,56 +1,53 @@
-<% content_for :title, current_user.name %>
-<div class="page-wrapper">
-  <div class="user-show-wrapper">
-    <div class="card">
-      <div class="card-body">
-        <h1 class="title text-center">User Profile</h1>
-        <div class="row">
-          <div class="col-sm-12 col-md-5">
-            <div class="row">
-              <div class= "col-12 text-center">
-                <% if current_user.avater? %>
-                  <%= image_tag current_user.avater.url(:small) ,class: "img-circle"%>
-                <% else %>
-                  <%= image_tag "blank-profile-picture-male.png", class:"img-circle"%> 
-                <% end %>
-              </div>
-              <div class="col-12 text-center">
-                <br>
-                <%= form_for current_user, html: { multipart: true, id:"update_avater" } do |f|%>
-                  <div class="image-upload">
-                    <label for="file-input">
-                      <div class="btn btn-outline-secondary"><i class="fa fa-upload"></i></div>
-                    </label>
-                      <%= f.file_field :avater, id:"file-input" %>
-                      <%= f.submit%>
-                    </div>
-                <% end %>
-              </div>
+<% content_for :title, "User Profile" %>
+<div class="row justify-content-center">
+  <div class="col-12 col-md-11 col-lg-10 col-xl-9">
+    <div class="white-box bg-light">
+      <div class="row">
+        <div class="col-sm-12 col-md-5">
+          <div class="row">
+            <div class= "col-12 text-center">
+              <% if current_user.avater? %>
+                <%= image_tag current_user.avater.url(:small) ,class: "img-circle"%>
+              <% else %>
+                <%= image_tag "blank-profile-picture-male.png", class:"img-circle"%> 
+              <% end %>
+            </div>
+            <div class="col-12 text-center">
+              <br>
+              <%= form_for current_user, html: { multipart: true, id:"update_avater" } do |f|%>
+                <div class="image-upload">
+                  <label for="file-input">
+                    <div class="btn btn-outline-secondary"><i class="fa fa-upload"></i></div>
+                  </label>
+                    <%= f.file_field :avater, id:"file-input" %>
+                    <%= f.submit%>
+                  </div>
+              <% end %>
             </div>
           </div>
-          <div class="col-sm-12 col-md-7" >
-              <h1 class="user-name"><%= current_user.name%></h1>
-              <h5 class="user-position">An 
-                <% if current_user.admin %>
-                  ADMIN
-                <% elsif current_user.admin %>
-                  HR
-                <% else %>
-                  Employee
-                <% end %>
-              </h5>
-            <hr>
-            <ul class="container-details">
-              <li><p class="user-phone"><span class="fa fa-mobile"></span> <%= current_user.phone%></p></li>
-              <li><p class="user-email"><span class="fa fa-envelope"></span><%=current_user.email%></p></li>
-            </ul>
+        </div>
+        <div class="col-sm-12 col-md-7" >
+            <h1 class="user-name"><%= current_user.name%></h1>
+            <h5 class="user-position">An 
+              <% if current_user.admin %>
+                ADMIN
+              <% elsif current_user.admin %>
+                HR
+              <% else %>
+                Employee
+              <% end %>
+            </h5>
+          <hr>
+          <ul class="container-details">
+            <li><p class="user-phone"><span class="fa fa-mobile"></span> <%= current_user.phone%></p></li>
+            <li><p class="user-email"><span class="fa fa-envelope"></span><%=current_user.email%></p></li>
+          </ul>
 
-            <hr>
-            <div class="user-dob"><strong>Date Of Birth:</strong> <%= DateTime.parse(current_user.dob.to_s).strftime("%d %B %Y")%></div>
-            <br>
-            <div class="col-12 user-edit-button">
-            <%= link_to " Edit", edit_user_path(current_user), class:"fa fa-edit btn btn-outline-warning"%>
-            </div>
+          <hr>
+          <div class="user-dob"><strong>Date Of Birth:</strong> <%= DateTime.parse(current_user.dob.to_s).strftime("%d %B %Y")%></div>
+          <br>
+          <div class="col-12 user-edit-button">
+          <%= link_to " Edit", edit_user_path(current_user), class:"fa fa-edit btn btn-outline-warning"%>
           </div>
         </div>
       </div>

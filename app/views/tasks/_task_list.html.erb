@@ -10,7 +10,9 @@
       <% if current_user.admin%>
         <th scope= "col">Assigned To</th>
       <% end %>
-      <th scope= "col">Assigned By</th>
+      <% unless ["user_assigned_task"].include?(params[:action])%>
+        <th scope= "col">Assigned By</th>
+      <% end %>
       <% if current_user.admin %>
         <th scope= "col"> Status</th>
       <% else %>
@@ -19,8 +21,13 @@
       <th scope= "col">View Task</th>
       <th scope= "col"> Approval</th>
       <% if current_user.admin %>
+        <% if ["approved_task"].include?(params[:action])%>
+          <th scope= "col">Send to HR</th>
+        <% end %>
         <th scope= "col">Edit</th>
         <th scope= "col">Delete</th>
+      <% elsif current_user.hr %>
+        <th scope= "col">Print</th>
       <%end%>
     </tr>
   </thead>
@@ -44,7 +51,9 @@
           <% if current_user.admin %>
             <td class="text-center"><%= task.user.name %></td>
           <% end %>
-          <td class= "text-center"><%= task.assign_by.name %></td>
+          <% unless ["user_assigned_task"].include?(params[:action])%>
+            <td class= "text-center"><%= task.assign_by.name %></td>
+          <% end %>
           <td class= "text-center">
             <% if current_user.admin %>
               <% if task.submit%>
@@ -76,12 +85,24 @@
               <% end %>
             <% end %>
           </td>
+          
           <% if current_user.admin || task.assign_task_by == current_user.id %>
-            <td class="text-center">
-              <%= link_to "", edit_task_path(task), class:"fa fa-edit" %>
-            </td>
+            <% if task.approved && current_user.admin && ["approved_task"].include?(params[:action])%>
+              <td class= "text-center">
+                <%= link_to "Notify HR", notify_hr_task_path(task), class:"btn btn-success", data: { disable_with: "notifying.." } %>
+              </td>
+            <% end %>
+            <% if !task.approved || current_user.admin %>
+              <td class="text-center">
+                <%= link_to "", edit_task_path(task), class:"fa fa-edit" %>
+              </td>
+            <% end %>
             <td class="text-center">
               <%= link_to "", task_path(task), data: {confirm: "Are you sure to delete?"}, method: :delete, class:"fa fa-trash"%>
+            </td>
+          <% elsif current_user.hr && task.notify_hr %>
+            <td class="text-center">
+              <%= link_to "", print_task_details_tasks_path(task), class:"fa fa-print"%>
             </td>
           <% end %>
         </tr>

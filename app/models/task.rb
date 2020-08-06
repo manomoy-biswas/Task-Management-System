@@ -31,26 +31,32 @@ class Task < ApplicationRecord
   validates_uniqueness_of :task_name, case_sensitive: false
   validates_presence_of :task_name, :priority, :repeat, :assign_task_to, :task_category
 
-  scope :my_assigned_tasks, ->(user_id=nil) { where(assign_task_by: user_id) }
-  scope :my_assigned_tasks_filter, ->(param=nil,user_id=nil) { where(priority: param, assign_task_by: user_id) }
-  scope :approved_tasks, ->{ where(approved: true) }
-  scope :approved_tasks_filter, ->(param=nil) { where(priority: param, approved: true) }
-  scope :notified_tasks, ->{ where(approved: true, notify_hr: true) }
-  scope :notified_tasks_filter, ->(param=nil) { where(priority: param, approved: true, notify_hr: true) }
-  scope :admin_task_filter, ->(param=nil) { where(priority: param ) }
-  scope :my_task_filter, ->(param=nil, user_id) { where(priority: param , assign_task_to: user_id ) }
-  scope :recurring_task, -> { where(recurring_task: true) }
+  scope :my_assigned_tasks, ->(user_id=nil) { where(assign_task_by: user_id).includes(:user, :category) }
+  scope :my_assigned_tasks_filter, ->(param=nil,user_id=nil) { where(priority: param, assign_task_by: user_id).includes(:user, :category) }
+  scope :approved_tasks, ->{ where(approved: true).includes(:user, :assign_by, :category) }
+  scope :approved_tasks_filter, ->(param=nil) { where(priority: param, approved: true).includes(:user, :assign_by, :category) }
+  scope :users_approved_tasks, ->(user_id) { where(approved: true, assign_task_to: user_id).includes(:assign_by, :category)}
+  scope :users_approved_tasks_filter, ->(param, user_id) { where(priority: param, approved: true, assign_task_to: user_id).includes(:assign_by, :category)}
+
+  scope :notified_tasks, ->{ where(approved: true, notify_hr: true).includes(:user, :assign_by, :category) }
+  scope :notified_tasks_filter, ->(param=nil) { where(priority: param, approved: true, notify_hr: true).includes(:user, :assign_by, :category) }
+  scope :admin_task_filter, ->(param=nil) { where(priority: param, approved: false).includes(:user, :assign_by, :category) }
+  scope :my_task_filter, ->(param=nil, user_id) { where(priority: param , approved: false, assign_task_to: user_id ).includes(:assign_by, :category) }
+  scope :recurring_task, -> { where(recurring_task: true).includes(:user, :assign_by, :category) }
 
   mappings dynamic: "false" do
     indexes :id, type: :text 
     indexes :task_name, type: "text"
+    indexes :description, type: "text"
     indexes :assign_task_to, type: "text"
+    indexes :assign_task_by, type: "text"
     indexes :search_field
     indexes :category do
       indexes :name, type: "text", copy_to: :search_field
     end
     indexes :sub_task, type: "nested" do
       indexes :name, type: "text", copy_to: :search_field
+      indexes :subtask_description, type: "text", copy_to: :search_field
     end
     indexes :user do
       indexes :name, type: "text", copy_to: :search_field
@@ -59,10 +65,10 @@ class Task < ApplicationRecord
   
   def as_indexed_json(options = {})
     self.as_json(
-      options.merge(only: [:id, :task_name, :assign_task_to],
+      options.merge(only: [:id, :task_name, :description, :assign_task_by, :assign_task_to],
         include: {
           category: {only: :name},
-          sub_task: {only: :name},
+          sub_task: {only: [:name, :subtask_description]},
           user: {only: :name}
         }
       )
@@ -76,7 +82,7 @@ class Task < ApplicationRecord
           multi_match: {
             query: query,
             type: "best_fields",
-            fields: ["task_name", "search_field"],
+            fields: ["task_name", "description","assign_task_by", "search_field"],
             operator: "and"
           }
         },
@@ -95,7 +101,7 @@ class Task < ApplicationRecord
           multi_match: {
             query: query,
             type: "best_fields",
-            fields: ["task_name", "search_field"],
+            fields: ["task_name", "description", "search_field"],
             operator: "and"
           }
         },
@@ -119,15 +125,15 @@ class Task < ApplicationRecord
   def self.filter_by_priority(param = nil, current_user)
     if current_user.admin
       if !param || param == ""
-        self.includes(:user, :assign_by, :category).order("created_at DESC")
+        self.where(approved: false).includes(:user, :assign_by, :category).order("created_at DESC")
       else
-        self.admin_task_filter(param).includes(:user, :assign_by, :category).order("created_at DESC")
+        self.admin_task_filter(param).order("created_at DESC")
       end    
     else
       if !param || param == ""
-        current_user.tasks.includes(:assign_by, :category).order("created_at DESC")
+        current_user.tasks.where(approved: false).includes(:assign_by, :category).order("created_at DESC")
       else
-        self.my_task_filter(param, current_user.id).includes(:assign_by, :category).order("created_at DESC")
+        self.my_task_filter(param, current_user.id).order("created_at DESC")
       end
     end
   end
@@ -135,24 +141,30 @@ class Task < ApplicationRecord
   def self.filter_approved_task_by_priority(param, current_user)
     if current_user.admin
       if !param || param == ""
-        self.approved_tasks.includes(:user, :assign_by, :category).order("created_at DESC")
+        self.approved_tasks.order("created_at DESC")
       else
-        self.approved_tasks_filter(param).includes(:user, :assign_by, :category).order("created_at DESC")
+        self.approved_tasks_filter(param).order("created_at DESC")
       end    
     elsif current_user.hr
       if !param || param == ""
-        self.notified_tasks.includes(:user, :category).order("created_at DESC")
+        self.notified_tasks.order("created_at DESC")
       else
-        self.notified_tasks_filter(param).includes(:user, :category).order("created_at DESC")
+        self.notified_tasks_filter(param).order("created_at DESC")
+      end
+    else
+      if !param || param == ""
+        self.users_approved_tasks(current_user.id).order("created_at DESC")
+      else
+        self.users_approved_tasks_filter(param, current_user.id).order("created_at DESC")
       end
     end
   end
 
   def self.filter_user_assigned_task_by_priority(param, current_user)
     if !param || param == ""
-      self.my_assigned_tasks(current_user.id).includes(:user, :category).order("created_at DESC")
+      self.my_assigned_tasks(current_user.id).order("created_at DESC")
     else
-      self.my_assigned_tasks_filter(param,current_user.id).includes(:user, :category).order("created_at DESC")
+      self.my_assigned_tasks_filter(param,current_user.id).order("created_at DESC")
     end  
   end
 

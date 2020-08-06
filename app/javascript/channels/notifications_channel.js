@@ -9,7 +9,7 @@ consumer.subscriptions.create("NotificationsChannel", {
 
   received(data) {
     console.log(data.content)
-    $("#unread-count,#unread-count1").text("(" + data.count + ")")
+    $("#unread_count,#unread_count1").text("(" + data.count + ")")
     $("#notifications").prepend(data.content)
   }
 });

@@ -1,88 +1,92 @@
-<% content_for :title, "Users" %>
-<div class="page-wrapper">
-  <h1 class="header-text text-center"> User List</h1>
-  <div class="tasklist-wrapper">
-    <div class="card card-6">
-      <div class="card-body">
-        <div class="row">
-          <div class="col-6 col-sm-4 text-left">
-            <% if current_user.admin %>
-              <%= link_to  "Add User", new_user_path, class: "btn btn-primary btn-lg" %>
-            <% elsif current_user.hr %>
-              <%= link_to  "Print", print_user_list_users_path(format: "pdf"), target: "_blank", class: "btn btn-primary btn-lg" %>
-            <% end %>
-          </div>
-          <div class="col-6 col-sm-4 text-right">
-            <%= link_to  "Back", user_dashboard_path, class: "btn btn-secondary btn-lg" %>
-          </div>
-          <div class="col-12 col-sm-4 task-index-col text-center">
-            <%=form_tag(users_path, action:"index", method: :get) do %>
-              <div class="form-group row">
-                <% priorities=["Admin", "HR", "Employee"] if current_user.admin %>
-                <% priorities=["HR", "Employee"] if current_user.hr %>
-                <span class="fa fa-filter col-2 text-right"></span>
-                <div class="col-7 text-right">
-                  <%= select_tag(:role, options_for_select(priorities, params[:role]), prompt:"All", class:"form-control text-center") %>
-                </div>
-                <div class="col-3">
-                  <%= submit_tag "Filter", class:"btn btn-dark" %>
-                </div>
-              </div>  
-            <% end %>
-          </div>
+<% content_for :title, "Registered Users" %>
+<div class="row justify-content-center">
+  <div class="col-12 col-md-11 col-lg-10 col-xl-9">
+    <div class="white-box bg-light">
+      <div class="row justify-content-between">
+        <div class="col-4 col-sm-4 text-left">
+          <% if current_user.admin %>
+            <%= link_to  "Add User", new_user_path, class: "btn btn-primary btn-lg" %>
+          <% elsif current_user.hr %>
+            <%= link_to  "Print", print_user_list_users_path(format: "pdf"), target: "_blank", class: "btn btn-primary btn-lg" %>
+          <% end %>
         </div>
-        <br/>
-        <div class="index-table">
-          <table class="table table-striped table-bordered table-hover table-dark">
-            <caption class="text-center"> List of Employees</caption>
-            <thead>
-              <tr class="text-center yellow">
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Email ID</th>
-                <th scope="col">Phone No.</th>
-                <th scope="col">D.O.B</th>
-                <th scope="col">Role</th>
-                <%if current_user.admin %>
-                  <th scope="col">Edit</th>
-                  <th scope="col">Delete</th>
-                <% end %>
-              </tr>
-            </thead>
+        <div class="col-8 col-sm-4 text-right">
+          <%=form_tag(users_path, action:"index", method: :get) do %>
+            <div class="form-group row">
+              <% priorities=["Admin", "HR", "Regular"] if current_user.admin %>
+              <% priorities=["HR", "Employee"] if current_user.hr %>
+              <span class="fa fa-filter col-2 text-right"></span>
+              <div class="col-7 text-right">
+                <%= select_tag(:role, options_for_select(priorities, params[:role]), prompt:"All", class:"form-control text-center") %>
+              </div>
+              <div class="col-3">
+                <%= submit_tag "Filter", class:"btn btn-dark" %>
+              </div>
+            </div>  
+          <% end %>
+        </div>
+      </div>
+      <br />
+      <div class="user-list">
+        <table class="table table-hover table-striped table-light">
+          <caption class="text-center"> List of Employees</caption>
+          <thead class="thead-dark">
+            <tr class="text-center">
+              <th scope="col" class="font-weight-bold"></th>
+              <th scope="col" class="font-weight-bold">Name</th>
+              <th scope="col" class="font-weight-bold">Email ID</th>
+              <th scope="col" class="font-weight-bold">Phone No.</th>
+              <th scope="col" class="font-weight-bold">D.O.B</th>
+              <th scope="col" class="font-weight-bold">Role</th>
+              <% if current_user.admin %>
+                <th scope="col" class="font-weight-bold">Edit</th>
+                <th scope="col" class="font-weight-bold">Delete</th>
+              <% end %>
+            </tr>
+          </thead>
+          <tbody>
             <% if @users.present? %>
-              <tbody>
-                <% @users.each do |user|%>
-                  <tr>
-                    <th scope="row"><%= @users.index(user)+1 %></th>
-                    <td><%= user.name%></td>
-                    <td><%= user.email %></td>
-                    <td><%= user.phone %></td>
-                    <td><%= DateTime.parse(user.dob.to_s).strftime("%d-%m-%Y") %></td>
-                    <td class="text-center">
-                      <% if user.admin %>
-                        ADMIN
-                      <% elsif user.hr%>
-                        HR
-                      <%else%>
-                        EMPLOYEE
-                      <%end%>
-                    </td>
-                    <% if current_user.admin %>
-                      <% unless user.admin %>
-                        <td class="text-center">
-                          <%= link_to "", edit_user_path(user), class:"fa fa-edit"%>
-                        </td>
-                        <td class="text-center">
-                          <%= link_to "", user_path(user), data: {confirm: "Are you sure?" }, method: :delete, class:"fa fa-trash", data: { disable_with: "..." }%>
-                        </td>
-                      <% end %>
+              <% @users.each do |user|%>
+                <tr>
+                  <th scope="row" class="align-middle">
+                    <% if user.avater.present? %>
+                      <%= image_tag user.avater.url, class:"user-image" %>
+                    <% else %>
+                      <%= image_tag "blank-profile-picture-male.png", class: "user-image" %>
                     <% end %>
-                  </tr>
-                <% end %>
-              </tbody>
-            </table>
-          </div>
-        <% end %>
+                  </th>
+                  <td class="align-middle"><%= user.name%></td>
+                  <td class="align-middle"><%= user.email %></td>
+                  <td class="align-middle"><%= user.phone %></td>
+                  <td class="align-middle"><%= DateTime.parse(user.dob.to_s).strftime("%d-%m-%Y") %></td>
+                  <td class="text-center align-middle">
+                    <% if user.admin %>
+                      ADMIN
+                    <% elsif user.hr%>
+                      HR
+                    <%else%>
+                      REGULER
+                    <%end%>
+                  </td>
+                  <% if current_user.admin %>
+                    <% unless user.admin %>
+                      <td class="text-center align-middle">
+                        <%= link_to "", edit_user_path(user), class:"fa fa-edit"%>
+                      </td>
+                      <td class="text-center align-middle">
+                        <%= link_to "", user_path(user), data: {confirm: "Are you sure?" }, method: :delete, class:"fa fa-trash", data: { disable_with: "..." }%>
+                      </td>
+                    <% else %>
+                      <td class="text-center align-middle" colspan="2"></td>
+                    <% end %>
+                  <% end %>
+                </tr>
+              <% end %>
+            <% else %>
+              <tr><td class="text-center align-middle">No User Found</td></tr>
+            <% end %>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

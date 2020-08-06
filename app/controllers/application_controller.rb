@@ -1,23 +1,22 @@
 class ApplicationController < ActionController::Base
-  # include SessionsHelper
   include ApplicationHelper
   before_action :set_cache_headers
   helper_method :current_user
   
   def current_user
-    if session[:user_id]
-      @current_user ||= User.find(session[:user_id])
+    if cookies[:auth_token]
+      @current_user ||= User.find_by_auth_token!(cookies[:auth_token])
     else
       @current_user = nil
     end
-  end
+  end  
 
   def check_user_is_admin
-    redirect_to root_path,  flash: { warning: t("application.only_admin") } unless current_user.admin
+    redirect_to overview_path,  flash: { warning: t("application.only_admin") } unless current_user.admin
   end
 
   def check_user_is_hr
-    redirect_to users_dashboard_path,  flash: { warning: t("application.only_hr") } if current_user.hr
+    redirect_to overview_path,  flash: { warning: t("application.only_hr") } unless current_user.hr
   end
 
   def authenticate_user!

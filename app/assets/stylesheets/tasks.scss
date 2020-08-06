@@ -49,6 +49,8 @@
   font-size: 18px;
   font-weight: 400;
   color: #2f4132;
+  text-align: justify;
+  white-space: pre-wrap;
 }
 .task-item-row{
   padding: 10px 0;
@@ -61,12 +63,18 @@
   font-size: 18px;
   font-weight: 400;
   color: #ffffff;
+  text-align: justify;
+  white-space: pre-wrap;
 }
 .fa-pencil{
   font-size: 24px;
 }
 .task-index-col{
-  margin: 5px auto;
+  margin: 10px auto 0;
+  max-width: 500px;
+}
+.btn-create{
+margin-top: 10px;
 }
 .subtask{
   border: 1px solid rgba(0,0,0,0.2);

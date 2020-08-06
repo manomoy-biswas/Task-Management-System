@@ -1,7 +1,7 @@
 .banner{
 	background: url("banner2.jpg") no-repeat right top/cover;
-    width: 100%;
-    height: 165px;
+  width: 100%;
+  height: 165px;
 }
 .banner-text{
 	display: none;
@@ -9,15 +9,151 @@
 	padding: 200px 0 50px 10px;
 }
 .login-wrapper {
-    // min-height: calc(100vh - 60px - 45px);
-    padding-top: 50px;
-    // padding-bottom: 100px;
+  padding-top: 50px;
+  height: calc(100vh - 165px - 60px - 45px);
 }
 .google-icon{
 	width: 40px;
 	background-color: #ffffff;
 	border-radius: 50px;
 }
+.signin-btn{
+  border-radius: 50px;
+}
+.signin-btn span{
+  font-size: 18px;
+  color: #ffffff;
+  font-weight: bolder;
+}
+.text-orange{
+	color: #f15b04;
+}
+.text-purple{
+	color: #670bb3;
+}
+.overview-wrapper{
+  background-color: rgba(147, 148, 155, 0.418);
+  min-height: calc(100vh - 55px - 30px);
+  padding: 0 15px;
+  h3{
+    line-height: 30px;
+  }
+}
+.overview-header{
+  margin-bottom: 30px;
+  height: 60px;
+	padding-top: 20px;
+	padding-left: 40px;
+}
+.page-title{
+  font-size: 24px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.page-time{
+  display: none;
+}
+.white-box {
+  background: #fff;
+  padding: 25px 25px 20px;
+  margin-bottom: 20px;
+}
+.box-title{
+  font-size: 20px;
+  font-weight: bolder;
+}
+.div-inline {
+  padding-top: 20px;
+}
+.overview-icon{
+  display: inline-block;
+  width: 67px;
+  height: 30px;
+  font-size: 32px;
+}
+.count{
+  float: right;
+  .counter{
+    font-size: 24px;
+    font-weight: bolder;
+  }
+}
+.task-center {
+	margin: 0 -25px;
+	min-height: 526px;
+  .task-body {
+    display: table;
+    width: 100%;
+    height: 172px;
+    padding: 12px 25px;
+  }
+  .user-img{
+		width: 45px;
+		height: 45px;
+  }
+  .user-img {
+    display: table-cell;
+    position: relative;
+    margin: 0 10px 0 0;
+    img {
+      width: 100%;
+    }
+    .img-circle {
+      border-radius: 50%;
+    }
+  }
+  .task-contnet {
+    display: table-cell;
+    padding-left: 15px;
+    vertical-align: top;
+    a h5{
+      height: 29px;
+      display: block;
+      display: -webkit-box;
+      max-width: 100%;
+      margin: 0 auto;
+      font-size: 22px;
+      line-height: 1.2;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: justify;
+    }
+    .task-desc {
+      font-size: 14px;
+      display: block;
+      margin: 15px 0;
+      line-height: 25px;
+      color: #848a96;
+      overflow: hidden;
+      max-height: 52px;
+      text-overflow: ellipsis;
+    }
+  }
+  .time {
+    display: inline-block;
+    font-size: 12px;
+    color: #98a6ad;
+  }
+}
+.p-t-10 {
+  padding-top: 10px !important;
+}
+.white-box .box-title {
+  margin: 0 0 12px;
+  font-weight: bolder;
+  text-transform: uppercase;
+  font-size: 16px;
+}
+.vertical-center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+
 @media screen and (min-width: 560px){
 	.banner-text{
 		display: inline-block;
@@ -29,7 +165,24 @@
 	}
 	.google-icon{
 		width: 52px;
-	}
+  }
+  .page-title{
+    font-size: 26px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  .page-time{
+    display: block;
+  }
+  .page-time, span{
+    font-size: 16px;
+    color: #848a96;
+    margin-top: -5px;
+    .fa-calendar{
+      font-size: 28px;
+      margin-right: 5px;
+    }
+  }
 }
 @media screen and (min-width: 768px){
 	.banner{
@@ -40,7 +193,13 @@
 	}
 	.banner-text h1{
 		font-size: 36px;
-	}
+  }
+  .login-wrapper {
+    height: calc(100vh - 335px - 60px - 45px);
+  }
+  .signin-btn span{
+    font-size: 24px;
+  }
 }
 @media screen and (min-width: 992px){
 	.banner{
@@ -51,7 +210,10 @@
 	}
 	.banner-text h1{
 		font-size: 42px;
-	}
+  }
+  .login-wrapper {
+    height: calc(100vh - 435px - 60px - 45px);
+  }
 }
 @media screen and (min-width: 1370px){
 	.banner{
@@ -62,5 +224,8 @@
 	}
 	.banner-text h1{
 		font-size: 48px;
-	}
+  }
+  .login-wrapper {
+    height: calc(100vh - 535px - 60px - 45px);
+  }
 }
