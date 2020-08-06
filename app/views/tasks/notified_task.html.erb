@@ -1,0 +1,28 @@
+<% content_for :title, "Notified Tasks" %>
+<div class="row justify-content-center">
+  <div class="col-12 col-xl-10">
+    <div class="white-box bg-light">
+      <div class="task-list">
+        <div class="row justify-content-between">
+          <div class="col-12 col-sm-5 col-md-4 text-left">
+            <%=form_tag(notified_task_tasks_path, action:"notified_task", method: :get) do %>
+              <div class="form-group row">
+                <% priorities=["Low", "Medium", "High"]%>
+                <span class="fa fa-filter col-2 text-right"></span>
+                <div class="col-10 text-right">
+                  <%= select_tag(:priority, options_for_select(priorities, params[:priority]), prompt:"All", class:"form-control text-center", id: "filter_input") %>
+                </div>
+              </div>  
+            <% end %>
+          </div>
+          <div class="col-12 col-sm-7 col-md-5 search-field">
+            <%= render "layouts/search" %>
+          </div>
+        </div>
+        <div class="index-table">
+          <%= render "tasks/task_list"%>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,4 @@
 class UsersController < ApplicationController
-  include UsersHelper
   layout "dashboard"
   before_action :authenticate_user!
   before_action :check_user_is_admin, only: [:new, :create, :destroy]
@@ -27,7 +26,7 @@ class UsersController < ApplicationController
   end    
 
   def index
-    redirerct_to root_path unless current_user.admin || current_user.hr
+    redirect_to root_path unless current_user.admin || current_user.hr
     @users =  User.filter_by_role(params[:role], current_user) 
   end    
   

@@ -92,7 +92,7 @@
   background-size: 200% auto;
   .dashboard-item-text{
     text-transform: uppercase;
-    padding: 3px 0 0;
+    padding: 0;
     font-size: 22px;
     color: #ffffffd0;
     font-weight: bolder;
@@ -139,12 +139,9 @@
       color: #ffffff;
     }
   }
-  .logout{
-    padding-top: 12px;
-    font-size: 16px;
-    color: #f00f0f;
-  }
+  
 }
+
 .create-btn-section{
   text-align: center;
 }

@@ -23,6 +23,13 @@
   height: 200px;
 
 }
+.user-image{
+  .img-circle{
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+  }
+}
 .user-name,
 .user-position,
 .container-details,
@@ -32,6 +39,13 @@
 .user-email,
 .user-phone{
   font-size: 20px;
+}
+.fa-mobile{
+  font-size: 50px;
+  width: 50px;
+}
+.fa-envelope{
+  width: 50px;
 }
 .user-name{
   color: #798485;

@@ -13,9 +13,9 @@
         </div>
         <div class="col-12 text-center">
           <div class="user-details ">
-            <h5 class="user-name text-center"><%= current_user.name %> (<% if current_user.admin %>Admin
-              <% elsif current_user.hr %>HR<% else %>Regular<% end %>)</h5>
+            <h5 class="user-name text-center"><%= current_user.name %></h5>
             <span class="user-email"><%= current_user.email %></span>
+            <h6>(<% if current_user.admin %>Admin<% elsif current_user.hr %>HR<% else %>Regular User<% end %>)</h6>
           </div>
         </div>
       </div>
@@ -115,6 +115,20 @@
         <% end %>
       </div>
       <div class="col-12">
+        <%= link_to notified_task_tasks_path, class: "dashboard-link" do %>
+          <div class="dashboard-item menu-6">
+            <div class="row no-gutters">
+              <div class="col-2">
+                <i class="fa fa-check-circle"></i>
+              </div>
+              <div class="col-10">
+                <p class="dashboard-item-text">Notified tasks</p>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      <div class="col-12">
         <%= link_to user_path(current_user.id), class: "dashboard-link" do %>
           <div class="dashboard-item menu-7">
             <div class="row no-gutters">
@@ -137,9 +151,6 @@
               </div>
             </div>
           <% end %>
-          <div class="col-4 text-center">
-            <%= link_to  " Logout", session_path(current_user), method: :delete, class: "fa fa-power-off logout" %>
-          </div>
         </div>
       </div>
     </div>

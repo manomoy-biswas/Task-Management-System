@@ -168,6 +168,14 @@ class Task < ApplicationRecord
     end  
   end
 
+  def self.filter_notified_tasks_by_priority(param)
+    if !param || param == ""
+      self.notified_tasks.order("created_at DESC")
+    else
+      self.notified_tasks_filter(param).order("created_at DESC")
+    end  
+  end
+
   
   private
 

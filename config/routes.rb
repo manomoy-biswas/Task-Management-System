@@ -29,6 +29,7 @@ Rails.application.routes.draw do
       get :elastic_search
       get :new_subtask
       get :approved_task
+      get :notified_task
       get :user_assigned_task
       get :print_task_list
       get :print_task_details

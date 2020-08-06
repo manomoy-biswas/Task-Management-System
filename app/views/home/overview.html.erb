@@ -2,74 +2,86 @@
 <div class="row justify-content-center">
   <% if current_user.admin || current_user.hr %>
     <div class="col-12 col-md-6 col-lg-3">
-      <div class="white-box analytics-info">
-        <h3 class="box-title">USERS</h3>
-        <div class="div-inline">
-          <div class="overview-icon"><i class="fa fa-users text-success"></i></div>
-          <div class="count text-right">
-            <span class="counter text-success"><%= user_count %></span>
+      <%= link_to users_path do %>
+        <div class="white-box analytics-info">
+          <h3 class="box-title">USERS</h3>
+          <div class="div-inline">
+            <div class="overview-icon"><i class="fa fa-users text-success"></i></div>
+            <div class="count text-right">
+              <span class="counter text-success"><%= user_count %></span>
+            </div>
           </div>
         </div>
-      </div>
+      <% end %>
     </div>
   <% end %>
   <% if current_user.admin %>
     <div class="col-12 col-md-6 col-lg-3">
-      <div class="white-box">
-        <h3 class="box-title">CATEGORIES</h3>
-        <div class="div-inline">
-          <div class="overview-icon"><i class="fa fa-tags text-danger"></i></div>
-          <div class="count text-right">
-            <span class="counter text-danger"><%= category_count %></span>
+      <%= link_to categories_path do %>
+        <div class="white-box">
+          <h3 class="box-title">CATEGORIES</h3>
+          <div class="div-inline">
+            <div class="overview-icon"><i class="fa fa-tags text-danger"></i></div>
+            <div class="count text-right">
+              <span class="counter text-danger"><%= category_count %></span>
+            </div>
           </div>
         </div>
-      </div>
+      <% end %>
     </div>
   <% end %>
   <div class="col-12 col-md-6 col-lg-3">
-    <div class="white-box">
-      <h3 class="box-title">TASKS</h3>
-      <div class="div-inline">
-        <div class="overview-icon"><i class="fa fa-newspaper-o text-primary"></i></div>
-        <div class="count text-right">
-          <span class="counter text-primary"><%= tasks_count %></span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-12 col-md-6 col-lg-3">
-    <div class="white-box">
-      <h3 class="box-title">APPROVED</h3>
-      <div class="div-inline">
-        <div class="overview-icon"><i class="fa fa-check-circle text-info"></i></div>
-        <div class="count text-right">
-          <span class="counter text-info"><%= approved_task_count %></span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-12 col-md-6 col-lg-3">
-    <div class="white-box">
-      <h3 class="box-title">SET TASKS</h3>
-      <div class="div-inline">
-        <div class="overview-icon"><i class="fa fa-check-square text-orange"></i></div>
-        <div class="count text-right">
-          <span class="counter text-orange"><%= set_task_count %></span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <% if current_user.admin %>
-    <div class="col-12 col-md-6 col-lg-3">
+    <%= link_to tasks_path do %>
       <div class="white-box">
-        <h3 class="box-title">NOTIFIED TASKS</h3>
+        <h3 class="box-title">TASKS</h3>
         <div class="div-inline">
-          <div class="overview-icon"><i class="fa fa-flag text-purple"></i></div>
+          <div class="overview-icon"><i class="fa fa-newspaper-o text-primary"></i></div>
           <div class="count text-right">
-            <span class="counter text-purple"><%= notified_count %></span>
+            <span class="counter text-primary"><%= tasks_count %></span>
           </div>
         </div>
       </div>
+    <% end %>
+  </div>
+  <div class="col-12 col-md-6 col-lg-3">
+    <%= link_to approved_task_tasks_path do %>
+      <div class="white-box">
+        <h3 class="box-title">APPROVED</h3>
+        <div class="div-inline">
+          <div class="overview-icon"><i class="fa fa-check-circle text-info"></i></div>
+          <div class="count text-right">
+            <span class="counter text-info"><%= approved_task_count %></span>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="col-12 col-md-6 col-lg-3">
+    <%= link_to user_assigned_task_tasks_path do %>
+      <div class="white-box">
+        <h3 class="box-title">SET TASKS</h3>
+        <div class="div-inline">
+          <div class="overview-icon"><i class="fa fa-check-square text-orange"></i></div>
+          <div class="count text-right">
+            <span class="counter text-orange"><%= set_task_count %></span>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <% if current_user.admin %>
+    <div class="col-12 col-md-6 col-lg-3">
+      <%= link_to notified_task_tasks_path do %>
+        <div class="white-box">
+          <h3 class="box-title">NOTIFIED TASKS</h3>
+          <div class="div-inline">
+            <div class="overview-icon"><i class="fa fa-flag text-purple"></i></div>
+            <div class="count text-right">
+              <span class="counter text-purple"><%= notified_count %></span>
+            </div>
+          </div>
+        </div>
+      <% end %>
     </div>
   <% end %>
 </div>

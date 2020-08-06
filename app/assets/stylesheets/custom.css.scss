@@ -2,10 +2,13 @@
 @import "bootstrap";
 @import "font-awesome";
 @import "hamburgers/dist/hamburgers";
-@import "./sidenav.scss";
-@import "./sidenav.scss";
 @import "./home.scss";
+@import "./notifications.scss";
+@import "./password_resets.scss";
+@import "./sessions.scss";
+@import "./sidenav.scss";
 @import "./tasks.scss";
+@import "./task-mailer.scss";
 @import "./users.scss";
 
 *{
@@ -83,6 +86,9 @@ a:hover{
   font-size: 30px;
   padding-top: 7px;
 }
+.notification-icon{
+  margin-right: 10px;
+}
 #unread_count{
   background-color: #dc1414;
   width: 25px;
@@ -131,10 +137,19 @@ padding: 0;
 .notify-content .notify-time{
   color: #c5c5a6;
   font-size: 12px;
+  
 }
 .logout-menu{
   position: absolute;
   background-color: #343a40;
+  .logout{
+    padding-top: 12px;
+    font-size: 20px;
+    color: #f00f0f;
+  }
+}
+.dropdown:hover .logout-menu{
+  display: block;
 }
 
 .dropdown-item{
@@ -166,12 +181,8 @@ padding: 0;
   color: #f3dc0a;
   text-decoration: none;
 }
-.fa-mobile{
-  font-size: 50px;
-  width: 50px;
-}
-.fa-envelope{
-  width: 50px;
+.fa-filter{
+  font-size: 30px;
 }
 .fa-eye:hover,
 .fa-edit:hover,
@@ -215,15 +226,13 @@ padding: 0;
   }
 }
 @media screen and (min-width: 768px){
-  .navbar-brand{
-    font-size: 24px;
-  }
+  
   #navbarSupportedContent{
     position: relative;
     top:0;
   }
   .navbar-collapse{
-    max-width: 300px;
+    max-width: 400px;
     right: 0;
   }
   .nav-item {
@@ -231,14 +240,27 @@ padding: 0;
     height: 60px;
     margin-top: 6px;
     padding-top: 10px;
-    margin-left: 15px;
+    margin-left: 5px;
   }
   .nav-item a {
     font-size: 20px;
     font-weight: bold;
   }
+  .nav-dropdown{
+    background: transparent;
+    height: 60px;
+    padding-top: 20px;
+    margin-left: 15px;
+  }
+  .nav-dropdown a{
+    font-weight: bold;
+    font-size: 20px;
+  }
+  .notification-icon{
+    margin-right: 5px;
+  }
   .notification-menu{
-    margin-right: 120px;
+    margin-right: 210px;
   }
   .attach-control{
     padding: 0;

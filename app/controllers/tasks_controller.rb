@@ -125,7 +125,12 @@ class TasksController < ApplicationController
   def new
     @task = Task.new
   end
-  
+
+  def notified_task
+    return unless current_user.admin
+    @task = Task.filter_notified_tasks_by_priority(params[:priority])
+  end
+
   def notify_hr
     return unless current_user.admin && @task.approved
     @task.notify_hr = true

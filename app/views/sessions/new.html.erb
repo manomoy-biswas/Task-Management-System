@@ -1,17 +1,17 @@
 <% content_for :title, "Admin Login" %>
 <%= form_for :login, url: :sessions do |form| %>
   <div class="row justify-content-center signup-wrapper bg-dark">
-    <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+    <div class="col-12 col-md-10 col-lg-8 col-xl-5">
       <div class="white-box bg-light">
         <h1 class="title text-center">ADMIN LOGIN</h1>
         <div class="form-group row">
-          <%= form.label :email, for: "email", class:"col-sm-2 col-form-label"%>
+          <%= form.label :email, for: "email", class:"col-sm-2 col-form-label font-weight-bolder"%>
           <div class="col-sm-10">
             <%= form.email_field :email,for: "email", class: "form-control", autofocus: true, autocomplete: "email", placeholder: "Enter Email ID", required: true %>
           </div>
         </div>
         <div class="form-group row">
-          <%= form.label :password, for: "password", class:"col-12 col-sm-2 col-form-label" %>
+          <%= form.label :password, for: "password", class:"col-12 col-sm-2 col-form-label font-weight-bolder" %>
           <div class="col-12 col-sm-10">
             <%= form.password_field :password, for: "password", class: "form-control", autocomplete: "current-password", placeholder: "Enter Password", required: true %>
           </div>
@@ -19,8 +19,8 @@
         <div class="form-group row">
           <div class="col-sm-2"></div>
           <div class="col-sm-10">
-            <%= check_box_tag :remember_me, 1, params[:remember_me], class: "" %>
-            <%= label_tag :remember_me %>
+            <%= check_box_tag :remember_me, 1, params[:remember_me] %>
+            <%= label_tag :remember_me, nil, {class: "font-weight-bolder"}  %>
           </div>
         </div>
         <div class="row align-items-center">

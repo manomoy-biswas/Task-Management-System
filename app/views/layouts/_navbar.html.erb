@@ -5,7 +5,7 @@
       <% unless current_page?("/notifications")%>
         <% count = (Notification.unread(current_user.id)).count if current_user %>
         <li class="">
-          <a class="nav-link notification-icon" id="notify" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a class="notification-icon" id="notify" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-bell"></i><span class="red" id="unread_count"><%= count%></span>
           </a>
           <div class="dropdown-menu dropdown-menu-right notification-menu" aria-labelledby="#notify">
@@ -73,6 +73,17 @@
             </a>
           <% end%>
         </li>
+      </ul>
+
+      <ul class="nav text-center ml-auto">	
+        <li class="nav-dropdown dropdown">	
+          <a class="dropdown-toggle text-warning" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">	
+            <strong>Hi, <%= current_user.name.split(" ").first %></strong>	
+          </a>	
+          <div class="dropdown-menu logout-menu dropdown-menu-right text-center" aria-labelledby="navbarDropdown">
+            <div><%= link_to  " Logout", session_path(current_user), method: :delete, class: "nav-link fa fa-power-off logout" %></div>	
+          </div>	
+        </li>	
       </ul>
     <% else%> 
       <% unless["new"].include?(params[:action])%>

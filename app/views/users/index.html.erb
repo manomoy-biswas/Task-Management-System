@@ -49,11 +49,13 @@
               <% @users.each do |user|%>
                 <tr>
                   <th scope="row" class="align-middle">
-                    <% if user.avater.present? %>
-                      <%= image_tag user.avater.url, class:"user-image" %>
-                    <% else %>
-                      <%= image_tag "blank-profile-picture-male.png", class: "user-image" %>
-                    <% end %>
+                    <div class="user-image">
+                      <% if user.avater.present? %>
+                        <%= image_tag user.avater.url, class:"img-circle" %>
+                      <% else %>
+                        <%= image_tag "blank-profile-picture-male.png", class: "img-circle" %>
+                      <% end %>
+                    </div>
                   </th>
                   <td class="align-middle"><%= user.name%></td>
                   <td class="align-middle"><%= user.email %></td>
