@@ -25,4 +25,29 @@ $(document).ready(function () {
   $(".hamburger").on("click", function(){
     $(".hamburger").toggleClass("is-active");
   });
+
+  function showNavItem() {
+    $("#mySidenav").animate({top: "240px"}, 400);
+    $(".hamburger").animate({top: "240px"}, 250);
+    $(".navbar-toggler").one("click", function(){
+      hideNavItem()});
+  }
+  
+  function hideNavItem() {
+    $("#mySidenav").animate({top: "60px"}, 400);
+    $(".hamburger").animate({top: "60px"}, 400)
+    
+    $(".navbar-toggler").one("click", function(){ showNavItem()});
+  }
+
+  $(".navbar-toggler").one("click", function(){showNavItem()});
+
+  $(window).resize(function(){
+    if ($(window).width() >= 768) {  
+      $("#navbarSupportedContent").removeClass("show");
+      $("#mySidenav").animate({top: "60px"}, 400);
+      $(".hamburger").animate({top: "60px"}, 400);
+      hideNavItem()
+    }
+  });
 });

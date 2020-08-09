@@ -66,6 +66,8 @@ a:hover{
 .nav-item {
   background-color: #343a40;
   padding-top: 4px;
+  text-align: right;
+  padding-right: 20px;
 }
 .nav-item:hover{
   background-color: #e8ebee;
@@ -80,6 +82,17 @@ a:hover{
 }
 .nav-item:hover a{
   color: #1d1c1c;
+}
+.nav-dropdown{
+  height: 40px;
+  padding-top: 5px;
+  width: 100%;
+  text-align: right;
+  padding-right: 20px;
+}
+.nav-dropdown a{
+  font-weight: bold;
+  font-size: 20px;
 }
 .notification-icon i{
   color: #ffffff;
@@ -139,9 +152,14 @@ padding: 0;
   font-size: 12px;
   
 }
+.login-btn{
+  // padding-bottom: 15px;
+  padding-top: 8px;
+}
 .logout-menu{
   position: absolute;
   background-color: #343a40;
+  // left: 60px;
   .logout{
     padding-top: 12px;
     font-size: 20px;
@@ -241,6 +259,7 @@ padding: 0;
     margin-top: 6px;
     padding-top: 10px;
     margin-left: 5px;
+    padding-right: 0;
   }
   .nav-item a {
     font-size: 20px;
@@ -250,11 +269,15 @@ padding: 0;
     background: transparent;
     height: 60px;
     padding-top: 20px;
-    margin-left: 15px;
+    margin-left: 10px;
+    padding-right: 0;
   }
   .nav-dropdown a{
     font-weight: bold;
     font-size: 20px;
+  }
+  .logout-menu{
+    right: 0;
   }
   .notification-icon{
     margin-right: 5px;

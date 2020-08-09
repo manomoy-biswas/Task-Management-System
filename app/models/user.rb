@@ -76,6 +76,15 @@ class User < ApplicationRecord
     user[column] = SecureRandom.urlsafe_base64
     user.save!
   end
+  def display_name
+    names = self.name.split(" ")
+    if names.first[-1] == "."
+      name = names.first + " " + names[1]
+    else
+      name = names.first
+    end
+    name
+  end
 
   private
 

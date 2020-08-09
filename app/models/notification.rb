@@ -1,6 +1,8 @@
 class Notification < ApplicationRecord
   include SessionsHelper
-  after_create { NotificationRelayWorker.perform_async(self.id) }
+  
+  after_commit { NotificationRelayWorker.perform_async(self.id) }
+  
   belongs_to :task, foreign_key: "notifiable_id", required: true
   belongs_to :user, foreign_key: "user_id", required: true
   belongs_to :recipient, class_name: "User", foreign_key: "recipient_id"
