@@ -1,0 +1,44 @@
+<% content_for :title, "Invitations" %>
+<div class="row justify-content-center">
+  <div class="col-12 col-md-10 col-lg-10 col-xl-7">
+    <div class="white-box bg-light">
+      <div class="row justify-content-between">
+        <div class="col-4 col-sm-4 col-md-3 col-lg-3 col-xl-3 text-left">
+          <%= link_to  "Invite Admin", new_invitation_path, class: "btn btn-primary btn-lg" %>
+        </div>
+      </div>
+      <br />
+      <div class="user-list">
+        <table class="table table-hover table-striped table-light">
+          <caption class="text-center"> List of Invitations</caption>
+          <thead class="thead-dark">
+            <tr class="text-center">
+              <th scope="col" class="font-weight-bold">#</th>
+              <th scope="col" class="font-weight-bold">Name</th>
+              <th scope="col" class="font-weight-bold">Email ID</th>
+              <th scope="col" class="font-weight-bold">Status</th>
+              <th scope="col" class="font-weight-bold">Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if @invitations.present? %>
+              <% i = 0 %>
+              <% @invitations.each do |invitation|%>
+                <tr>
+                  <th scope="row" class="align-middle"><%= i = i.to_i + 1 %></th>
+                  <td class="align-middle"><%= invitation.name.capitalize() %></td>
+                  <td class="align-middle"><%= invitation.email %></td>
+                  <td class="text-center align-middle"><%= invitation.status.capitalize()%></td>
+                  <td class="text-center align-middle">
+                    <%= link_to "", invitation_path(invitation), data: {confirm: "Are you sure?" }, method: :delete, class:"fa fa-trash" %>
+                  </td>
+              <% end %>
+            <% else %>
+              <tr><td colspan="4" class="text-center align-middle">No invitation Found</td></tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

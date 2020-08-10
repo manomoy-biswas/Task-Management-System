@@ -3,8 +3,8 @@
   <div class="col-12 col-xl-10">
     <div class="white-box bg-light">
       <div class="task-list">
-        <div class="row justify-content-end">
-          <div class="col-12 col-sm-8 col-md-5 col-lg-4 col-xl-3">
+        <div class="row justify-content-between">
+          <div class="col-12 col-sm-5 col-md-4 text-left">
             <%=form_tag(user_assigned_task_tasks_path, action:"assign_by_me", method: :get) do %>
               <div class="form-group row">
                 <% priorities=["Low", "Medium", "High"]%>
@@ -12,7 +12,12 @@
                 <div class="col-10 text-center">
                   <%= select_tag(:priority, options_for_select(priorities, params[:priority]), prompt:"All", class:"form-control text-center select-center", id:"filter_input") %>
                 </div>
-              </div>  
+              </div>    
+            <% end %>
+          </div>
+          <div class="col-12 col-sm-7 col-md-5 col-xl-4">
+            <%=form_tag user_assigned_task_tasks_path, action: "index", method: :get do %>
+              <%= render "layouts/search" %>
             <% end %>
           </div>
         </div>

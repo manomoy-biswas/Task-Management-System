@@ -29,8 +29,7 @@ $(document).ready(function () {
   function showNavItem() {
     $("#mySidenav").animate({top: "240px"}, 400);
     $(".hamburger").animate({top: "240px"}, 250);
-    $(".navbar-toggler").one("click", function(){
-      hideNavItem()});
+    $(".navbar-toggler").one("click", function(){hideNavItem()});
   }
   
   function hideNavItem() {
@@ -42,12 +41,10 @@ $(document).ready(function () {
 
   $(".navbar-toggler").one("click", function(){showNavItem()});
 
-  $(window).resize(function(){
+  $(window).on("resize", function(){
     if ($(window).width() >= 768) {  
-      $("#navbarSupportedContent").removeClass("show");
       $("#mySidenav").animate({top: "60px"}, 400);
-      $(".hamburger").animate({top: "60px"}, 400);
-      hideNavItem()
+      $(".hamburger").animate({top: "60px"}, 400)
     }
   });
 });

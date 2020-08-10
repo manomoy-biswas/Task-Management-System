@@ -46,10 +46,12 @@ class Task < ApplicationRecord
 
   mappings dynamic: "false" do
     indexes :id, type: :text 
-    indexes :task_name, type: "text"
-    indexes :description, type: "text"
-    indexes :assign_task_to, type: "text"
-    indexes :assign_task_by, type: "text"
+    indexes :task_name, type: :text
+    indexes :description, type: :text
+    indexes :assign_task_to, type: :text
+    indexes :assign_task_by, type: :text
+    indexes :approved, type: :boolean
+    indexes :notify_hr, type: :boolean
     indexes :search_field
     indexes :category do
       indexes :name, type: "text", copy_to: :search_field
@@ -58,18 +60,14 @@ class Task < ApplicationRecord
       indexes :name, type: "text", copy_to: :search_field
       indexes :subtask_description, type: "text", copy_to: :search_field
     end
-    indexes :user do
-      indexes :name, type: "text", copy_to: :search_field
-    end
   end
   
   def as_indexed_json(options = {})
     self.as_json(
-      options.merge(only: [:id, :task_name, :description, :assign_task_by, :assign_task_to],
+      options.merge(only: [:id, :task_name, :description, :assign_task_by, :assign_task_to, :approved, :notify_hr],
         include: {
           category: {only: :name},
-          sub_task: {only: [:name, :subtask_description]},
-          user: {only: :name}
+          sub_task: {only: [:name, :subtask_description]}
         }
       )
     )
@@ -78,7 +76,7 @@ class Task < ApplicationRecord
   def self.all_task_search(query)
     __elasticsearch__.search(query:{
       bool: {  
-        must: {
+        must: [{
           multi_match: {
             query: query,
             type: "best_fields",
@@ -86,16 +84,87 @@ class Task < ApplicationRecord
             operator: "and"
           }
         },
+        {
+          match: {
+            approved: false
+          }
+        }],
       }
     })
   end
 
   def self.search(query, current_user_id)
-    __elasticsearch__.search(query: multi_match_query(query,current_user_id))
+    __elasticsearch__.search(query: 
+    { 
+      bool: {  
+        must: [{
+          multi_match: {
+            query: query,
+            type: "best_fields",
+            fields: ["task_name", "description", "search_field"],
+            operator: "and"
+          }
+        },
+        {
+          match: {
+            approved: false
+          }
+        }],
+        filter: {
+          term: {
+            "assign_task_to": current_user_id.to_s
+          }
+        }
+      }
+    })
   end
 
-  def self.multi_match_query(query, current_user_id)
-    { 
+  def self.users_approved_tasks_search(query, current_user_id)
+    __elasticsearch__.search(query:{ 
+      bool: {  
+        must: [{
+          multi_match: {
+            query: query,
+            type: "best_fields",
+            fields: ["task_name", "description", "search_field"],
+            operator: "and"
+          }
+        },
+        {
+          match: {
+            approved: true
+          }
+        }],
+        filter: {
+          term: {
+            "assign_task_to": current_user_id.to_s
+          }
+        }
+      }
+    })
+  end
+
+  def self.approved_tasks_search(query)
+    __elasticsearch__.search(query:{ 
+      bool: {  
+        must: [{
+          multi_match: {
+            query: query,
+            type: "best_fields",
+            fields: ["task_name", "description", "search_field"]
+          }
+        },
+        {
+          match: {
+            approved: true
+          }
+        }]
+      }
+    })
+  end
+
+  def self.user_assigned_tasks_search(query, current_user_id)
+    __elasticsearch__.search(query:{ 
       bool: {  
         must: {
           multi_match: {
@@ -107,76 +176,104 @@ class Task < ApplicationRecord
         },
         filter: {
           term: {
-            "assign_task_to": current_user_id.to_s
+            "assign_task_by": current_user_id.to_s
           }
         }
       }
-    }
+    })
   end
 
-  def self.task_search(param, current_user)
-    if current_user.admin
-      self.all_task_search(param.present? ? param : nil)
-    else
-      self.search((param.present? ? param : nil), current_user.id)
-    end  
+  def self.notified_tasks_search(query)
+    __elasticsearch__.search(query:{ 
+      bool: {  
+        must: [{
+          multi_match: {
+            query: query,
+            type: "best_fields",
+            fields: ["task_name", "description", "search_field"]
+          }
+        },
+        {
+          match: {
+            notify_hr: true
+          }
+        }]
+      }
+    })
   end
 
-  def self.filter_by_priority(param = nil, current_user)
-    if current_user.admin
-      if !param || param == ""
-        self.where(approved: false).includes(:user, :assign_by, :category).order("created_at DESC")
+  def self.fetch_tasks(filter = nil, query = nil, current_user)
+    if query.present?
+      if current_user.admin
+        tasks = self.all_task_search(query).map(&:id)
       else
+        tasks = self.search(query, current_user.id).map(&:id)
+      end
+      return self.where(id: tasks).includes(:user, :category, :assign_by).order("id DESC")
+    elsif filter.present?
+      if current_user.admin
         self.admin_task_filter(param).order("created_at DESC")
-      end    
-    else
-      if !param || param == ""
-        current_user.tasks.where(approved: false).includes(:assign_by, :category).order("created_at DESC")
       else
         self.my_task_filter(param, current_user.id).order("created_at DESC")
+      end    
+    else
+      if current_user.admin
+        self.where(approved: false).includes(:user, :assign_by, :category).order("created_at DESC")
+      else
+        current_user.tasks.where(approved: false).includes(:assign_by, :category).order("created_at DESC")
       end
     end
   end
 
-  def self.filter_approved_task_by_priority(param, current_user)
-    if current_user.admin
-      if !param || param == ""
-        self.approved_tasks.order("created_at DESC")
+  def self.fetch_approved_tasks(filter = nil, query = nil, current_user)
+    if query.present?
+      if current_user.admin
+        tasks = self.approved_tasks_search(query).map(&:id)
       else
-        self.approved_tasks_filter(param).order("created_at DESC")
-      end    
-    elsif current_user.hr
-      if !param || param == ""
+        tasks = self.users_approved_tasks_search(query, current_user.id).map(&:id)
+      end
+     self.where(id: tasks).includes(:user, :category, :assign_by).order("id DESC")
+    elsif filter.present?
+      if current_user.admin
+        self.approved_tasks_filter(filter).order("created_at DESC")
+      elsif current_user.hr
+        self.notified_tasks_filter(filter).order("created_at DESC")
+      else
+        self.users_approved_tasks_filter(filter, current_user.id).order("created_at DESC")
+      end
+    else
+      if current_user.admin
+        self.approved_tasks.order("created_at DESC")
+      elsif current_user.hr
         self.notified_tasks.order("created_at DESC")
       else
-        self.notified_tasks_filter(param).order("created_at DESC")
-      end
-    else
-      if !param || param == ""
         self.users_approved_tasks(current_user.id).order("created_at DESC")
-      else
-        self.users_approved_tasks_filter(param, current_user.id).order("created_at DESC")
       end
     end
   end
 
-  def self.filter_user_assigned_task_by_priority(param, current_user)
-    if !param || param == ""
+  def self.fetch_user_assigned_tasks(filter = nil, query = nil, current_user)
+    if query.present?
+      tasks = self.user_assigned_tasks_search(query, current_user.id).map(&:id)
+      self.where(id: tasks).includes(:user, :category, :assign_by).order("id DESC")
+    elsif filter.present?
+      self.my_assigned_tasks_filter(filter, current_user.id).order("created_at DESC")
+    else
       self.my_assigned_tasks(current_user.id).order("created_at DESC")
-    else
-      self.my_assigned_tasks_filter(param,current_user.id).order("created_at DESC")
     end  
   end
 
-  def self.filter_notified_tasks_by_priority(param)
-    if !param || param == ""
+  def self.fetch_notified_tasks(filter = nil, query = nil)
+    if query.present?
+      tasks = self.notified_tasks_search(query).map(&:id)
+      self.where(id: tasks).includes(:user, :category, :assign_by).order("updated_at DESC")
+    elsif filter.present?
+      self.notified_tasks_filter(filter).order("created_at DESC")
+    else
       self.notified_tasks.order("created_at DESC")
-    else
-      self.notified_tasks_filter(param).order("created_at DESC")
     end  
   end
 
-  
   private
 
   def squeeze_task_name

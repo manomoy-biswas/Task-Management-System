@@ -1,6 +1,5 @@
 
 Rails.application.routes.draw do
-  get 'passwoed_resets/new'
   require "sidekiq/web"
   
   root "home#index"
@@ -46,6 +45,8 @@ Rails.application.routes.draw do
   end
 
   resources :password_resets
+
+  resources :invitations
   
   
   get :login, to: redirect("auth/google_oauth2")

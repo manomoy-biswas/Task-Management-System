@@ -44,31 +44,45 @@
         <div class="col-12">
           <%= link_to users_path, class: "dashboard-link" do%>
            <div class="dashboard-item menu-2">
-            <div class="row no-gutters">
-              <div class="col-2">
-                <i class="fa fa-users"></i>
-              </div>
-              <div class="col-10">
-                <p class="dashboard-item-text">Users</p>
+              <div class="row no-gutters">
+                <div class="col-2">
+                  <i class="fa fa-users"></i>
+                </div>
+                <div class="col-10">
+                  <p class="dashboard-item-text">Users</p>
+                </div>
               </div>
             </div>
-          </div>
           <% end %>
         </div>
       <% end %>
       <% if current_user.admin%>
         <div class="col-12">
-          <%= link_to categories_path, class: "dashboard-link" do%>
-            <div class="dashboard-item menu-3">
-            <div class="row no-gutters">
-              <div class="col-2">
-                <i class="fa fa-tags"></i>
-              </div>
-              <div class="col-10">
-                <p class="dashboard-item-text">Categories</p>
+          <%= link_to invitations_path, class: "dashboard-link" do%>
+           <div class="dashboard-item menu-2">
+              <div class="row no-gutters">
+                <div class="col-2">
+                  <i class="fa fa-user-plus"></i>
+                </div>
+                <div class="col-10">
+                  <p class="dashboard-item-text">Invite Admin</p>
+                </div>
               </div>
             </div>
-          </div>
+          <% end %>
+        </div>
+        <div class="col-12">
+          <%= link_to categories_path, class: "dashboard-link" do%>
+            <div class="dashboard-item menu-3">
+              <div class="row no-gutters">
+                <div class="col-2">
+                  <i class="fa fa-tags"></i>
+                </div>
+                <div class="col-10">
+                  <p class="dashboard-item-text">Categories</p>
+                </div>
+              </div>
+            </div>
           <% end %>
         </div>
       <% end %>

@@ -1,4 +1,6 @@
 $(document).ready(function(){
+  
+  //activating the sidenav menu item
   var path = window.location.pathname;
   var page = path.substring(path.lastIndexOf("/") + 1);
   var page2 = path.substring(path.substring(0, path.lastIndexOf("/")).lastIndexOf("/") + 1, path.lastIndexOf("/") );
@@ -56,4 +58,16 @@ $(document).ready(function(){
 	  else{p = "PM"}
     $(".timer").text(d + " " + monthNames[b] + ", " + Y + " " + I + ":" + M + ":" + S + " " + p);
   }, 1000);
+  
+  //Counter animation in overview page
+  $('.counter').each(function () {
+    var $this = $(this);
+    jQuery({ Counter: 0 }).animate({ Counter: $this.text() }, {
+      duration: 1000,
+      easing: 'swing',
+      step: function () {
+        $this.text(Math.ceil(this.Counter));
+      }
+    });
+  });
 });

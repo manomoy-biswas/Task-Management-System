@@ -16,7 +16,9 @@
             <% end %>
           </div>
           <div class="col-12 col-sm-7 col-md-5 search-field">
-            <%= render "layouts/search" %>
+            <%=form_tag tasks_path, action: "index", method: :get do %>
+              <%= render "layouts/search" %>
+            <% end %>
           </div>
         </div>
         <div class="index-table">

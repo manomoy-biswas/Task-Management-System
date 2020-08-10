@@ -1,0 +1,24 @@
+
+Invitation from Task Management System
+
+ <%= @greeting %>
+
+  We are inviting you to join task Management system as an Admin. 
+
+
+  Join us by registering yourself. Please follow the link bellow
+
+
+  <%= edit_invitation_url(@invite.invitation_token) %>
+
+
+  This link is valid till <%= DateTime.parse(3.days.from_now.to_s).strftime("%I:%M %p")%>
+
+
+  *Note: If you already joined, please ignore this email.
+
+  Thanks You and have a great day!
+
+
+  See you online
+  Task Management System Team

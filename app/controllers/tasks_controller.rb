@@ -29,11 +29,11 @@ class TasksController < ApplicationController
   end
   
   def approved_task
-    @tasks = Task.filter_approved_task_by_priority(params[:priority], current_user)
+    @tasks = Task.fetch_approved_tasks(params[:priority], params[:query],current_user)
   end  
   
   def user_assigned_task
-    @tasks = Task.filter_user_assigned_task_by_priority(params[:priority], current_user)      
+    @tasks = Task.fetch_user_assigned_tasks(params[:priority], params[:query], current_user)      
   end
 
   def create
@@ -119,7 +119,7 @@ class TasksController < ApplicationController
   end  
 
   def index
-    @tasks =  Task.filter_by_priority(params[:priority], current_user)
+    @tasks =  Task.fetch_tasks(params[:priority], params[:query], current_user)
   end            
       
   def new
@@ -127,8 +127,8 @@ class TasksController < ApplicationController
   end
 
   def notified_task
-    return unless current_user.admin
-    @task = Task.filter_notified_tasks_by_priority(params[:priority])
+    return unless current_user.admin || current_user.hr
+    @tasks = Task.fetch_notified_tasks(params[:priority], params[:query], current_user)
   end
 
   def notify_hr

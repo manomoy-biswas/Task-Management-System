@@ -228,6 +228,29 @@ padding: 0;
 .select-center{
   text-align-last: center;
 }
+.search-field{
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  padding-left: 27px;
+  max-width: 390px;
+  margin-left: 5px;
+
+}
+.search-icon:before{
+  position: absolute;
+  margin-right: auto;;
+  font-family: 'FontAwesome';
+  content: "\f002";
+  margin-top: 2px;
+  left: 10px;  
+  // z-index: 1;
+  font-size: 20px;
+  color: #918b8b98;
+}
+.submit-search input{
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
 .footer{
   width: 100%;
   height: 45px;

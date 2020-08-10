@@ -15,8 +15,10 @@
               </div>  
             <% end %>
           </div>
-          <div class="col-12 col-sm-7 col-md-5 search-field">
-            <%= render "layouts/search" %>
+          <div class="col-12 col-sm-7 col-md-5 col-xl-4">
+            <%=form_tag notified_task_tasks_path, method: :get do %>
+              <%= render "layouts/search" %>
+            <% end %>
           </div>
         </div>
         <div class="index-table">

@@ -27,7 +27,7 @@ class UsersController < ApplicationController
 
   def index
     redirect_to root_path unless current_user.admin || current_user.hr
-    @users =  User.filter_by_role(params[:role], current_user) 
+    @users =  User.fetch_user(params[:role], params[:query], current_user)
   end    
   
   def new
@@ -48,6 +48,14 @@ class UsersController < ApplicationController
 
   def show
   end  
+
+  def search
+    if params[:query].present?
+      user_ids = User.search(params[:query]).map(&:id)
+      @users = User.where(id: user_ids).order("name ASC")
+      redirect_to users_path(@users)
+    end
+  end
 
   def update
     if current_user.admin && @user != current_user
