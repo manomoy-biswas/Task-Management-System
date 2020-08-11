@@ -274,6 +274,12 @@ class Task < ApplicationRecord
     end  
   end
 
+  def self.send_notified_email(task_id)
+    User.where(hr: true).each do |user|
+      TaskMailerWorker.perform_async(task_id, "notified", user.id)
+    end
+  end
+
   private
 
   def squeeze_task_name

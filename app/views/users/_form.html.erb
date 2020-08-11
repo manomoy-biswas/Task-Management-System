@@ -60,7 +60,7 @@
         </div>
         <% unless ["edit"].include?(params[:action]) && ((current_user.admin && @user.admin) || !current_user.admin) %>
           <div class="form-group row">
-            <% user_role = %w[Admin Reguler HR] %>
+            <% user_role = %w[Reguler HR] %>
             <%= form.label :user_type, 'User Type', for: "User type", class:"col-12 col-sm-2 col-form-label font-weight-bolder"%>
             <div class="col-12 col-sm-4">
               <%= form.select :role, options_for_select(user_role ,@user.role), {prompt: "Choose..."},{required: true, class: "form-control custom-select d-block w-100"} %>

@@ -36,7 +36,8 @@ class User < ApplicationRecord
   scope :all_admin, -> { where(admin: true) }
   scope :all_employee, -> {where(admin: false, hr: false)}
   scope :all_user_except, -> (user_id) {where.not(id: user_id)}
-  scope :all_user_except_admin_and, -> (user_id) {where.not(id: user_id, admin:true)}
+  scope :all_employee_except, -> (user_id) {where.not(id: user_id).where.not(admin: true).where.not( hr: true)}
+  scope :all_hr_except, -> (user_id) {where(hr: true).where.not(id: user_id)}
 
   mappings dynamic: "false" do
     indexes :id, type: :text 

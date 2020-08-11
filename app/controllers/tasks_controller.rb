@@ -38,7 +38,8 @@ class TasksController < ApplicationController
 
   def create
     @task = Task.new(task_params)
-    return redirect_to root_path if @task.user.admin || @task.user == current_user
+    return redirect_to overview_path if @task.user == current_user || (current_user.hr && !@task.user.hr) || ((!current_user.admin && !current_user.hr) && (@task.user.hr || @task.user.admin)) 
+    
     @task.assign_task_by = current_user.id
     @task.recurring_task = true unless task_params[:repeat] == "One_Time"
     if @task.save
@@ -105,18 +106,8 @@ class TasksController < ApplicationController
   end
 
   def edit
-    redirect_to root_path unless @task.assign_task_by == current_user.id || current_user.admin
+    redirect_to overview_path unless @task.assign_task_by == current_user.id || current_user.admin
   end
-
-  def elastic_search
-    return redirect_to tasks_path, flash: { danger: "Please enter a search term" } if params[:q].blank?
-    tasks = Task.task_search(params[:q], current_user)
-    task_list = []
-    tasks.each do |task|
-      task_list << task.id
-    end
-    @tasks =  Task.where(id: task_list).includes(:user, :category, :assign_by).order("id desc")
-  end  
 
   def index
     @tasks =  Task.fetch_tasks(params[:priority], params[:query], current_user)
@@ -127,8 +118,8 @@ class TasksController < ApplicationController
   end
 
   def notified_task
-    return unless current_user.admin || current_user.hr
-    @tasks = Task.fetch_notified_tasks(params[:priority], params[:query], current_user)
+    return redirect_to overview_path, flash: { danger: "Yoou don't have assess to this page" } unless current_user.admin || current_user.hr
+    @tasks = Task.fetch_notified_tasks(params[:priority], params[:query])
   end
 
   def notify_hr
@@ -136,7 +127,7 @@ class TasksController < ApplicationController
     @task.notify_hr = true
     if @task.save
       Notification.create_notification(@task.id, "notified", current_user.id )
-      redirect_to request.referrer, flash: { success: "A notification has been sent to all HR's" }
+      Task.send_notified_email(@task.id)
     end
   end  
 
@@ -171,7 +162,7 @@ class TasksController < ApplicationController
     @subtask = SubTask.find(params[:id])
     return unless @subtask.task.assign_task_to == current_user.id
     @subtask.submit = true
-    redirect_to task_path(@subtask.task.id), flash: { success: t("task.submit_subtask.success", subtask: @subtask.name) } if @subtask.save
+    @subtask.save
   end  
   
   def submit_task

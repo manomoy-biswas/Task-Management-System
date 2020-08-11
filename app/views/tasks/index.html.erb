@@ -8,14 +8,14 @@
             <%=form_tag(tasks_path, action:"index", method: :get) do %>
               <div class="form-group row">
                 <% priorities=["Low", "Medium", "High"]%>
-                <span class="fa fa-filter col-2 text-right"></span>
-                <div class="col-10 text-right">
-                  <%= select_tag(:priority, options_for_select(priorities, params[:priority]), prompt:"All", class:"form-control text-center", id: "filter_input") %>
+                <span class="fa fa-filter col-1 col-sm-2 text-right"></span>
+                <div class="col-11 col-sm-10 text-right">
+                  <%= select_tag(:priority, options_for_select(priorities, params[:priority]), prompt:"All", class:"form-control custom-select select-center", id: "filter_input") %>
                 </div>
               </div>  
             <% end %>
           </div>
-          <div class="col-12 col-sm-7 col-md-5 search-field">
+          <div class="col-12 col-sm-7 col-md-5 col-xl-4">
             <%=form_tag tasks_path, action: "index", method: :get do %>
               <%= render "layouts/search" %>
             <% end %>

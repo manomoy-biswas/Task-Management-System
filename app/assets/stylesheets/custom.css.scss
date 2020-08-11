@@ -30,6 +30,14 @@ a,
 a:hover{
   text-decoration: none;
 }
+a{
+  color: #1d1c1c;
+}
+#flash{
+  position: fixed;
+  width: 100%;
+  z-index: 999;
+}
 .navbar {
   padding-top: 0;
   height: 60px;
@@ -148,7 +156,7 @@ padding: 0;
   margin-right: 15px;
 }
 .notify-content .notify-time{
-  color: #c5c5a6;
+  color: #ca6f3bb6;
   font-size: 12px;
   
 }
@@ -188,6 +196,7 @@ padding: 0;
 }
 .fa-trash, .fa-minus-circle{
   color: #DC143C;
+  font-size: 30px;
 }
 .fa-edit{
   color: #1E90FF;
@@ -199,14 +208,17 @@ padding: 0;
   color: #f3dc0a;
   text-decoration: none;
 }
-.fa-filter{
+.fa-filter,
+.fa-eye,
+.fa-check,
+.fa-edit{
   font-size: 30px;
 }
 .fa-eye:hover,
 .fa-edit:hover,
 .fa-trash:hover,
 .fa-check:hover{
-  color: #ffffff;
+  color: #0af3cc;
   text-decoration: none;
 }
 .fa-minus-circle:hover,
@@ -232,7 +244,7 @@ padding: 0;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   padding-left: 27px;
-  max-width: 390px;
+  max-width: 650px;
   margin-left: 5px;
 
 }

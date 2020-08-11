@@ -10,7 +10,6 @@ require("packs/home")
 
 //fade out the flash message with timer
 $(()=>$(".hide").fadeOut(4000));
-
 // prevent user from going back using backspace button
 $(document).unbind('keydown').bind('keydown', function (event) {
   if (event.keyCode === 8) {

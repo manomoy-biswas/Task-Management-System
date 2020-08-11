@@ -1,171 +1,175 @@
 <% if current_user.present? %>
   <section id="mySidenav" class="sidenav bg-dark">
-    <%= link_to  user_path(current_user) do %>
-      <div class="row no-gutters">
-        <div class="col-12 text-center">
-          <div class="user-avater">
-            <% if current_user.avater.present? %>
-              <%= image_tag current_user.avater.url(:small), alt: "#{current_user.name}_image", class: "user-image" %>
-            <% else %>
-              <%= image_tag "blank-profile-picture-male.png", alt: "#{current_user.name}_image", class: "user-image" %>
+    <div class="dashboard-menu">
+      <%= link_to  user_path(current_user) do %>
+        <div class="row no-gutters">
+          <div class="col-12 text-center">
+            <div class="user-avater">
+              <% if current_user.avater.present? %>
+                <%= image_tag current_user.avater.url(:small), alt: "#{current_user.name}_image", class: "user-image" %>
+              <% else %>
+                <%= image_tag "blank-profile-picture-male.png", alt: "#{current_user.name}_image", class: "user-image" %>
+              <% end %>
+            </div>
+          </div>
+          <div class="col-12 text-center">
+            <div class="user-details ">
+              <h5 class="user-name text-center"><%= current_user.name %></h5>
+              <span class="user-email"><%= current_user.email %></span>
+              <h6>(<% if current_user.admin %>Admin<% elsif current_user.hr %>HR<% else %>Regular User<% end %>)</h6>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      <% if current_user %>
+        <div class="create-btn-section">
+          <%= link_to  "  Create Task", new_task_path, class:"fa fa-plus btn btn-primary create-btn"%>
+        </div>
+      <% end %>
+      <div class="row">
+        <div class="col-12">
+          <%= link_to overview_path, class: "dashboard-link" do%>
+            <div class="dashboard-item menu-1">
+              <div class="row no-gutters">
+                <div class="col-2">
+                  <i class="fa fa-pie-chart"></i>
+                </div>
+                <div class="col-10">
+                  <p class="dashboard-item-text">Overview</p>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <% if current_user.admin || current_user.hr %>
+          <div class="col-12">
+            <%= link_to users_path, class: "dashboard-link" do%>
+            <div class="dashboard-item menu-2">
+                <div class="row no-gutters">
+                  <div class="col-2">
+                    <i class="fa fa-users"></i>
+                  </div>
+                  <div class="col-10">
+                    <p class="dashboard-item-text">Users</p>
+                  </div>
+                </div>
+              </div>
             <% end %>
           </div>
-        </div>
-        <div class="col-12 text-center">
-          <div class="user-details ">
-            <h5 class="user-name text-center"><%= current_user.name %></h5>
-            <span class="user-email"><%= current_user.email %></span>
-            <h6>(<% if current_user.admin %>Admin<% elsif current_user.hr %>HR<% else %>Regular User<% end %>)</h6>
-          </div>
-        </div>
-      </div>
-    <% end %>
-    <% if current_user %>
-      <div class="create-btn-section">
-        <%= link_to  "  Create", new_task_path, class:"fa fa-plus btn btn-primary create-btn"%>
-      </div>
-    <% end %>
-    <div class="row">
-      <div class="col-12">
-        <%= link_to overview_path, class: "dashboard-link" do%>
-          <div class="dashboard-item menu-1">
-            <div class="row no-gutters">
-              <div class="col-2">
-                <i class="fa fa-pie-chart"></i>
-              </div>
-              <div class="col-10">
-                <p class="dashboard-item-text">Overview</p>
-              </div>
-            </div>
-          </div>
         <% end %>
-      </div>
-      <% if current_user.admin || current_user.hr %>
-        <div class="col-12">
-          <%= link_to users_path, class: "dashboard-link" do%>
-           <div class="dashboard-item menu-2">
-              <div class="row no-gutters">
-                <div class="col-2">
-                  <i class="fa fa-users"></i>
-                </div>
-                <div class="col-10">
-                  <p class="dashboard-item-text">Users</p>
-                </div>
-              </div>
-            </div>
-          <% end %>
-        </div>
-      <% end %>
-      <% if current_user.admin%>
-        <div class="col-12">
-          <%= link_to invitations_path, class: "dashboard-link" do%>
-           <div class="dashboard-item menu-2">
-              <div class="row no-gutters">
-                <div class="col-2">
-                  <i class="fa fa-user-plus"></i>
-                </div>
-                <div class="col-10">
-                  <p class="dashboard-item-text">Invite Admin</p>
-                </div>
-              </div>
-            </div>
-          <% end %>
-        </div>
-        <div class="col-12">
-          <%= link_to categories_path, class: "dashboard-link" do%>
+        <% if current_user.admin%>
+          <div class="col-12">
+            <%= link_to invitations_path, class: "dashboard-link" do%>
             <div class="dashboard-item menu-3">
+                <div class="row no-gutters">
+                  <div class="col-2">
+                    <i class="fa fa-user-plus"></i>
+                  </div>
+                  <div class="col-10">
+                    <p class="dashboard-item-text">Invite Admin</p>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          <div class="col-12">
+            <%= link_to categories_path, class: "dashboard-link" do%>
+              <div class="dashboard-item menu-4">
+                <div class="row no-gutters">
+                  <div class="col-2">
+                    <i class="fa fa-tags"></i>
+                  </div>
+                  <div class="col-10">
+                    <p class="dashboard-item-text">Categories</p>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+        <div class="col-12">
+          <%= link_to tasks_path, class: "dashboard-link" do %>
+            <div class="dashboard-item menu-5">
               <div class="row no-gutters">
                 <div class="col-2">
-                  <i class="fa fa-tags"></i>
+                  <i class="fa fa-tasks"></i>
                 </div>
                 <div class="col-10">
-                  <p class="dashboard-item-text">Categories</p>
+                  <p class="dashboard-item-text">Tasks</p>
                 </div>
               </div>
             </div>
           <% end %>
         </div>
-      <% end %>
-      <div class="col-12">
-        <%= link_to tasks_path, class: "dashboard-link" do %>
-          <div class="dashboard-item menu-4">
-            <div class="row no-gutters">
-              <div class="col-2">
-                <i class="fa fa-tasks"></i>
-              </div>
-              <div class="col-10">
-                <p class="dashboard-item-text">Tasks</p>
-              </div>
-            </div>
-          </div>
-        <% end %>
-      </div>
-      <div class="col-12">
-        <%= link_to user_assigned_task_tasks_path, class: "dashboard-link" do %>
-          <div class="dashboard-item menu-5">
-            <div class="row no-gutters">
-              <div class="col-2">
-                <i class="fa fa-check-square"></i>
-              </div>
-              <div class="col-10">
-                <p class="dashboard-item-text">Set Tasks</p>
-              </div>
-            </div>
-          </div>
-        <% end %>
-      </div>
-      <div class="col-12">
-        <%= link_to approved_task_tasks_path, class: "dashboard-link" do %>
-          <div class="dashboard-item menu-6">
-            <div class="row no-gutters">
-              <div class="col-2">
-                <i class="fa fa-check-circle"></i>
-              </div>
-              <div class="col-10">
-                <p class="dashboard-item-text">Approved tasks</p>
-              </div>
-            </div>
-          </div>
-        <% end %>
-      </div>
-      <div class="col-12">
-        <%= link_to notified_task_tasks_path, class: "dashboard-link" do %>
-          <div class="dashboard-item menu-6">
-            <div class="row no-gutters">
-              <div class="col-2">
-                <i class="fa fa-check-circle"></i>
-              </div>
-              <div class="col-10">
-                <p class="dashboard-item-text">Notified tasks</p>
-              </div>
-            </div>
-          </div>
-        <% end %>
-      </div>
-      <div class="col-12">
-        <%= link_to user_path(current_user.id), class: "dashboard-link" do %>
-          <div class="dashboard-item menu-7">
-            <div class="row no-gutters">
-              <div class="col-2">
-                <i class="fa fa-user"></i>
-              </div>
-              <div class="col-10">
-                <p class="dashboard-item-text">Profile</p>
-              </div>
-            </div>
-          </div>
-        <% end %>
-      </div>
-      <div class="btm-0">
-        <div class="row no-gutters justify-content-center">
-          <% if current_user.admin %>
-            <div class="col-8">
-              <div class="change-password text-center">
-                <%= link_to " Change Password", new_user_change_password_path(current_user), class: "fa fa-key" %>
+        <div class="col-12">
+          <%= link_to user_assigned_task_tasks_path, class: "dashboard-link" do %>
+            <div class="dashboard-item menu-6">
+              <div class="row no-gutters">
+                <div class="col-2">
+                  <i class="fa fa-check-square"></i>
+                </div>
+                <div class="col-10">
+                  <p class="dashboard-item-text">Set Tasks</p>
+                </div>
               </div>
             </div>
           <% end %>
         </div>
+        <div class="col-12">
+          <%= link_to approved_task_tasks_path, class: "dashboard-link" do %>
+            <div class="dashboard-item menu-7">
+              <div class="row no-gutters">
+                <div class="col-2">
+                  <i class="fa fa-check-circle"></i>
+                </div>
+                <div class="col-10">
+                  <p class="dashboard-item-text">Approved tasks</p>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <% if current_user.admin || current_user.hr %>
+          <div class="col-12">
+            <%= link_to notified_task_tasks_path, class: "dashboard-link" do %>
+              <div class="dashboard-item menu-8">
+                <div class="row no-gutters">
+                  <div class="col-2">
+                    <i class="fa fa-check-circle"></i>
+                  </div>
+                  <div class="col-10">
+                    <p class="dashboard-item-text">Notified tasks</p>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+        <div class="col-12">
+          <%= link_to user_path(current_user.id), class: "dashboard-link" do %>
+            <div class="dashboard-item menu-9">
+              <div class="row no-gutters">
+                <div class="col-2">
+                  <i class="fa fa-user"></i>
+                </div>
+                <div class="col-10">
+                  <p class="dashboard-item-text">Profile</p>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="btm-0">
+      <div class="row no-gutters justify-content-center">
+        <% if current_user.admin %>
+          <div class="col-8">
+            <div class="change-password text-center">
+              <%= link_to " Change Password", new_user_change_password_path(current_user), class: "fa fa-key" %>
+            </div>
+          </div>
+        <% end %>
       </div>
     </div>
   </section>

@@ -43,7 +43,10 @@
   margin-bottom: 30px;
   height: 60px;
 	padding-top: 20px;
-	padding-left: 40px;
+  padding-left: 40px;
+}
+.ovarview-header-create-btn{
+  display: none;
 }
 .page-title{
   font-size: 24px;
@@ -188,7 +191,14 @@
 @media screen and (min-width: 768px){
 	.banner{
 		height: 335px;
-	}
+  }
+  .ovarview-header-create-btn{
+    display: block;
+    .task-create-btn{
+      margin-top: -10px;
+      border-radius: 15px;
+    }
+  }
 	.banner-text{
 		padding-top: 100px 
 	}

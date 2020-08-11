@@ -31,13 +31,7 @@
       <%= render "layouts/alert" %>
     </header>
     <main id="main">
-      <%
-=begin%>
- <%= render "layouts/side_navbar" %>
-      <%= render "layouts/work_area" %> 
-<%
-=end%>
-    <%= yield %>
+      <%= yield %>
     </main>
     <%= render "layouts/footer" %>
   </body>

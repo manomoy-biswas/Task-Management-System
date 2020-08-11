@@ -7,4 +7,14 @@ module TasksHelper
     end
     link_to(name, '#', class: 'add-fields ' + args[:class], data: {id: id, fields: fields.delete("\n")})
   end
+
+  def user_list
+    if current_user.admin
+      User.all_user_except(current_user.id)
+    elsif current_user.hr
+      User.all_hr_except(current_user.id)
+    else
+      User.all_employee_except(current_user.id)
+    end
+  end
 end

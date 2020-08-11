@@ -8,9 +8,9 @@
             <%=form_tag(user_assigned_task_tasks_path, action:"assign_by_me", method: :get) do %>
               <div class="form-group row">
                 <% priorities=["Low", "Medium", "High"]%>
-                <span class="fa fa-filter col-2 text-right"></span>
-                <div class="col-10 text-center">
-                  <%= select_tag(:priority, options_for_select(priorities, params[:priority]), prompt:"All", class:"form-control text-center select-center", id:"filter_input") %>
+                <span class="fa fa-filter col-1 col-sm-2 text-right"></span>
+                <div class="col-11 col-sm-10 text-center">
+                  <%= select_tag(:priority, options_for_select(priorities, params[:priority]), prompt:"All", class:"form-control custom-select select-center", id:"filter_input") %>
                 </div>
               </div>    
             <% end %>

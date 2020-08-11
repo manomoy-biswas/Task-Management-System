@@ -10,23 +10,26 @@ $(document).ready(function(){
   else if (page == "users"){
     $(".menu-2").addClass("active");
   }
-  else if (page == "categories"){
+  else if (page == "invitations"){
     $(".menu-3").addClass("active");
   }
-  else if (page == "tasks"){
+  else if (page == "categories"){
     $(".menu-4").addClass("active");
   }
-  else if (page == "user_assigned_task"){
+  else if (page == "tasks"){
     $(".menu-5").addClass("active");
   }
-  else if (page == "approved_task"){
+  else if (page == "user_assigned_task"){
     $(".menu-6").addClass("active");
   }
-  else if (page == ""){
-    $(".menu-6").addClass("active");
+  else if (page == "approved_task"){
+    $(".menu-7").addClass("active");
+  }
+  else if (page == "notified_task"){
+    $(".menu-8").addClass("active");
   }
   else if (page2 == "users"){
-    $(".menu-7").addClass("active");
+    $(".menu-9").addClass("active");
   }
 
 

@@ -1,10 +1,15 @@
 <div class="overview-wrapper bg-alice-blue">
   <% if current_user.present? %>
-    <section class="row bg-light overview-header">
-      <div class="col-12 col-sm-5 text-left">
+    <section class="row bg-light overview-header justify-content-between">
+      <div class="col-8 col-sm-6 col-md-5 col-lg-6 col-xl-7 text-left">
         <h4 class="page-title text-color-black"><%= yield(:title) %></h4> 
       </div>
-      <div class="col-7 text-right">
+      <div class="col-2 ovarview-header-create-btn text-right">
+        <% if current_user %>
+            <%= link_to  "  Create Task", new_task_path, class:"btn btn-primary btn-lg task-create-btn"%>
+        <% end %>
+      </div>
+      <div class="col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3 text-right">
         <div class="page-time"><i class="fa fa-calendar"></i><span class="timer"></span></div> 
       </div>
     </section>

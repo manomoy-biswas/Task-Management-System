@@ -51,7 +51,7 @@
             <div class="form-group row">
               <%= form.label :assign_date, for: "task_assign_date", class:"col-12 col-sm-4 col-md-4 col-form-label font-weight-bolder"%>
               <div class="col-12 col-sm-8 col-md-8">
-                <%= form.label :assign_date, (@task.created_at.blank? ? DateTime.now.strftime("%d/%m/%Y %I:%M %p") : @task.created_at.strftime("%d/%m/%Y %I:%M %p")), class: "form-control" %>  
+                <%= form.label :assign_date, (@task.created_at.blank? ? "" : @task.created_at.strftime("%d/%m/%Y %I:%M %p")), class: "form-control timer" %>  
               </div>
             </div>
           </div>
@@ -60,7 +60,7 @@
               <%= form.label :submit_date, "Submit Date",for: "Last date to submit", class:"col-12 col-sm-4 col-md-4 col-form-label font-weight-bolder"%>
               <div class="col-12 col-sm-8 col-md-8">
                 <div class="input-group date" id="datetimepicker1" data-target="#datetimepicker1" data-toggle="datetimepicker" data-target-input="nearest">
-                  <%= form.text_field :submit_date, for: "submit_date", class:"form-control datetimepicker-input", value: (@task.submit_date.blank? ? "" : @task.submit_date.strftime("%d%m%Y %I:%M %p")), placeholder: "dd/mm/yyyy HH:MM AM/PM", required: true %>
+                  <%= form.text_field :submit_date, for: "submit_date", class:"form-control datetimepicker-input", value: (@task.submit_date.blank? ? "" : @task.submit_date.strftime("%d%b%Y %I:%M %p")), placeholder: "dd/mm/yyyy HH:MM AM/PM", autocomplete: false, required: true %>
                   <div class="input-group-append">
                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                   </div>
@@ -75,11 +75,7 @@
         <div class="form-group row">
           <%= form.label :assign_task_to, "Assign To", for: "assign_task_to", class:"col-12 col-sm-4 col-md-2 col-form-label font-weight-bolder"%>
           <div class="col-12 col-sm-8 col-md-10 ">
-            <% if current_user.admin %>
-              <%= form.select :assign_task_to, options_from_collection_for_select(User.all_user_except(current_user.id) , :id, :name, form.object.assign_task_to), { prompt: "choose..."}, {  required: "", class: "custom-select d-block w-100" } %>
-            <%else%>    
-              <%= form.select :assign_task_to, options_from_collection_for_select(User.all_user_except_admin_and(current_user.id) , :id, :name, form.object.assign_task_to), { prompt: "Choose..."}, {  required: true , class: "form-control scustom-select d-block w-100" } %>  
-            <%end%>          
+            <%= form.select :assign_task_to, options_from_collection_for_select(user_list , :id, :name, form.object.assign_task_to), { prompt: "choose..."}, {  required: "", class: "custom-select d-block w-100" } %>          
           </div>
         </div>
         <hr>

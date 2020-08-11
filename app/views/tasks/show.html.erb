@@ -63,12 +63,12 @@
             <div class="col- col-sm-4 col-md-7">
               <p class="subtask-item-details"><%= subtask.name%></p>
             </div>
-            <div class="col-1 col-sm-1 col-md-1 text-right">
+            <div class="col-1 col-sm-1 col-md-1 text-right" id="submit_subtask_<%=subtask.id%>">
               <% if @task.assign_task_to == current_user.id %>
                 <% if subtask.submit %>
                   <span class="green"><i class="btn btn-outline-success btn-sm fa fa-check-circle"></i></span> 
                 <% else %>
-                  <span class="red"><%= link_to  "", submit_subtask_task_path(subtask), class: "btn btn-outline-danger btn-sm fa fa-circle-o" %></span>
+                  <span class="red"><%= link_to  "", submit_subtask_task_path(subtask), class: "btn btn-outline-danger btn-sm fa fa-circle-o", remote: :true %></span>
                 <% end %>
               <% end %>
             </div>

@@ -4,7 +4,10 @@
 #notifications {
   .fa-tasks,
   .fa-check-circle,
-  .fa-check-square{
+  .fa-check-square,
+  .fa-flag,
+  .fa-check,
+  .fa-bullhorn{
     font-size:50px;
   }
 }
@@ -13,8 +16,61 @@
   align-items: center;  
 }
 .notification-row{
-  border-bottom: 1px solid #606061;
+  border-bottom: 1px solid #6060619a;
+  .fa-tasks,
+  .fa-check-circle,
+  .fa-check-square,
+  .fa-bullhorn,
+  .fa-check,
+  .fa-flag{
+    font-size: 36px;
+  }
+  .notification-info{
+    padding: 7px;
+    span{
+      color: #0a0a0ac7;
+      font-size: 14px;
+    }
+  }
+  .notification-time{
+    color: #cc905fb2;
+  }
 }
-.notification-row:last-child(1){
+.notification-row:nth-last-child(1){
   border-bottom: none;
+}
+.bg-gainsboro{
+  background-color: #DCDCDC;
+}
+
+.bg-ivory{
+  background-color: #FFFFF0;
+}
+.bg-gainsboro:hover, .bg-ivory:hover{
+  background-color: #ebebebc7;
+}
+.no-notification-img{
+  width: 250px;
+}
+@media screen and (min-width: 576px){
+  .notification-row{
+    // border-bottom: 1px solid #6060619a;
+    margin-bottom: 5px;
+    box-shadow: 5px 10px rbga(0,0,0,0.8);
+    border-radius: 20px;
+    .fa-tasks,
+    .fa-check-circle,
+    .fa-check-square,
+    .fa-bullhorn,
+    .fa-check,
+    .fa-flag{
+      font-size: 50px;
+    }
+    .notification-info{
+      padding: 10px;
+    }
+  }
+  .no-notification-img{
+    width: 350px;
+  }
 }
