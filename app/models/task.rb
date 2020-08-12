@@ -32,17 +32,27 @@ class Task < ApplicationRecord
   validates_presence_of :task_name, :priority, :repeat, :assign_task_to, :task_category
 
   scope :my_assigned_tasks, ->(user_id=nil) { where(assign_task_by: user_id).includes(:user, :category) }
+  
   scope :my_assigned_tasks_filter, ->(filter=nil,user_id=nil) { where(priority: filter, assign_task_by: user_id).includes(:user, :category) }
+  
   scope :approved_tasks, ->{ where(approved: true).includes(:user, :assign_by, :category) }
+  
   scope :approved_tasks_filter, ->(filter=nil) { where(priority: filter, approved: true).includes(:user, :assign_by, :category) }
+  
   scope :users_approved_tasks, ->(user_id) { where(approved: true, assign_task_to: user_id).includes(:assign_by, :category)}
+  
   scope :users_approved_tasks_filter, ->(filter, user_id) { where(priority: filter, approved: true, assign_task_to: user_id).includes(:assign_by, :category)}
 
   scope :notified_tasks, ->{ where(approved: true, notify_hr: true).includes(:user, :assign_by, :category) }
+  
   scope :notified_tasks_filter, ->(filter=nil) { where(priority: filter, approved: true, notify_hr: true).includes(:user, :assign_by, :category) }
+  
   scope :all_task_filter, ->(filter=nil, user_id=nil) { where(priority: filter, approved: false).where.not(assign_task_to: user_id).includes(:user, :assign_by, :category) }
+  
   scope :my_task_filter, ->(filter=nil, user_id) { where(priority: filter , approved: false, assign_task_to: user_id ).includes(:assign_by, :category) }
+  
   scope :admins_task_filter, ->(filter=nil, user_id) { where(priority: filter , assign_task_to: user_id ).includes(:user, :assign_by, :category) }
+  
   scope :recurring_task, -> { where(recurring_task: true).includes(:user, :assign_by, :category) }
 
   mappings dynamic: "false" do

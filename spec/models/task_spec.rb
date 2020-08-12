@@ -6,14 +6,25 @@ RSpec.describe Task, type: :model do
   let (:user3) {create(:employee)}
   let (:user4) {create(:employee)}
   let (:user5) {create(:hr)}
+  let (:user6) {create(:admin, email: "admin1@gmail.com")}
+  
   let (:category1) {create(:category)}
-  subject { create(:assigned_task1, task_category: category1.id, assign_task_to: user2.id, assign_task_by: user1.id)}
+  
+  subject { create(:assigned_task1, task_category: category1.id, assign_task_to: user2.id, assign_task_by: user1.id, priority: "Low")}
+  
   let (:task1) { create(:assigned_task2, task_category: category1.id, assign_task_to: user2.id, priority: "Medium", assign_task_by: user1.id, approved: true)}
+  
   let (:task2) { create(:assigned_task1, task_category: category1.id, assign_task_to: user2.id, assign_task_by: user3.id, priority: "High")}
+  
   let (:task3) { create(:assigned_task2, task_category: category1.id, assign_task_to: user2.id, assign_task_by: user3.id, approved: true, priority: "Low", notify_hr: true)}
+  
   let (:task4) { create(:assigned_task2, task_category: category1.id, assign_task_to: user4.id, assign_task_by: user2.id, approved: true, priority: "Medium")}
+  
   let (:task5) { create(:assigned_task2, task_category: category1.id, assign_task_to: user4.id, assign_task_by: user2.id, approved: true, priority: "High", notify_hr: true)}
+  
   let (:task6) { create(:assigned_task2, task_category: category1.id, assign_task_to: user4.id, assign_task_by: user2.id, approved: true, priority: "Low", notify_hr: true)}
+
+  let (:task7) { create(:assigned_task2, task_category: category1.id, assign_task_to: user1.id, assign_task_by: user6.id, approved: true, priority: "Low", notify_hr: true)}
 
   # Association test
   describe "Model Association test" do
@@ -105,7 +116,35 @@ RSpec.describe Task, type: :model do
       end
     end
   end
+
+  describe ".user_approved_tasks" do
+    context "with valid task" do
+      it "is expected to include users approved task by priority" do
+        expect(Task.users_approved_tasks(user2.id)).to include(task1, task3)
+      end
+    end
   
+    context "with invalid task" do
+      it "is expected to exclude uses approved task by priority" do
+        expect(Task.users_approved_tasks(user2.id)).to_not include(task2, task4, task5, task6)
+      end
+    end
+  end
+  
+  describe ".users_approved_tasks_filter" do
+    context "with valid task" do
+      it "is expected to include users approved task by priority" do
+        expect(Task.users_approved_tasks_filter("Low", user2.id)).to include(task3)
+      end
+    end
+  
+    context "with invalid task" do
+      it "is expected to exclude users approved task by priority" do
+        expect(Task.users_approved_tasks_filter("Low", user2.id)).to_not include(task1)
+      end
+    end
+  end
+
   describe ".notified_tasks" do
     context "with valid task" do
       it "is expected to include task notified by admin" do
@@ -134,16 +173,16 @@ RSpec.describe Task, type: :model do
     end
   end
   
-  describe ".admin_task_filter" do
+  describe ".all_task_filter" do
     context "with valid task" do
-      it "is expected to include admin task by priority" do
-        expect(Task.admin_task_filter("High")).to include(task2, task5)
+      it "is expected to include all task by priority" do
+        expect(Task.all_task_filter("High", user1.id)).to include(task2)
       end
     end
   
     context "with invalid task" do
-      it "is expected to exclude admin task by priority" do
-        expect(Task.admin_task_filter("High")).to_not include(task1, task3, task4, task6)
+      it "is expected to exclude all task by priority" do
+        expect(Task.all_task_filter("High")).to_not include(task1, task3, task4, task5, task6, task7)
       end
     end
   end
@@ -162,6 +201,20 @@ RSpec.describe Task, type: :model do
     end
   end
   
+  describe ".admins_task_filter" do
+    context "with valid task" do
+      it "it is expected to include admins task by priority" do
+        expect(Task.admins_task_filter("Low", user1.id)).to include(task7)
+      end
+    end
+  
+    context "with invalid task" do
+      it "it is expected to exclude admins task by priority" do
+        expect(Task.admins_task_filter("High", user1.id)).to eq([])
+      end
+    end
+  end
+
   describe ".recurring_task" do
     context "with valid task" do
       it "is expected to include recurring task" do
@@ -226,181 +279,212 @@ RSpec.describe Task, type: :model do
   end
 
   # Class Method Test
-  describe "#filter_by_priority" do
+  describe "#fetch_tasks" do
     context "with no priority & user type admin" do
       it "is expected to display all task" do
-        expect(Task.filter_by_priority("", user1)).to include(task6, task5, task4, task3, task2, task1)
+        expect(Task.fetch_tasks("", user1.id)).to include(task2)
       end
     end
     
     context "when Medium priority & user type admin" do
       it "is expected to display medium priority task" do
-        expect(Task.filter_by_priority("Medium", user1)).to include(task1, task4)
+        expect(Task.fetch_tasks("Medium", user1.id)).to eq([])
       end
     
       it "is expected not to display non Medium priority task" do
-        expect(Task.filter_by_priority("Medium", user1)).to_not include(task6, task5, task3, task2)
+        expect(Task.fetch_tasks("Medium", user1.id)).to_not include(task6, task5, task4, task3, task2)
       end
     end
     
     context "with Low priority & user type admin" do
       it "is expected to display display Low priority task" do
-        expect(Task.filter_by_priority("Low", user1)).to include(task6, task3)
+        expect(Task.fetch_tasks("Low", user1.id)).to include(subject)
       end
 
       it "is expected not to display Low priority task" do
-        task1.priority = "Low"
-        expect(Task.filter_by_priority("Low", user1)).to_not include(task5, task4, task2, task1)
+        expect(Task.fetch_tasks("Low", user1.id)).to_not include(task6, task5, task4, task3, task2, task1)
       end
     end
     
     context "with High priority task & user type admin" do
       it "is expected to display High priority" do
-        expect(Task.filter_by_priority("High", user1)).to include(task5, task2)
+        expect(Task.fetch_tasks("High", user1.id)).to include(task2)
       end
 
       it "is expected not display non High priority" do
-        expect(Task.filter_by_priority("High", user1)).to_not include(task6, task4, task3, task1)
+        expect(Task.fetch_tasks("High", user1.id)).to_not include(task6, task5, task4, task3, task1)
       end
     end
     
     context "with no priority & user type employee" do
       it "is expected to display My task" do
-        expect(Task.filter_by_priority("", user2)).to include(task1, task2, task3)
+        expect(Task.fetch_tasks("", user2.id)).to eq([])
       end
 
       it "is expected not to display others task" do
-        expect(Task.filter_by_priority("", user2)).to_not include(task4, task5, task6)
+        expect(Task.fetch_tasks("", user2.id)).to_not include(task3, task4, task5, task6)
       end
     end
     
     context "with Medium priority & user type Employee" do
       it "is expected to display Medium priority task" do
-        expect(Task.filter_by_priority("Medium", user2)).to include( task1)
-      end
-
-      it "is expected to display Medium priority task" do
-        expect(Task.filter_by_priority("Medium", user4)).to include( task4)
+        expect(Task.fetch_tasks("Medium", user2.id)).to eq([])
       end
 
       it "is expected not display others Medium" do
-        expect(Task.filter_by_priority("Medium", user2)).to_not include(task4)
-      end
-
-      it "is expected not display others Medium" do
-        expect(Task.filter_by_priority("Medium", user4)).to_not include(task1)
+        expect(Task.fetch_tasks("Medium", user2.id)).to_not include(task4)
       end
     end
     
     context "with low priority & user type Employee" do
       it "is expected to display Low priority task" do
-        expect(Task.filter_by_priority("Low", user2)).to include( task3)
+        expect(Task.fetch_tasks("Low", user2.id)).to include(subject)
       end
 
       it "is expected not to display others non Low priority task" do
-        expect(Task.filter_by_priority("Low", user2)).to_not include(task6)
+        expect(Task.fetch_tasks("Low", user2.id)).to_not include(task6)
       end
     end
     
     context "with High priority & user type Employee" do
       it "is expected to display High priority task" do
-        expect(Task.filter_by_priority("High", user2)).to include(task2)
+        expect(Task.fetch_tasks("High", user2.id)).to include(task2)
       end
 
       it "is expected not to display others non High priority task" do
-        expect(Task.filter_by_priority("High", user2)).to_not include(task5)
+        expect(Task.fetch_tasks("High", user2.id)).to_not include(task5)
       end
     end
   end
 
-  describe "#filter_approved_task_by_priority" do
+  describe "#fetch_approved_tasks" do
     context "with no priority & user type admin" do
       it "includes all approved tasks" do
-        expect(Task.filter_approved_task_by_priority("", user1)).to include(task1, task3, task4, task6)
+        expect(Task.fetch_approved_tasks("", user1.id)).to include(task1, task3, task4, task6)
       end
     end
     
-    context "with no priority & user type HR" do
-      it "includes all notified tasks" do
-        expect(Task.filter_approved_task_by_priority("", user5)).to include(task3, task6)
+    context "with no priority & user type Employee" do
+      it "includes users approved tasks" do
+        expect(Task.fetch_approved_tasks("", user2.id)).to include(task1, task3)
       end
     end
     
     context "with Low priority & user type Admin" do
       it "includes low priority approved tasks" do
-        expect(Task.filter_approved_task_by_priority("Low", user1)).to include(task3, task6)
+        expect(Task.fetch_approved_tasks("Low", user1.id)).to include(task3, task6, task7)
       end
     end
     
-    context "with Low priority & user type HR" do
-      it "includes low priority notified tasks" do
-        expect(Task.filter_approved_task_by_priority("Low", user5)).to include(task3, task6)
+    context "with Low priority & user type employee" do
+      it "includes low priority approved tasks" do
+        expect(Task.fetch_approved_tasks("Low", user4.id)).to include(task6)
       end
     end
     
     context "with Medium priority & user type Admin" do
       it "includes Medium priority approved tasks" do
-        expect(Task.filter_approved_task_by_priority("Medium", user1)).to include(task1, task4)
+        expect(Task.fetch_approved_tasks("Medium", user1.id)).to include(task1,task4)
       end
     end
     
-    context "with Medium priority & user type HR" do
-      it "includes mediun priority notified tasks" do
-        expect(Task.filter_approved_task_by_priority("Medium", user5)).to_not include(task1, task3)
+    context "with Medium priority & user type employee" do
+      it "includes mediun priority approved tasks" do
+        expect(Task.fetch_approved_tasks("Medium", user4.id)).to include(task4)
       end
     end
     
     context "with High priority & user type Admin" do
       it "includes high priority approved tasks" do
-        expect(Task.filter_approved_task_by_priority("High", user1)).to_not include(task1, task3, task4, task6)
+        expect(Task.fetch_approved_tasks("High", user1.id)).to_not include(task1, task2, task3, task4, task6)
       end
     end
     
-    context "with High priority & user type HR" do
-      it "includes High priority notified tasks" do
-        expect(Task.filter_approved_task_by_priority("High", user5)).to_not include(task3, task6)
+    context "with High priority & user typ Eemployee" do
+      it "includes High priority approvedd tasks" do
+        expect(Task.fetch_approved_tasks("High", user4.id)).to include(task5)
       end
     end
   end
 
-  describe "#filter_user_assigned_task_by_priority" do
+  describe "#fetch_user_assigned_tasks" do
     context "with no priority" do
       it "is expected to include All user assigned task" do
-        expect(Task.filter_user_assigned_task_by_priority("", user2)).to include(task4, task5, task6)
+        expect(Task.fetch_user_assigned_tasks("", user2.id)).to include(task4, task5, task6)
       end
     
       it "is expected to exclude others assigned task" do
-        expect(Task.filter_user_assigned_task_by_priority("", user2)).to_not include(subject, task1, task2, task3)
+        expect(Task.fetch_user_assigned_tasks("", user2.id)).to_not include(subject, task1, task2, task3)
       end
     end
     
     context "with Medium priority" do
       it "is expected to display Medium priority tasks" do
-        expect(Task.filter_user_assigned_task_by_priority("Medium", user2)).to include(task4)
+        expect(Task.fetch_user_assigned_tasks("Medium", user2.id)).to include(task4)
       end
     
       it "is expected not to display others medium priority task" do
-        expect(Task.filter_user_assigned_task_by_priority("Medium", user2)).to_not include(task1)
+        expect(Task.fetch_user_assigned_tasks("Medium", user2.id)).to_not include(task1)
       end
     end
 
     context "with Low Priority" do
       it "is expect to display Low priority task" do
-        expect(Task.filter_user_assigned_task_by_priority("Low", user3)).to include(task3)
+        expect(Task.fetch_user_assigned_tasks("Low", user3.id)).to include(task3)
       end
 
       it "expecte not to display others lo priority task" do
-        expect(Task.filter_user_assigned_task_by_priority("Low", user3)).to_not include(task6)
+        expect(Task.fetch_user_assigned_tasks("Low", user3.id)).to_not include(task6)
       end
     end
     
     context "with High Priority" do
       it "is expected to display High priority task" do
-        expect(Task.filter_user_assigned_task_by_priority("High", user2)).to include(task5)
+        expect(Task.fetch_user_assigned_tasks("High", user2.id)).to include(task5)
       end
 
       it "is expected not to display others High priority task" do
-        expect(Task.filter_user_assigned_task_by_priority("High", user2)).to_not include(task2)
+        expect(Task.fetch_user_assigned_tasks("High", user2.id)).to_not include(task2)
+      end
+    end
+  end
+
+  describe "#fetch_notified_tasks" do
+    context "with no priority" do
+      it "is expected to include All notified task" do
+        expect(Task.fetch_notified_tasks("")).to include(task3, task5, task6, task7)
+      end
+    end
+    
+    context "with Low priority" do
+      it "is expected to display Medium priority tasks" do
+        expect(Task.fetch_notified_tasks("Low")).to include(task3, task6, task7)
+      end
+    end
+    
+    context "with High Priority" do
+      it "is expected to display High priority task" do
+        expect(Task.fetch_notified_tasks("High")).to include(task5)
+      end
+    end
+  end
+
+  describe "#fetch_admins_task" do
+    context "with no priority" do
+      it "is expected to include All notified task" do
+        expect(Task.fetch_admins_task("", "", user1.id)).to include(task7)
+      end
+    end
+    
+    context "with Low priority" do
+      it "is expected to display Medium priority tasks" do
+        expect(Task.fetch_admins_task("Low", "", user1.id)).to include(task7)
+      end
+    end
+    
+    context "with High Priority" do
+      it "is expected to display High priority task" do
+        expect(Task.fetch_admins_task("Low", "", user1.id)).to eq([])
       end
     end
   end

@@ -7,4 +7,4 @@ Sidekiq.configure_server do |config|
     username: "root",
     password: "root"
   })
-end if Rails.env.development?
+end if Rails.env.development? || Rails.env.development?

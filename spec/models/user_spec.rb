@@ -186,70 +186,70 @@ RSpec.describe User, type: :model do
     end
   end
     
-  describe "#filter_by_role" do
+  describe "#fetch_user" do
     context "with no paramiter & user type Admin" do
       it "is expected to display all users" do
-        expect(User.filter_by_role("", user1)).to include(user1, user2, user3, user4)
+        expect(User.fetch_user("", "", user1)).to include(user1, user2, user3, user4)
       end
     end
     
     context "with Admin paramiter & user type Admin" do
       it "is expected to display Admin users" do
-        expect(User.filter_by_role("Admin", user1)).to include(user1)
+        expect(User.fetch_user("Admin","", user1)).to include(user1)
       end
 
       it "is expected not to display other users" do
-        expect(User.filter_by_role("Admin", user1)).to_not include(user2, user3, user4)
+        expect(User.fetch_user("Admin", "", user1)).to_not include(user2, user3, user4)
       end
     end
     
     context "with HR paramiter & user type Admin" do
       it "is expected to display HR users" do
-        expect(User.filter_by_role("HR", user1)).to include(user3)
+        expect(User.fetch_user("HR", "", user1)).to include(user3)
       end
 
       it "is expected not to display other users" do
-        expect(User.filter_by_role("HR", user1)).to_not include(user1, user2, user4)
+        expect(User.fetch_user("HR", "", user1)).to_not include(user1, user2, user4)
       end
     end
     
     context "with Employee paramiter & user type Admin" do
       it "is expected to display Employee users" do
-        expect(User.filter_by_role("Employee", user1)).to include(user2, user4)
+        expect(User.fetch_user("Employee", "", user1)).to include(user2, user4)
       end
 
       it "is expected not to display other users" do
-        expect(User.filter_by_role("Employee", user1)).to_not include(user1, user3)
+        expect(User.fetch_user("Employee", "", user1)).to_not include(user1, user3)
       end
     end
 
     context "with no paramiter & user type HR" do
       it "is expected to display all users expect admin" do
-        expect(User.filter_by_role("", user3)).to include(user2, user3, user4)
+        expect(User.fetch_user("", "", user3)).to include(user2, user3, user4)
       end
 
       it "is expect not to display Admin users" do
-        expect(User.filter_by_role("", user3)).to_not include(user1)
+        expect(User.fetch_user("","", user3)).to_not include(user1)
       end
     end
 
     context "with HR paramiter & user type HR" do
       it "is expected to display HR users" do
-        expect(User.filter_by_role("HR", user3)).to include(user3)
+        expect(User.fetch_user("HR", "", user3)).to include(user3)
       end
 
       it "is expected not to display other users" do
-        expect(User.filter_by_role("HR", user3)).to_not include(user1, user2, user4)
+        expect(User.fetch_user("HR","", user3)).to_not include(user1, user2, user4)
       end
     end
 
     context "with Employee paramiter & user type HR" do
       it "is expected to display Employee users" do
-        expect(User.filter_by_role("Employee", user3)).to include(user2, user4)
+        expect(User.fetch_user("Reguler","", user3)).to include(user2, user4)
       end
 
       it "is expected not to display other users" do
-        expect(User.filter_by_role("Employee", user3)).to_not include(user1, user3)
+        expect(User.fetch_user("Reguler","", user3)).to_not include(user1, user3)
       end
     end
   end

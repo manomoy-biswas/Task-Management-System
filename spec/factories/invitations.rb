@@ -1,7 +1,8 @@
 FactoryBot.define do
   factory :invitation do
-    email { "MyString" }
+    name { Faker::Name.name }
+    email {Faker::Internet.safe_email}
     invitation_token { "MyString" }
-    status { "MyString" }
+    status { "pending" }
   end
 end
