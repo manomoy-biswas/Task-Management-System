@@ -7,6 +7,10 @@ class TasksController < ApplicationController
                 :submit_task, :update]
   before_action :redirect_path, only: [:new, :edit, :show]
   
+  def admins_task
+    @tasks = Task.fetch_admins_task(params[:priority], params[:query], current_user.id)
+  end
+
   def approve
     return if @task.assign_task_to == current_user.id
     return redirect_to request.referrer, flash: { warning: "Employee not Submitted the task yet." } unless @task.submit
@@ -29,11 +33,11 @@ class TasksController < ApplicationController
   end
   
   def approved_task
-    @tasks = Task.fetch_approved_tasks(params[:priority], params[:query],current_user)
+    @tasks = Task.fetch_approved_tasks(params[:priority], params[:query],current_user.id)
   end  
   
   def user_assigned_task
-    @tasks = Task.fetch_user_assigned_tasks(params[:priority], params[:query], current_user)      
+    @tasks = Task.fetch_user_assigned_tasks(params[:priority], params[:query], current_user.id)      
   end
 
   def create
@@ -110,7 +114,7 @@ class TasksController < ApplicationController
   end
 
   def index
-    @tasks =  Task.fetch_tasks(params[:priority], params[:query], current_user)
+    @tasks =  Task.fetch_tasks(params[:priority], params[:query], current_user.id)
   end            
       
   def new

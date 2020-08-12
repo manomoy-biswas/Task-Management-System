@@ -1,0 +1,90 @@
+<% content_for :title, "Task List" %>
+<div class="row justify-content-center">
+  <div class="col-12 col-xl-10">
+    <div class="white-box bg-light">
+      <div class="task-list">
+        <div class="row justify-content-between">
+          <div class="col-12 col-sm-5 col-md-4 text-left">
+            <%=form_tag(admins_task_tasks_path, action:"admins_task", method: :get) do %>
+              <div class="form-group row">
+                <% priorities=["Low", "Medium", "High"]%>
+                <span class="fa fa-filter col-1 col-sm-2 text-right"></span>
+                <div class="col-11 col-sm-10 text-right">
+                  <%= select_tag(:priority, options_for_select(priorities, params[:priority]), prompt:"All", class:"form-control custom-select select-center", id: "filter_input") %>
+                </div>
+              </div>  
+            <% end %>
+          </div>
+          <div class="col-12 col-sm-7 col-md-5 col-xl-4">
+            <%=form_tag admins_task_tasks_path, action: "admins_task", method: :get do %>
+              <%= render "layouts/search" %>
+            <% end %>
+          </div>
+        </div>
+        <div class="index-table">
+          <table class="table table-striped table-bordered table-hover table-dark" data-toggle="table">
+            <caption class="text-center"> List of Tasks</caption>
+            <thead>
+              <tr class="text-center">
+                <th scope= "col">#</th>
+                <th scope= "col">Task Name</th>
+                <th scope= "col">Category</th>
+                <th scope= "col">Priority</th>
+                <th scope= "col">Deadline</th>
+                <th scope= "col">Assigned By</th>
+                <th scope= "col"> Submit Task</th>
+                <th scope= "col"> Approval</th>
+                <th scope= "col">View Task</th>
+              </tr>
+            </thead>
+            <% if @tasks.present?%>
+              <tbody id="task_table">
+                <% i=0 %>
+                <% @tasks.each do |task|%>
+                  <tr class="
+                    <% if task.submit && task.approved%>
+                    green
+                    <% elsif task.submit && !task.approved %>
+                    yellow
+                    <% else %>
+                      red
+                    <% end %>">
+                    <td><%= i=i.to_i + 1 %></td>
+                    <td class= "text-center"><%= task.task_name%></td>
+                    <td class= "text-center"><%= task.category.name%></td>
+                    <td id="priority" class= "text-center"><%= task.priority%></td>
+                    <td class= "text-center"><%= DateTime.parse(task.submit_date.to_s).strftime("%d-%m-%Y - %I:%M %p") %></td>
+                    <td class= "text-center"><%= task.assign_by.name %></td>
+                    <td class= "text-center">
+                      <% if !task.submit%>
+                        <%= link_to "SUBMIT", submit_task_task_path(task), data: { disable_with: "wait.." }, class:"btn btn-success"%>
+                      <% else  %>
+                        Submitted
+                      <% end%>
+                    </td>
+                    <td class="text-center">
+                      <% if task.approved%>
+                        Approved
+                      <% elsif task.submit %>
+                        Pending
+                      <% end %>
+                    </td>
+                    <td class="text-center">
+                      <%= link_to "", task_path(task), class:"fa fa-eye" %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            <%else%>
+            <tbody>
+              <tr>
+                <td colspan="13" class="text-center">No Record Found</td>
+              </tr>
+            </tbody>
+            <% end %>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

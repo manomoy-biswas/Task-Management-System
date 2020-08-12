@@ -17,12 +17,12 @@
               <% priorities=["HR", "Employee"] if current_user.hr %>
               <span class="fa fa-filter col-2 text-right"></span>
               <div class="col-10 col-xl-8 text-right">
-                <%= select_tag(:role, options_for_select(priorities, params[:role]), prompt:"All", class:"form-control select-center", id: "filter_input") %>
+                <%= select_tag(:role, options_for_select(priorities, params[:role]), prompt:"All", class:"form-control custom-select select-center", id: "filter_input") %>
               </div>
             </div>  
           <% end %>
         </div>
-        <div class="col-12 col-md-5 col-xl-4 search-field">
+        <div class="col-12 col-md-5 col-xl-4">
           <%=form_tag users_path, action: "index", method: :get do %>
             <%= render "layouts/search" %>
           <% end %>
@@ -73,16 +73,12 @@
                     <%end%>
                   </td>
                   <% if current_user.admin %>
-                    <% unless user.admin %>
-                      <td class="text-center align-middle">
-                        <%= link_to "", edit_user_path(user), class:"fa fa-edit"%>
-                      </td>
-                      <td class="text-center align-middle">
-                        <%= link_to "", user_path(user), data: {confirm: "Are you sure?" }, method: :delete, class:"fa fa-trash", data: { disable_with: "..." }%>
-                      </td>
-                    <% else %>
-                      <td class="text-center align-middle" colspan="2"></td>
-                    <% end %>
+                    <td class="text-center align-middle">
+                      <%= link_to "", edit_user_path(user), class:"fa fa-edit"%>
+                    </td>
+                    <td class="text-center align-middle">
+                      <%= link_to "", user_path(user), data: {confirm: "Are you sure?" }, method: :delete, class:"fa fa-trash", data: { disable_with: "..." }%>
+                    </td>
                   <% end %>
                 </tr>
               <% end %>

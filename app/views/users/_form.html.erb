@@ -58,7 +58,7 @@
             </div>
           </div>
         </div>
-        <% unless ["edit"].include?(params[:action]) && ((current_user.admin && @user.admin) || !current_user.admin) %>
+        <% unless ["edit"].include?(params[:action]) %>
           <div class="form-group row">
             <% user_role = %w[Reguler HR] %>
             <%= form.label :user_type, 'User Type', for: "User type", class:"col-12 col-sm-2 col-form-label font-weight-bolder"%>

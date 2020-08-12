@@ -65,6 +65,8 @@
     font-size: 14px;
     color: #c0b733;
   }
+  .user-role{ color: #fff}
+  
 }
 .user-avater{
   .user-image{
@@ -87,7 +89,7 @@
   border-bottom-left-radius: 50px;
   box-shadow: 0px 10px 10px 3px rgba(0, 0, 0, 0.5);
   padding: 7px 0 0 25px;
-  margin: 20px 0 0 15px;
+  margin: 0 0 19px 20px;
   background-color: #ffffff;
   height: 45px;
   background-image: linear-gradient(to right, #DD5E89 0%, #F7BB97 51%, #DD5E89 100%);
@@ -109,7 +111,8 @@
   .fa-check-square,
   .fa-check-circle,
   .fa-user-plus,
-  .fa-tasks{
+  .fa-tasks,
+  .fa-thumb-tack{
     color: #ffffffd0;
     font-size: 32px;
   }

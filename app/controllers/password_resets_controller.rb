@@ -8,7 +8,12 @@ class PasswordResetsController < ApplicationController
   end
 
   def edit
-    @user = User.find_by_password_reset_token!(params[:id])
+    begin
+      return redirect_to overview_path, flash: {warning: "Please nogout anf try again."} if current_user.present?
+      @user = User.find_by_password_reset_token!(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      return redirect_to root_path, flash: {warning: "You alrady change your password"}
+    end
   end
 
   def update
@@ -16,6 +21,8 @@ class PasswordResetsController < ApplicationController
     if @user.password_reset_sent_at < 3.hours.ago
       redirect_to new_password_reset_path, flash: {danger: "Password reset has expired." }
     elsif @user.update(params_password)
+      @user.password_reset_token = nil
+      @user.save!
       redirect_to root_url, flash: { success: "Password has been reset!" }
     else
       render "edit"

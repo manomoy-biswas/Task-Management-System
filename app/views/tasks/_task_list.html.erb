@@ -13,11 +13,11 @@
       <% unless ["user_assigned_task"].include?(params[:action])%>
         <th scope= "col">Assigned By</th>
       <% end %>
-      <% if current_user.admin %>
-        <th scope= "col"> Status</th>
-      <% else %>
-        <th scope= "col"> Submit Task</th>
-      <% end %>
+        <% if current_user.admin || ["user_assigned_task"].include?(params[:action]) %>
+          <th scope= "col"> Status</th>
+        <% else %>
+          <th scope= "col"> Submit Task</th>
+        <% end %>
       <th scope= "col">View Task</th>
       <th scope= "col"> Approval</th>
       <% if current_user.admin %>
@@ -27,7 +27,9 @@
         <th scope= "col">Edit</th>
         <th scope= "col">Delete</th>
       <% elsif current_user.hr %>
-        <th scope= "col">Print</th>
+        <% if ["notified_task"].include?(params[:action])%>
+          <th scope= "col">Print</th>
+        <% end %>
       <%end%>
     </tr>
   </thead>
@@ -55,7 +57,7 @@
             <td class= "text-center"><%= task.assign_by.name %></td>
           <% end %>
           <td class= "text-center">
-            <% if current_user.admin %>
+            <% if current_user.admin || task.assign_by == current_user %>
               <% if task.submit%>
                 Submitted
               <% else %>
@@ -101,9 +103,11 @@
               <%= link_to "", task_path(task), data: {confirm: "Are you sure to delete?"}, method: :delete, class:"fa fa-trash"%>
             </td>
           <% elsif current_user.hr && task.notify_hr %>
-            <td class="text-center">
-              <%= link_to "", print_task_details_tasks_path(task), class:"fa fa-print"%>
-            </td>
+            <% if ["notified_task"].include?(params[:action])%>
+              <td class="text-center">
+                <%= link_to "", print_task_details_tasks_path(task_id: task.id, format: "pdf"), target: "_blank", class:"fa fa-print print-btn"%>
+              </td>
+            <% end %>
           <% end %>
         </tr>
       <% end %>

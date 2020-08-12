@@ -18,7 +18,7 @@ class UserList < Prawn::Document
 
   def user_list 
     table_header = [["SL.No","Name", "Email", "Phone No", "Role"]]
-    table(table_header, header: true, column_widths: [40, 150, 210, 80, 60], cell_style:{ background_color:"000000", text_color: "ffffff", align: :center, border_color: "ffffff", size: 10} )
+    table(table_header, header: true, column_widths: [40, 150, 210, 80, 60], cell_style:{ size: 10, background_color:"000000", text_color: "ffffff", align: :center, border_color: "ffffff", size: 10} )
     if @users.present?
       data = []
       i = 0
@@ -32,7 +32,7 @@ class UserList < Prawn::Document
                 end
         data += [["#{i=i+1}","#{user.name}", "#{user.email}", "#{user.phone}", "#{role}"]]
       end
-      table(data, column_widths: [40, 150, 210, 80, 60], row_colors: ["DDDDDD","FFFFFF"],cell_style: {size: 10})
+      table(data, column_widths: [40, 150, 210, 80, 60], row_colors: ["DDDDDD","FFFFFF"],cell_style: {size: 9})
     end
   end
 end

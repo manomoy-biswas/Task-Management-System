@@ -32,16 +32,17 @@ class Task < ApplicationRecord
   validates_presence_of :task_name, :priority, :repeat, :assign_task_to, :task_category
 
   scope :my_assigned_tasks, ->(user_id=nil) { where(assign_task_by: user_id).includes(:user, :category) }
-  scope :my_assigned_tasks_filter, ->(param=nil,user_id=nil) { where(priority: param, assign_task_by: user_id).includes(:user, :category) }
+  scope :my_assigned_tasks_filter, ->(filter=nil,user_id=nil) { where(priority: filter, assign_task_by: user_id).includes(:user, :category) }
   scope :approved_tasks, ->{ where(approved: true).includes(:user, :assign_by, :category) }
-  scope :approved_tasks_filter, ->(param=nil) { where(priority: param, approved: true).includes(:user, :assign_by, :category) }
+  scope :approved_tasks_filter, ->(filter=nil) { where(priority: filter, approved: true).includes(:user, :assign_by, :category) }
   scope :users_approved_tasks, ->(user_id) { where(approved: true, assign_task_to: user_id).includes(:assign_by, :category)}
-  scope :users_approved_tasks_filter, ->(param, user_id) { where(priority: param, approved: true, assign_task_to: user_id).includes(:assign_by, :category)}
+  scope :users_approved_tasks_filter, ->(filter, user_id) { where(priority: filter, approved: true, assign_task_to: user_id).includes(:assign_by, :category)}
 
   scope :notified_tasks, ->{ where(approved: true, notify_hr: true).includes(:user, :assign_by, :category) }
-  scope :notified_tasks_filter, ->(param=nil) { where(priority: param, approved: true, notify_hr: true).includes(:user, :assign_by, :category) }
-  scope :admin_task_filter, ->(param=nil) { where(priority: param, approved: false).includes(:user, :assign_by, :category) }
-  scope :my_task_filter, ->(param=nil, user_id) { where(priority: param , approved: false, assign_task_to: user_id ).includes(:assign_by, :category) }
+  scope :notified_tasks_filter, ->(filter=nil) { where(priority: filter, approved: true, notify_hr: true).includes(:user, :assign_by, :category) }
+  scope :all_task_filter, ->(filter=nil, user_id=nil) { where(priority: filter, approved: false).where.not(assign_task_to: user_id).includes(:user, :assign_by, :category) }
+  scope :my_task_filter, ->(filter=nil, user_id) { where(priority: filter , approved: false, assign_task_to: user_id ).includes(:assign_by, :category) }
+  scope :admins_task_filter, ->(filter=nil, user_id) { where(priority: filter , assign_task_to: user_id ).includes(:user, :assign_by, :category) }
   scope :recurring_task, -> { where(recurring_task: true).includes(:user, :assign_by, :category) }
 
   mappings dynamic: "false" do
@@ -202,7 +203,8 @@ class Task < ApplicationRecord
     })
   end
 
-  def self.fetch_tasks(filter = nil, query = nil, current_user)
+  def self.fetch_tasks(filter = nil, query = nil, current_user_id)
+    current_user = User.find(current_user_id)
     if query.present?
       if current_user.admin
         tasks = self.all_task_search(query).map(&:id)
@@ -212,20 +214,33 @@ class Task < ApplicationRecord
       return self.where(id: tasks).includes(:user, :category, :assign_by).order("id DESC")
     elsif filter.present?
       if current_user.admin
-        self.admin_task_filter(param).order("created_at DESC")
+        self.all_task_filter(filter).order("created_at DESC")
       else
-        self.my_task_filter(param, current_user.id).order("created_at DESC")
+        self.my_task_filter(filter, current_user.id).order("created_at DESC")
       end    
     else
       if current_user.admin
-        self.where(approved: false).includes(:user, :assign_by, :category).order("created_at DESC")
+        self.where(approved: false).where.not(assign_task_to: current_user.id).includes(:user, :assign_by, :category).order("created_at DESC")
       else
         current_user.tasks.where(approved: false).includes(:assign_by, :category).order("created_at DESC")
       end
     end
   end
 
-  def self.fetch_approved_tasks(filter = nil, query = nil, current_user)
+  def self.fetch_admins_task(filter = nil, query = nil, current_user_id)
+    current_user = User.find(current_user_id)
+    if query.present?
+      tasks = self.search(query, current_user.id).map(&:id)
+      return self.where(id: tasks).includes(:user, :category, :assign_by).order("id DESC")
+    elsif filter.present?
+      self.admins_task_filter(filter, current_user.id).order("created_at DESC")
+    else
+      current_user.tasks.includes(:assign_by, :category).order("created_at DESC")
+    end
+  end
+
+  def self.fetch_approved_tasks(filter = nil, query = nil, current_user_id)
+    current_user = User.find(current_user_id)
     if query.present?
       if current_user.admin
         tasks = self.approved_tasks_search(query).map(&:id)
@@ -236,23 +251,20 @@ class Task < ApplicationRecord
     elsif filter.present?
       if current_user.admin
         self.approved_tasks_filter(filter).order("created_at DESC")
-      elsif current_user.hr
-        self.notified_tasks_filter(filter).order("created_at DESC")
       else
         self.users_approved_tasks_filter(filter, current_user.id).order("created_at DESC")
       end
     else
       if current_user.admin
         self.approved_tasks.order("created_at DESC")
-      elsif current_user.hr
-        self.notified_tasks.order("created_at DESC")
       else
         self.users_approved_tasks(current_user.id).order("created_at DESC")
       end
     end
   end
 
-  def self.fetch_user_assigned_tasks(filter = nil, query = nil, current_user)
+  def self.fetch_user_assigned_tasks(filter = nil, query = nil, current_user_id)
+    current_user = User.find(current_user_id)
     if query.present?
       tasks = self.user_assigned_tasks_search(query, current_user.id).map(&:id)
       self.where(id: tasks).includes(:user, :category, :assign_by).order("id DESC")
