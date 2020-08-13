@@ -9,6 +9,7 @@ gem "carrierwave-aws"
 gem "elasticsearch-model"
 gem "elasticsearch-rails"
 gem "font-awesome-rails", "~> 4.7", ">= 4.7.0.5"
+gem 'hamburgers', '~> 1.1', '>= 1.1.3'
 gem "jbuilder", "~> 2.7"
 gem "mini_magick", "~> 4.10", ">= 4.10.1"
 gem "mysql2", ">= 0.4.4"
