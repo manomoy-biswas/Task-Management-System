@@ -13,8 +13,14 @@
   left: 0;
   z-index: 1;
   padding-top: 5px;
-  overflow-x: hidden;
   padding-bottom: 45px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.sidenav::-webkit-scrollbar {
+  display: none;
 }
 .dashboard-menu{
   height: calc(100vh - 60px - 45px);
