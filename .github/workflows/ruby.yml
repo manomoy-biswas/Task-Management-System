@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       db:
-        image: mysql:5.7
+        image: mysql:8.0.21
         env:
           MYSQL_ROOT_PASSWORD: root
         ports:
@@ -63,6 +63,7 @@ jobs:
       - name: Bundle Install and Create DB
         env:
           RAILS_ENV: test
+          DB_DATABASE: Task_Management_System
           DB_PASSWORD: root
           DB_PORT: ${{ job.services.mysql.ports[3306] }}
         run: |
