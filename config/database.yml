@@ -11,12 +11,12 @@ default: &default
 
 development:
   <<: *default
-  database: <%= ENV['DB_DATABASE'] %>_development
+  database: Task_Management_System_development
 test:
   <<: *default
-  database: <%= ENV['DB_DATABASE'] %>_test
+  database: Task_Management_System_test
   host: 0.0.0.0
 
 production:
   <<: *default
-  database: <%= ENV['DB_DATABASE'] %>_production
+  database: Task_Management_System_production
