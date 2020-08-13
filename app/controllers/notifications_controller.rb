@@ -4,7 +4,7 @@ class NotificationsController < ApplicationController
   before_action :set_notification, only: [:destroy, :mark_as_read]
 
   def index
-    @notifications = Notification.all_notification(current_user.id).includes(:user, :recipient, :task).order("created_at DESC")
+    @notifications = Notification.fetch_notification(params[:filter], current_user.id)
   end
 
   def destroy

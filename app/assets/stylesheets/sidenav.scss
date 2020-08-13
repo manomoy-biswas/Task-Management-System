@@ -11,16 +11,21 @@
   z-index: 1;
   top: 60px;
   left: 0;
+  z-index: 1;
   padding-top: 5px;
+  overflow-x: hidden;
+  padding-bottom: 45px;
+}
+.dashboard-menu{
+  height: calc(100vh - 60px - 45px);
   overflow-x: hidden;
   overflow-y: scroll;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
-.sidenav::-webkit-scrollbar {
+.dashboard-menu::-webkit-scrollbar {
   display: none;
 }
-
 .sidenav a{
   text-decoration: none;
   display: block;
@@ -51,7 +56,7 @@
 .user-details{
   .user-name{
     margin-top: 10px;
-    font-size: 18px;
+    font-size: 16px;
     text-transform: uppercase;
     color: #ffffff;
     font-weight: bolder;
@@ -60,11 +65,13 @@
     font-size: 14px;
     color: #c0b733;
   }
+  .user-role{ color: #fff}
+  
 }
 .user-avater{
   .user-image{
-    width: 95px;
-    height: 95px;
+    width: 85px;
+    height: 85px;
     border-radius: 50px;
   }
 }
@@ -82,7 +89,7 @@
   border-bottom-left-radius: 50px;
   box-shadow: 0px 10px 10px 3px rgba(0, 0, 0, 0.5);
   padding: 7px 0 0 25px;
-  margin: 20px 0 0 15px;
+  margin: 0 0 19px 20px;
   background-color: #ffffff;
   height: 45px;
   background-image: linear-gradient(to right, #DD5E89 0%, #F7BB97 51%, #DD5E89 100%);
@@ -103,7 +110,9 @@
   .fa-tags,
   .fa-check-square,
   .fa-check-circle,
-  .fa-tasks{
+  .fa-user-plus,
+  .fa-tasks,
+  .fa-thumb-tack{
     color: #ffffffd0;
     font-size: 32px;
   }
@@ -123,12 +132,12 @@
 .btm-0{
   bottom: 0;
   position: absolute;
-  // margin-top: 100px;
   left: 0;
   width: 100%;
   height: 45px;
   background-color: #000000;
   border-top: 1px solid #afaeae;
+  margin-top: 50px;
   .change-password{
     padding: 12px 15px;
     a{
@@ -146,15 +155,18 @@
   text-align: center;
 }
 .create-btn{
-  width: 150px;
+  width: 220px;
   border-radius: 50px;
-  margin: 15px auto 5px;
-  font-size: 20px;
+  margin: 10px auto 0;
+  font-size: 16px;
   text-transform: uppercase;
   padding-top: 5px;
 }
 
 @media screen and (min-width: 768px){
+  .create-btn-section{
+    display:none;
+  }
   
 }
 

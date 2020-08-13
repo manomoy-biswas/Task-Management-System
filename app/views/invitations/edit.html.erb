@@ -1,0 +1,77 @@
+<% content_for :title, "Sign up" %>
+<%= form_for @user, url: invitation_path(params[:id]), method: :put do |form| %>
+  <div class="page-wrapper bg-dark">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-10 col-xl-8">
+        <div class="white-box bg-light">
+          <h1 class="title text-center"> CREATE ACCOUNT</h1>
+          <br />
+          <% if @user.errors.any? %>
+            <% @user.errors.full_messages.each do |msg| %>
+              <div class="alert alert-danger"><%= msg %></div>
+            <%end%>
+          <%end%>
+
+          <div class="form-group row">
+            <%= form.label :name, for: "name", class:"col-12 col-sm-2 col-form-label font-weight-bolder"%>
+            <div class="col-12 col-sm-10">
+              <%= form.text_field :name, autofocus: true, class: "form-control", placeholder: "Enter name", required: true, value: @invite.name %>  
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <%= form.label :email, for: "email", class:"col-sm-2 col-form-label font-weight-bolder"%>
+            <div class="col-sm-10">
+              <%= form.label :email, @invite.email, class: "form-control" %> 
+              <%= form.hidden_field :email, required: true, value: @invite.email %>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12 col-sm-12 col-md-6">
+              <div class="form-group row">
+                <%= form.label :mobile_no, for: "phone", class:"col-12 col-sm-2 col-md-4 col-form-label font-weight-bolder"%>
+                <div class="col-12 col-sm-10 col-md-8">
+                  <%= form.text_field :phone, class: "form-control", placeholder: "Enter 10 digit mobile no", required: true %>  
+                </div>
+              </div>
+            </div>
+
+            <div class=" col-12 col-sm-12 col-md-6">
+              <div class="form-group row">
+                <%= form.label :dob, 'D.O.B',for: "dob", class:"col-12 col-sm-2 col-md-4 col-form-label font-weight-bolder"%>
+                <div class="col-12 col-sm-10 col-md-8">
+                  <div class="input-group date" id="datepicker1" data-target="#datepicker1" data-toggle="datetimepicker" data-target-input="nearest">
+                    <%= form.text_field :dob, for: "dob", class:"form-control datetimepicker-input", value: (@user.dob.blank? ? "" : @user.dob.strftime("%d/%m/%Y")), placeholder: "dd/mm/yyyy", required: true %>
+                    <div class="input-group-append">
+                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    </div>
+                  </div>  
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <%= form.label :password, "Password", class:"col-12 col-sm-2 col-form-label font-weight-bolder" %>
+            <div class="col-12 col-sm-10">
+              <%= form.password_field :password, class: "form-control", autocomplete: "new-password", placeholder: "Enter new password", required: true %>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <%= form.label :password_conformation, "Conform password", class:"col-12 col-sm-2 col-form-label font-weight-bolder" %>
+            <div class="col-12 col-sm-10">
+              <%= form.password_field :password_confirmation, class: "form-control", autocomplete: "new-password", placeholder: "Repeat new password", required: true %>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 text-center">
+              <%= form.submit "Sign up", class:"btn btn-primary btn-lg" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

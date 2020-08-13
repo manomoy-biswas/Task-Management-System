@@ -4,9 +4,10 @@ RSpec.describe TaskMailer, type: :mailer do
   let (:user1) {create(:admin)}
   let (:user2) {create(:employee)}
   let (:user3) {create(:employee)}
+  let (:user4) {create(:hr)}
   let (:category1) {create(:category)}
   let (:task1) { create(:assigned_task2, task_category: category1.id, assign_task_to: user2.id, priority: "Medium", assign_task_by: user1.id, approved: true)}
-  let (:task2) { create(:assigned_task1, task_category: category1.id, assign_task_to: user3.id, assign_task_by: user2.id, priority: "High", approved_by: user2.id)}
+  let (:task2) { create(:assigned_task1, task_category: category1.id, assign_task_to: user3.id, assign_task_by: user2.id, priority: "High", approved_by: user2.id, approved: true, notify_hr: true)}
   
   describe "#task_create_email" do
     let (:mail) { TaskMailer.task_create_email(task1.id) }
@@ -388,6 +389,59 @@ RSpec.describe TaskMailer, type: :mailer do
       it "is expected not to assigns invalid @url for production" do
         allow(Rails).to receive(:env) { "production".inquiry }
         mail = TaskMailer.task_approved_email(task2.id)
+        expect(mail.body.encoded).to_not match("http://localhost:3000/tasks/" + task2.id.to_s)
+      end
+    end
+  end
+
+  describe "#notified_task_email" do
+    let (:mail) { TaskMailer.notified_task_email(user4.id, task2.id) }
+    context "with valid email data" do
+      it "is expected to return valid subject" do
+        expect(mail.subject).to eq("Task Approved Notification: #{task2.task_name}")
+      end
+      it "is expected to return valid receiver email" do
+        expect(mail.to).to eq([user4.email])
+      end
+      it "is expected to return valid sender email/name" do
+        expect(mail.from).to eq("Task Management System")
+      end
+      it "is expected to assigns valid @greeting" do
+        expect(mail.body.encoded).to match("Hi #{user4.name},")
+      end
+      it "is expected to assigns valid @url" do
+        expect(mail.body.encoded).to match("http://localhost:3000/tasks/" + task2.id.to_s)
+      end
+      it "is expected to assigns valid @url for production" do
+        allow(Rails).to receive(:env) { "production".inquiry }
+        mail = TaskMailer.notified_task_email(user4.id, task2.id)
+        expect(mail.body.encoded).to match("http://tms-kreeti.herokuapp.com/tasks/" + task2.id.to_s)
+      end
+    end
+
+    context "with invalid email data" do
+      it "is expected not to return invalid subject" do
+        expect(mail.subject).to_not eq("Task Approved: #{task1.task_name}")
+      end
+
+      it "is expected not to return invalid receiver email" do
+        expect(mail.to).to_not eq([user2.email])
+      end
+
+      it "is expected not to return invalid sender email/name" do
+        expect(mail.from).to_not eq("TMS")
+      end
+
+      it "is expected not to assigns invalid @greeting" do
+        expect(mail.body.encoded).to_not match("Hi #{user1.name},")
+      end
+      it "is expected not to assigns invalid @url" do
+        expect(mail.body.encoded).to_not match("http://tms-kreeti.herokuapp.com/tasks/" + task2.id.to_s)
+      end
+
+      it "is expected not to assigns invalid @url for production" do
+        allow(Rails).to receive(:env) { "production".inquiry }
+        mail = TaskMailer.notified_task_email(user4.id, task2.id)
         expect(mail.body.encoded).to_not match("http://localhost:3000/tasks/" + task2.id.to_s)
       end
     end

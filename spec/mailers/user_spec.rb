@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe UserMailer, type: :mailer do
-  let (:user1) {create(:employee)}
+  let (:user1) {create(:employee, password_reset_token: "mHASnnjjhgtred12334rdf")}
   
   describe "#welcome_user_email" do
     context "with valid email data" do

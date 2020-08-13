@@ -28,7 +28,9 @@
   <body>
     <header>
       <%= render "layouts/navbar" %>
-      <%= render "layouts/alert" %>
+      <div id="flash">
+        <%= render "layouts/alert" %>
+      </div>
       <%= render "layouts/side_navbar" %>
     </header>
     <main id="main">

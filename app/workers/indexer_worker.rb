@@ -11,5 +11,4 @@ class IndexerWorker
       client.delete index: Task.index_name, type: "_doc", id: task_id
     end
   end
-
 end

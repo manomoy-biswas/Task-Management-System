@@ -4,26 +4,25 @@
     <div class="white-box bg-light">
       <div class="task-list">
         <div class="row justify-content-between">
-          <% if current_user.hr %>
-            <div class="col-12 col-sm-6 text-left">
-              <%= link_to " Print Task List",print_task_list_tasks_path(format: "pdf"), target: "_blank", class: "fa fa-print btn btn-outline-primary" %>
-            </div>
-          <% end %>
-          <div class="col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3 text-right">
-            <%=form_tag(approved_task_tasks_path, action: "approved_task", method: :get) do %>
+          <div class="col-12 col-sm-5 col-md-4 text-left">
+            <%=form_tag(approved_task_tasks_path, action:"notified_task", method: :get) do %>
               <div class="form-group row">
                 <% priorities=["Low", "Medium", "High"]%>
-                <span class="fa fa-filter col-2 text-right"></span>
-                <div class="col-10 text-right">
-                  <%= select_tag(:priority, options_for_select(priorities, params[:priority]), prompt:"All", class:"form-control select-center", id: "filter_input") %>
+                <span class="fa fa-filter col-1 col-sm-2 text-right"></span>
+                <div class="col-11 col-sm-10 text-right">
+                  <%= select_tag(:priority, options_for_select(priorities, params[:priority]), prompt:"All", class:"form-control custom-select select-center", id: "filter_input") %>
                 </div>
               </div>  
             <% end %>
           </div>
-        </div>
-          <div class="index-table">
-            <%= render "tasks/task_list"%>
+          <div class="col-12 col-sm-7 col-md-5 col-xl-4">
+            <%=form_tag approved_task_tasks_path, method: :get do %>
+              <%= render "layouts/search" %>
+            <% end %>
           </div>
+        </div>
+        <div class="index-table">
+          <%= render "tasks/task_list"%>
         </div>
       </div>
     </div>

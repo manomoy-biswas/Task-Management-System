@@ -8,6 +8,8 @@
 #   Category.new(name: category).save
 # end
 
+# Task.__elasticsearch__.create_index! force: true
+
 # 50.times do
 #   repeat_interval =  ["One_Time", "Daily", "Weekly", "Monthly", "Quarterly", "Half_yearly", "Yearly"].sample
 
@@ -37,5 +39,4 @@
 #   end
 # end
 
-# Task.__elasticsearch__.create_index! force: true
 # Task.import

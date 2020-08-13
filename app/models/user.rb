@@ -1,5 +1,7 @@
+require 'elasticsearch/model'
 class User < ApplicationRecord
   include ApplicationHelper
+  include Elasticsearch::Model
 
   has_secure_password(validations: false) 
 
@@ -18,6 +20,8 @@ class User < ApplicationRecord
   before_validation :valid_email
 
   after_create :welcome_user_email
+  after_commit  :index_user,  on: [:create, :update]
+  after_commit  :delete_user_index, on: :destroy
 
   validates :name, length: { in: 3..50 }
   validates :email, format: { with: VALID_EMAIL_REGEX }
@@ -32,7 +36,30 @@ class User < ApplicationRecord
   scope :all_admin, -> { where(admin: true) }
   scope :all_employee, -> {where(admin: false, hr: false)}
   scope :all_user_except, -> (user_id) {where.not(id: user_id)}
-  scope :all_user_except_admin_and, -> (user_id) {where.not(id: user_id, admin:true)}
+  scope :all_employee_except, -> (user_id) {where.not(id: user_id).where.not(admin: true).where.not( hr: true)}
+  scope :all_hr_except, -> (user_id) {where(hr: true).where.not(id: user_id)}
+
+  mappings dynamic: "false" do
+    indexes :id, type: :text 
+    indexes :name, type: "text"
+    indexes :email, type: "text"
+    indexes :phone, type: "text"
+  end
+  
+  def as_indexed_json(options = {})
+    self.as_json(
+      options.merge(only: [:id, :name, :email, :phone])
+    )
+  end
+
+  def self.search(query)
+    __elasticsearch__.search(query:{
+      "query_string": {
+        "query": "*#{query}*",
+        "fields": ["name", "email", "phone"]
+      }
+    })
+  end
 
   def self.from_omniauth(auth)
     data = auth.info
@@ -44,19 +71,24 @@ class User < ApplicationRecord
     where.not(id: user_id)
   end
 
-  def self.filter_by_role(param=nil, current_user)
-    if param == "" || !param
-      if current_user.admin
-        self.all.order("name ASC")
-      elsif current_user.hr
-        self.all_users_except_admin.order("name ASC") 
-      end
-    elsif param == "Admin"
-      self.all_admin.order("name ASC") unless current_user.hr
-    elsif param == "HR"
-      self.all_hr.order("name ASC")
+  def self.fetch_user(filter = nil, query = nil, current_user)
+    if query.present?
+      user_ids = self.search(query).map(&:id)
+      return self.where(id: user_ids).order("name ASC")
     else
-      self.all_employee.order("name ASC")
+      if filter  == "" || !filter 
+        if current_user.admin
+          self.all.order("name ASC")
+        elsif current_user.hr
+          self.all_users_except_admin.order("name ASC") 
+        end
+      elsif filter  == "Admin"
+        self.all_admin.order("name ASC") unless current_user.hr
+      elsif filter  == "HR"
+        self.all_hr.order("name ASC")
+      else
+        self.all_employee.order("name ASC")
+      end
     end
   end  
 
@@ -76,6 +108,15 @@ class User < ApplicationRecord
     user[column] = SecureRandom.urlsafe_base64
     user.save!
   end
+  def display_name
+    names = self.name.split(" ")
+    if names.first[-1] == "."
+      name = names.first + " " + names[1]
+    else
+      name = names.first
+    end
+    name
+  end
 
   private
 
@@ -93,6 +134,14 @@ class User < ApplicationRecord
 
   def valid_email
     self.email = email.to_s.downcase.strip
+  end
+
+  def index_user
+    UserIndexerWorker.perform_async("index",  self.id)
+  end
+
+  def delete_user_index
+    UserIndexerWorker.perform_async("delete", self.id)
   end
 
   def welcome_user_email

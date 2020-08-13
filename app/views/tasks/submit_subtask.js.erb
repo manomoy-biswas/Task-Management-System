@@ -1,0 +1,3 @@
+$('#submit_subtask_<%= @subtask.id %>').html('<span class="green"><i class="btn btn-outline-success btn-sm fa fa-check-circle"></i></span>');
+$("#flash").html('<%= j render "layouts/alert", flash:{success: t("task.submit_subtask.success", subtask: @subtask.name)} %>');
+$(".hide").fadeOut(4000);

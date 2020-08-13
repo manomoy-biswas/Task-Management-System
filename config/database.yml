@@ -1,10 +1,14 @@
 default: &default
   adapter: mysql2
-  encoding: utf8
+  encoding: utf8mb4
+  collation: utf8mb4_bin
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: root
-  password: root
+  password: <%= ENV['DB_PASSWORD'] %>
+  port: <%= ENV['DB_PORT'] %>
+  host: <%= ENV['DB_HOST'] %>
   socket: /var/run/mysqld/mysqld.sock
+
 development:
   <<: *default
   database: Task_Management_System_development
@@ -12,8 +16,7 @@ test:
   <<: *default
   database: Task_Management_System_test
   host: 0.0.0.0
+
 production:
   <<: *default
   database: Task_Management_System_production
-  username: Task_Management_System
-  password: <%= ENV['TASK_MANAGEMENT_SYSTEM_DATABASE_PASSWORD'] %>

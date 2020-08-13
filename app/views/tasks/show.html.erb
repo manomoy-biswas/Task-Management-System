@@ -1,11 +1,11 @@
 <% content_for :title, "View Task" %>
-<div class="row justify-content-center">
+<div class="row align-items-center justify-content-center">
   <div class="col-12 col-xl-10">
     <div class="white-box bg-light">
       <h1 class="text-center"><%= @task.task_name %></h1>
-      <div class="row task-item-row">
+      <div class="row align-items-center task-item-row">
         <div class="col-12 col-sm-4">
-          <div class="row">
+          <div class="row align-items-center">
             <div class="col-6">
               <span class="task-item">Catagory </span>
             </div>
@@ -15,7 +15,7 @@
           </div>
         </div>
         <div class="col-12 col-sm-4">
-          <div class="row">
+          <div class="row align-items-center">
             <div class="col-6 col-md-5">
               <span class="task-item">Priority </span>
             </div>
@@ -25,7 +25,7 @@
           </div>
         </div>
         <div class="col-12 col-sm-4">
-          <div class="row">
+          <div class="row align-items-center">
             <div class="col-6 col-md-5">
               <span class="task-item">Assign Date :</span>
             </div>
@@ -35,7 +35,7 @@
           </div>
         </div>
       </div>
-      <div class="row task-item-row">
+      <div class="row align-items-center task-item-row">
         <div class="col-6 col-sm-4 col-md-2">
           <span class="task-item">Task Name </span>
         </div>
@@ -52,10 +52,11 @@
         </div>
       </div>
       <% if @task.sub_task.present? %>
-        <% @task.sub_task.each do |subtask|%>
-          <div class="row sub-task-row task-item-row">
+        <% i = 0 %>
+        <% @task.sub_task.reverse.each do |subtask|%>
+          <div class="row align-items-center sub-task-row task-item-row">
             <div class="col-12 col-sm-4 col-md-2">
-              <h5 class="red">Sub task <%= @task.sub_task.index(subtask)+1 %> :</h5>
+              <h5 class="red">Sub task <%= i += 1 %> :</h5>
             </div>
             <div class="col-5 col-sm-3 col-md-2">
               <span class="task-item">Subtask Name</span>
@@ -63,15 +64,15 @@
             <div class="col- col-sm-4 col-md-7">
               <p class="subtask-item-details"><%= subtask.name%></p>
             </div>
-            <div class="col-1 col-sm-1 col-md-1 text-right">
-              <% if @task.assign_task_to == current_user.id %>
+            <% if @task.assign_task_to == current_user.id %>
+              <div class="col-1 col-sm-1 col-md-1 text-right" id="submit_subtask_<%=subtask.id%>">
                 <% if subtask.submit %>
                   <span class="green"><i class="btn btn-outline-success btn-sm fa fa-check-circle"></i></span> 
                 <% else %>
-                  <span class="red"><%= link_to  "", submit_subtask_task_path(subtask), class: "btn btn-outline-danger btn-sm fa fa-circle-o" %></span>
+                  <span class="red"><%= link_to  "", submit_subtask_task_path(subtask), class: "btn btn-outline-danger btn-sm fa fa-circle-o", remote: :true %></span>
                 <% end %>
-              <% end %>
-            </div>
+              </div>
+            <% end %>
           </div>
           <div class="row sub-task-row task-item-row">
             <div class="col-12 col-sm-4 col-md-2"></div>
@@ -84,9 +85,9 @@
           </div>
         <% end %>
       <% end %>
-      <div class="row task-item-row">
+      <div class="row align-items-center task-item-row">
         <div class="col-12 col-sm-6">
-          <div class="row">
+          <div class="row align-items-center">
             <div class="col-6 col-md-4">
               <span class="task-item">Submit Date</span>
             </div>
@@ -96,7 +97,7 @@
           </div>
         </div>
         <div class="col-12 col-sm-6">
-          <div class="row">
+          <div class="row align-items-center">
             <div class="col-6 col-md-4">
               <span class="task-item">Status</span>
             </div>
@@ -112,38 +113,33 @@
           </div>
         </div>
       </div>
-      <div class="row task-item-row">
-        <% if @task.assign_task_to != current_user.id %>
-          <div class="col-12 col-sm-6">
-            <div class="row">
-              <div class="col-6 col-md-4">
-                <span class="task-item">Assigned To</span>
-              </div>
-              <div class="col-6 col-md-8 ">
-                <p class="task-item-details"><%= @task.user.name%></p>
-              </div>
+      <div class="row align-items-center task-item-row">
+        <div class="col-12 col-sm-6">
+          <div class="row align-items-center">
+            <div class="col-6 col-md-4">
+              <span class="task-item">Assigned To</span>
+            </div>
+            <div class="col-6 col-md-8 ">
+              <p class="task-item-details"><%= @task.user.name%></p>
             </div>
           </div>
-        <% end %>
+        </div>
         <div class="col-12 col-sm-6">
-          <div class="row">
+          <div class="row align-items-center">
             <div class="col-6 col-md-4">
               <span class="task-item">Assigned By</span>
             </div>
             <div class="col-6 col-md-8">
               <p class="task-item-details">
-              <% unless @task.assign_task_by == current_user.id %>
-                <%= @task.assign_by.name %></p>
-              <% else %>
-                You
-              <% end %>
+                <%= @task.assign_by.name %>
+              </p>
             </div>
           </div>
         </div>
       </div>
-      <div class="row task-item-row">
+      <div class="row align-items-center task-item-row">
         <div class="col-12 col-sm-6">
-          <div class="row">
+          <div class="row align-items-center">
             <div class="col-6 col-md-4">
               <span class="task-item">Download Document</span>
             </div>
@@ -160,7 +156,7 @@
         </div>
         <% if @task.assign_task_to == current_user.id && !@task.submit %>
           <div class="col-12 col-sm-6">
-            <div class="row">
+            <div class="row align-items-center">
               <div class="col-6 col-md-4">
                 <span class="task-item">Submit Task</span>
               </div>
@@ -171,19 +167,19 @@
           </div>
         <% end %>
       </div>
-      <div class="row task-item-row">
+      <div class="row align-items-center task-item-row">
         <div class="col-12 col-sm-6">
-          <div class="row">
+          <div class="row align-items-center">
             <div class="col-6 col-md-4">
               <span class="task-item">Approval Status</span>
             </div>
             <div class="col-6 col-md-8 ">
               <p class="task-item-details">
-                <% if @task.submit && @task.approved  %>
+                <% if @task.approved  %>
                   <span class="green">Approved</span>
                 <% else %>
                   <% unless current_user.hr || @task.assign_task_to == current_user.id %> 
-                    <%= link_to "APPROVE", approve_task_path(@task), class: "btn btn-warning", data: {disable_with: "Approving..."} if @task.submit%>
+                    <%= link_to "APPROVE", approve_task_path(@task), class: "btn btn-warning", data: {disable_with: "Approving..."} if @task.submit %>
                   <% end %>
                 <% end %>
               </p>
@@ -192,22 +188,15 @@
         </div>
         <div class="col-12 col-sm-6"></div>
       </div>
-      <div class="row justify-content-center task-item-row">
-        <% if !current_user.hr %>
+      <div class="row align-items-center justify-content-center task-item-row">
+        <% if current_user.admin && @task.user != current_user || (@task.assign_by == current_user && !@task.approved) %>
           <div class="col text-center">
-            <%= link_to " Create", new_task_path, class: "fa fa-pencil btn btn-outline-primary btn-lg", data: {turbolinks: false, disable_with: "creating..."} %>
+            <%= link_to " Edit", edit_task_path(@task), class: "fa fa-edit btn btn-outline-warning btn-lg",data: { disable_with: "wait.." } %>
           </div>
-          <div class="col text-center">
-            <% if (@task.assign_task_by == current_user.id && !@task.approved) || current_user.admin %>
-              <%= link_to " Edit", edit_task_path(@task), class: "fa fa-edit btn btn-outline-warning btn-lg",data: { disable_with: "wait.." } %>
-            <% end %>
+        <% elsif current_user.hr && @task.notify_hr %>
+          <div class="col text-center" >
+            <%= link_to  " Print", print_task_details_tasks_path(task_id: @task.id, format: "pdf"), class: "fa fa-print btn btn-outline-success btn-lg", target: "_blank" %>
           </div>
-        <% else %>
-          <% if @task.submit %>
-            <div class="col text-center" >
-              <%= link_to  " Print", print_task_details_tasks_path(task_id: @task.id, format: "pdf"), class: "fa fa-print btn btn-outline-success btn-lg", target: "_blank" %>
-            </div>
-          <% end %>
         <% end %>
       </div>
     </div>

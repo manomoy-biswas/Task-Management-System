@@ -8,7 +8,7 @@ $(document).ready(function() {
 
   $('#datetimepicker1').datetimepicker({
     sideBySide: true,
-    format: "DD/MM/YYYY LT",
+    format: "DD MMM, YYYY LT",
     icons: {
       up: "fa fa-angle-up",
       down: "fa fa-angle-down",

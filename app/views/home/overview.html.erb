@@ -35,7 +35,7 @@
       <div class="white-box">
         <h3 class="box-title">TASKS</h3>
         <div class="div-inline">
-          <div class="overview-icon"><i class="fa fa-newspaper-o text-primary"></i></div>
+          <div class="overview-icon"><i class="fa fa-tasks text-primary"></i></div>
           <div class="count text-right">
             <span class="counter text-primary"><%= tasks_count %></span>
           </div>
@@ -93,21 +93,23 @@
       <div class="task-center p-t-10">
         <% if @tasks.present? %>
           <% @tasks.each do |task| %>
-            <div class="task-body">
-              <div class="user-img">
-                <% if task.assign_by.avater.present? %>
-                  <%= image_tag task.assign_by.avater.url(:thumb), alt: "image_#{task.id}", class: "img-circle" %>
-                <% else %>
-                  <%= image_tag "blank-profile-picture-male.png", alt: "image_#{task.id}", class: "img-circle" %>
-                <% end %>
-              </div>
-              <div class="task-contnet">
-                <h5><%= link_to  "#{task.task_name}", task_path(task.id) %></h5>
-                <span class="time">By <%=task.assign_by.name %>, <%= DateTime.parse(task.created_at.to_s).strftime("%I:%M %p %d %b,%Y") %></span>
-                <br />
-                <span class="task-desc"><%= task.description %></span>
-              </div>
-            </div>  
+            <%= link_to  task_path(task.id) do %>
+              <div class="task-body">
+                <div class="user-img">
+                  <% if task.assign_by.avater.present? %>
+                    <%= image_tag task.assign_by.avater.url(:thumb), alt: "image_#{task.id}", class: "img-circle" %>
+                  <% else %>
+                    <%= image_tag "blank-profile-picture-male.png", alt: "image_#{task.id}", class: "img-circle" %>
+                  <% end %>
+                </div>
+                <div class="task-contnet">
+                  <h5><%= task.task_name %></h5>
+                  <span class="time">By <%=task.assign_by.name %>, <%= DateTime.parse(task.created_at.to_s).strftime("%I:%M %p %d %b,%Y") %></span>
+                  <br />
+                  <span class="task-desc"><%= task.description %></span>
+                </div>
+              </div> 
+            <% end %> 
           <% end %>
         <% else %>
           <div class="task-body vertical-center">
@@ -123,21 +125,23 @@
       <div class="task-center p-t-10">
         <% if @approved_tasks.present? %>
           <% @approved_tasks.each do |task| %>
-            <div class="task-body">
-              <div class="user-img"> 
-                <% if task.assign_by.avater.present? %>
-                  <%= image_tag task.assign_by.avater.url(:thumb), class: "img-circle", alt: "image_#{task.id}" %>
-                <% else %>
-                  <%= image_tag "blank-profile-picture-male.png", class: "img-circle", alt: "image_#{task.id}" %>
-                <% end %>
+            <%= link_to  task_path(task.id) do %>
+              <div class="task-body">
+                <div class="user-img"> 
+                  <% if task.assign_by.avater.present? %>
+                    <%= image_tag task.assign_by.avater.url(:thumb), class: "img-circle", alt: "image_#{task.id}" %>
+                  <% else %>
+                    <%= image_tag "blank-profile-picture-male.png", class: "img-circle", alt: "image_#{task.id}" %>
+                  <% end %>
+                </div>
+                <div class="task-contnet">
+                  <h5><%= task.task_name %></h5>
+                  <span class="time">By <%= task.assign_by.name %>, <%= DateTime.parse(task.created_at.to_s).strftime("%I:%M %p %d %b,%Y") %></span>
+                  <br />
+                  <span class="task-desc"><%= task.description %></span>
+                </div>
               </div>
-              <div class="task-contnet">
-                <h5><%= task.task_name %></h5>
-                <span class="time">By <%= task.assign_by.name %>, <%= DateTime.parse(task.created_at.to_s).strftime("%I:%M %p %d %b,%Y") %></span>
-                <br />
-                <span class="task-desc"><%= task.description %></span>
-              </div>
-            </div>
+            <% end %>
           <% end %>
         <% else %>
           <div class="task-body vertical-center">

@@ -1,0 +1,16 @@
+<h5 class="card-title">Task Management System</h5>
+<hr>
+<p class="card-text">
+  <%= @greeting %>
+</p>
+<p class="card-text">
+  One task is approved by <%= User.find(@task.approved_by).name %>. Please do the necessary action to keep recod.
+</p>
+<br>
+<p>For more details visit<%= link_to "here", @url %>
+<hr>
+<p> See you online,</p>
+<p>Task Management System Team</p>
+<p class="red">
+  Note: This is a auto generated email. Please do not reply to this email.
+</p>

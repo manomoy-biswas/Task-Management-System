@@ -1,0 +1,28 @@
+<% content_for :title, "Invite Admin" %>
+<%= form_for @invite do |form| %>
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-9 col-xl-5">
+      <div class="white-box bg-light">
+        <h1 class="title text-center">Invite Admin</h1>
+        <br />
+        <div class="form-group row">
+          <%= form.label :name, "Name", class:"col-sm-2 col-form-label font-weight-bold" %>
+          <div class="col-sm-10">
+            <%= form.text_field :name, class: "form-control", autocomplete: "false", placeholder: "Enter name", required: true %>
+          </div>
+        </div>
+        <div class="form-group row">
+          <%= form.label :email, "Email", class:"col-sm-2 col-form-label font-weight-bold" %>
+          <div class="col-sm-10">
+            <%= form.email_field :email, class: "form-control", autocomplete: "false", placeholder: "Enter email id", required: true %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 text-center">
+            <%= form.submit "INVITE", class:"btn btn-primary btn-lg" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -1,5 +1,5 @@
 <div class="row justify-content-center">
-  <div class="col-12 col-md-11 col-lg-10 col-xl-9">
+  <div class="col-12 col-md-10 col-lg-8 col-xl-5">
     <div class="white-box bg-light">
       <% unless["edit"].include?(params[:action])%>
         <h1 class="title text-center">Create Catagory</h1>
@@ -13,6 +13,7 @@
             <%= form.text_field :name, for: "category name", class: "form-control", autofocus: true, autocomplete: "email", placeholder: "Enter category name", required: true %>
           </div>
         </div>
+        <br />
         <div class="row">
           <div class="col-6">
             <strong><%= link_to "BACK", categories_path, class: "btn btn-danger btn-lg btn-block my-2 my-sm-0" %></strong>

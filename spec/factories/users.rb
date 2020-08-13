@@ -7,6 +7,7 @@ FactoryBot.define do
     password_digest {"admin"}
     admin {true}
     hr {false}
+    auth_token {"wqeerfdt123"}
   end
 
   factory :hr, class: User do

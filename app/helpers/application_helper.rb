@@ -27,7 +27,11 @@ module ApplicationHelper
   end
 
   def approved_task_count
-    Task.where(approved: true).count
+    if current_user.admin
+      Task.where(approved: true).count
+    else
+      current_user.tasks.where(approved: true).count
+    end
   end
 
   def set_task_count

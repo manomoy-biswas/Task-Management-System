@@ -1,28 +1,30 @@
-<% content_for :title, "Registered Users" %>
+<% content_for :title, "Users" %>
 <div class="row justify-content-center">
   <div class="col-12 col-md-11 col-lg-10 col-xl-9">
     <div class="white-box bg-light">
       <div class="row justify-content-between">
-        <div class="col-4 col-sm-4 text-left">
+        <div class="col-4 col-sm-4 col-md-3 col-lg-3 col-xl-3 text-left">
           <% if current_user.admin %>
             <%= link_to  "Add User", new_user_path, class: "btn btn-primary btn-lg" %>
           <% elsif current_user.hr %>
             <%= link_to  "Print", print_user_list_users_path(format: "pdf"), target: "_blank", class: "btn btn-primary btn-lg" %>
           <% end %>
         </div>
-        <div class="col-8 col-sm-4 text-right">
+        <div class="col-8 col-sm-6 col-md-4 col-lg-3  col-xl-3 text-left">
           <%=form_tag(users_path, action:"index", method: :get) do %>
             <div class="form-group row">
               <% priorities=["Admin", "HR", "Regular"] if current_user.admin %>
               <% priorities=["HR", "Employee"] if current_user.hr %>
               <span class="fa fa-filter col-2 text-right"></span>
-              <div class="col-7 text-right">
-                <%= select_tag(:role, options_for_select(priorities, params[:role]), prompt:"All", class:"form-control text-center") %>
-              </div>
-              <div class="col-3">
-                <%= submit_tag "Filter", class:"btn btn-dark" %>
+              <div class="col-10 col-xl-8 text-right">
+                <%= select_tag(:role, options_for_select(priorities, params[:role]), prompt:"All", class:"form-control custom-select select-center", id: "filter_input") %>
               </div>
             </div>  
+          <% end %>
+        </div>
+        <div class="col-12 col-md-5 col-xl-4">
+          <%=form_tag users_path, action: "index", method: :get do %>
+            <%= render "layouts/search" %>
           <% end %>
         </div>
       </div>
@@ -71,16 +73,12 @@
                     <%end%>
                   </td>
                   <% if current_user.admin %>
-                    <% unless user.admin %>
-                      <td class="text-center align-middle">
-                        <%= link_to "", edit_user_path(user), class:"fa fa-edit"%>
-                      </td>
-                      <td class="text-center align-middle">
-                        <%= link_to "", user_path(user), data: {confirm: "Are you sure?" }, method: :delete, class:"fa fa-trash", data: { disable_with: "..." }%>
-                      </td>
-                    <% else %>
-                      <td class="text-center align-middle" colspan="2"></td>
-                    <% end %>
+                    <td class="text-center align-middle">
+                      <%= link_to "", edit_user_path(user), class:"fa fa-edit"%>
+                    </td>
+                    <td class="text-center align-middle">
+                      <%= link_to "", user_path(user), data: {confirm: "Are you sure?" }, method: :delete, class:"fa fa-trash", data: { disable_with: "..." }%>
+                    </td>
                   <% end %>
                 </tr>
               <% end %>
