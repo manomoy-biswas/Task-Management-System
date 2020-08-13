@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe UsersHelper, type: :helper do
+RSpec.describe SessionsHelper, type: :helper do
   let (:user1) {create(:admin)}
   describe "#login" do
     context "when login a user" do
