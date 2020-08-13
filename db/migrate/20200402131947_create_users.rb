@@ -13,7 +13,7 @@ class CreateUsers < ActiveRecord::Migration[6.0]
       t.datetime   :password_reset_sent_at
       t.timestamps
     end
-    add_index :users, :email, unique: true, length: 191
-    add_index :users, :phone, unique: true, length: 191
+    add_index :users, :email, unique: true
+    add_index :users, :phone, unique: true
   end
 end
