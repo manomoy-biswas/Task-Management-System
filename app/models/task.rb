@@ -47,7 +47,7 @@ class Task < ApplicationRecord
   
   scope :notified_tasks_filter, ->(filter=nil) { where(priority: filter, approved: true, notify_hr: true).includes(:user, :assign_by, :category) }
   
-  scope :all_task_filter, ->(filter=nil, user_id=nil) { where(priority: filter, approved: false).where.not(assign_task_to: user_id).includes(:user, :assign_by, :category) }
+  scope :all_task_filter, ->(filter=nil, user_id=nil) { where(priority: filter).where.not(assign_task_to: user_id).includes(:user, :assign_by, :category) }
   
   scope :my_task_filter, ->(filter=nil, user_id) { where(priority: filter , approved: false, assign_task_to: user_id ).includes(:assign_by, :category) }
   
@@ -87,7 +87,7 @@ class Task < ApplicationRecord
   def self.all_task_search(query)
     __elasticsearch__.search(query:{
       bool: {  
-        must: [{
+        must: {
           multi_match: {
             query: query,
             type: "best_fields",
@@ -95,11 +95,6 @@ class Task < ApplicationRecord
             operator: "and"
           }
         },
-        {
-          match: {
-            approved: false
-          }
-        }],
       }
     })
   end
@@ -230,7 +225,7 @@ class Task < ApplicationRecord
       end    
     else
       if current_user.admin
-        self.where(approved: false).where.not(assign_task_to: current_user.id).includes(:user, :assign_by, :category).order("created_at DESC")
+        self.all.includes(:user, :assign_by, :category).order("created_at DESC")
       else
         current_user.tasks.where(approved: false).includes(:assign_by, :category).order("created_at DESC")
       end

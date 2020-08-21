@@ -42,7 +42,7 @@ class TasksController < ApplicationController
 
   def create
     @task = Task.new(task_params)
-    return redirect_to overview_path if @task.user == current_user || (current_user.hr && !@task.user.hr) || ((!current_user.admin && !current_user.hr) && (@task.user.hr || @task.user.admin)) 
+    return redirect_to overview_path if @task.user == current_user || (current_user.hr && @task.user.admin) || ((!current_user.admin && !current_user.hr) && (@task.user.hr || @task.user.admin)) 
     
     @task.assign_task_by = current_user.id
     @task.recurring_task = true unless task_params[:repeat] == "One_Time"

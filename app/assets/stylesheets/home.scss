@@ -10,10 +10,10 @@
 }
 .login-wrapper {
   padding-top: 50px;
-  height: calc(100vh - 165px - 60px - 45px);
+  min-height: calc(100vh - 165px - 60px - 45px);
 }
 .google-icon{
-	width: 40px;
+	width: 35px;
 	background-color: #ffffff;
 	border-radius: 50px;
 }
@@ -21,7 +21,7 @@
   border-radius: 50px;
 }
 .signin-btn span{
-  font-size: 18px;
+  font-size: 16px;
   color: #ffffff;
   font-weight: bolder;
 }
@@ -167,9 +167,6 @@
 	.banner-text h1{
 		font-size: 30px;
 	}
-	.google-icon{
-		width: 52px;
-  }
   .page-title{
     font-size: 26px;
     font-weight: bold;
@@ -206,10 +203,13 @@
 		font-size: 36px;
   }
   .login-wrapper {
-    height: calc(100vh - 335px - 60px - 45px);
+    min-height: calc(100vh - 335px - 60px - 45px);
+  }
+  .google-icon{
+		width: 45px;
   }
   .signin-btn span{
-    font-size: 24px;
+    font-size: 22px;
   }
 }
 @media screen and (min-width: 992px){
@@ -223,7 +223,13 @@
 		font-size: 42px;
   }
   .login-wrapper {
-    height: calc(100vh - 435px - 60px - 45px);
+    min-height: calc(100vh - 435px - 60px - 45px);
+  }
+  .google-icon{
+		width: 50px;
+  }
+  .signin-btn span{
+    font-size: 24px;
   }
 }
 @media screen and (min-width: 1370px){
@@ -237,6 +243,6 @@
 		font-size: 48px;
   }
   .login-wrapper {
-    height: calc(100vh - 535px - 60px - 45px);
+    min-height: calc(100vh - 535px - 60px - 45px);
   }
 }

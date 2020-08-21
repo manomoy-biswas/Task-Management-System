@@ -70,7 +70,7 @@
         </li>
         <li class="nav-item">
           <% if current_user.hr %>
-            <a class="nav-link" href="<%= approved_task_tasks_path %>"><strong> Approved Task</strong></a>
+            <a class="nav-link" href="<%= notified_task_tasks_path %>"><strong> Notified Task</strong></a>
           <% else %>
             <a class="nav-link" href="<%= tasks_path %>">
               <strong>

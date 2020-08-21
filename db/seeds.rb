@@ -1,16 +1,16 @@
-User.__elasticsearch__.create_index! force: true
+# User.__elasticsearch__.create_index! force: true
 
-User.new(id: 1, name: "Admin", email: "admin@gmail.com", phone:"7123456789", dob: "01-01-2000", password: "admin", password_confirmation: "admin", admin: true, hr: false).save(validate: false)
+# User.new(id: 1, name: "Admin", email: "admin@gmail.com", phone:"7123456789", dob: "01-01-2000", password: "admin", password_confirmation: "admin", admin: true, hr: false).save(validate: false)
 # User.new(id: 2, name: "Arnab Roy", email: "manomoybiswas95@gmail.com", phone: "7894561230", dob: "01-01-1996").save(validate: false)
 # User.new(id: 3, name: "Manomoy Biswas", email: "manomoy26@gmail.com", phone: "7894561231", dob: "10-09-1995").save(validate: false)
 # User.new(id: 4, name: Faker::Name.name, email: "manomoybiswas1414@gmail.com", phone: "7894561232", dob: "10-09-1995").save(validate: false)
 # User.new(id: 5, name: Faker::Name.name, email: "biswasmanomoy@gmail.com", phone: "7894561233", dob: "10-09-2000",admin: false, hr: true).save(validate: false)
 
-%w(Birthday Interview Training Exams Campus Event Hiring).each do |category|
-  Category.new(name: category).save
-end
+# %w(Birthday Interview Training Exams Campus Event Hiring).each do |category|
+#   Category.new(name: category).save
+# end
 
-Task.__elasticsearch__.create_index! force: true
+# Task.__elasticsearch__.create_index! force: true
 
 # 50.times do
 #   repeat_interval =  ["One_Time", "Daily", "Weekly", "Monthly", "Quarterly", "Half_yearly", "Yearly"].sample
@@ -41,5 +41,5 @@ Task.__elasticsearch__.create_index! force: true
 #   end
 # end
 
-Task.import
-User.import
+# Task.import
+# User.import

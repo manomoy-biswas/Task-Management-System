@@ -12,7 +12,7 @@ module TasksHelper
     if current_user.admin
       User.all_user_except(current_user.id)
     elsif current_user.hr
-      User.all_hr_except(current_user.id)
+      User.all_regular_and_hr_except(current_user.id)
     else
       User.all_employee_except(current_user.id)
     end
