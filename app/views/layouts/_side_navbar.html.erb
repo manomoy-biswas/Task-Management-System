@@ -16,7 +16,7 @@
             <div class="user-details ">
               <h5 class="user-name text-center"><%= current_user.name %></h5>
               <span class="user-email"><%= current_user.email %></span>
-              <h6 class="user-role">(<% if current_user.admin %>Admin<% elsif current_user.hr %>HR<% else %>Regular User<% end %>)</h6>
+              <h6 class="user-role">(<% if current_user.admin %>Admin<% elsif current_user.hr %>HR<% else %>Regular<% end %>)</h6>
             </div>
           </div>
         </div>
