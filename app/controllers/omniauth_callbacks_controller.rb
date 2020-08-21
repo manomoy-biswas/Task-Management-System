@@ -4,12 +4,10 @@ class OmniauthCallbacksController < ApplicationController
   def google_oauth2
     begin
       @user = User.from_omniauth(request.env["omniauth.auth"])
-      if @user.persisted?
-        unless @user.admin
-          User.generate_auth_token(:auth_token, @user)
-          login_with_remember_me(@user)
-          redirect_to overview_path, flash: { success: t("omniauth_callbacks.success") }
-        end
+      if @user.persisted? && !@user.admin
+        User.generate_auth_token(:auth_token, @user)
+        login_with_remember_me(@user)
+        redirect_to overview_path, flash: { success: t("omniauth_callbacks.success") }
       else
         redirect_to root_path, flash: { danger: t("omniauth_callbacks.failed") }
       end
