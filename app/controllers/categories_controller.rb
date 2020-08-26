@@ -10,8 +10,11 @@ class CategoriesController < ApplicationController
   end
   
   def destroy
-    return redirect_to categories_path, flash: { success: t("category.destroy_success") } if @category.destroy
-    flash[:danger]=I18n.t "category.faild"
+    begin
+      return redirect_to categories_path, flash: { success: t("category.destroy_success") } if @category.destroy
+    rescue
+      redirect_to categories_path, flash: { danger: "Can not delete this Categoy. One or more task is associated with this category." }
+    end
   end
   
   def edit

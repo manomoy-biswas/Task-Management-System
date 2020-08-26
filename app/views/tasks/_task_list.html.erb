@@ -45,8 +45,18 @@
           <% else %>
             red
           <% end %>">
-          <td><%= i=i.to_i + 1 %></td>
-          <td class= "text-center"><%= task.task_name%></td>
+          <td><%= i=i.to_i + 1 %></td>          
+          <td class= "text-center">
+            <%= link_to task.task_name, task_path(task), class: "#{
+              if task.approved 
+                "green" 
+              elsif task.submit && !task.approved 
+                "yellow" 
+              else 
+                "red" 
+              end 
+            }" %>
+          </td>
           <td class= "text-center"><%= task.category.name%></td>
           <td id="priority" class= "text-center"><%= task.priority%></td>
           <td class= "text-center"><%= DateTime.parse(task.submit_date.to_s).strftime("%d-%m-%Y - %I:%M %p") %></td>

@@ -25,6 +25,7 @@ Rails.application.routes.draw do
       get :notify_hr
     end
     collection do
+      post :import
       get :admins_task
       get :new_subtask
       get :approved_task

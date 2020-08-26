@@ -47,7 +47,7 @@ $(document).ready(function(){
     $('#update_avater').submit(); 
   });
 
-  $('#filter_input').on('change', function() { 
+  $('#filter_input, #sort_input').on('change', function() { 
     $(this.form).submit(); 
   });
   

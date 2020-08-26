@@ -5,7 +5,7 @@ class User < ApplicationRecord
 
   has_secure_password(validations: false) 
 
-  has_many :tasks, foreign_key: "assign_task_to", dependent: :destroy
+  has_many :tasks, foreign_key: "assign_task_to"
   has_many :notifications, foreign_key: "user_id"
   
   mount_uploader :avater, AvaterUploader

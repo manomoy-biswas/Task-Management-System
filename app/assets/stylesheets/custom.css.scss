@@ -28,6 +28,7 @@ ul{
 }
 a,
 a:hover{
+  color: #ffffff;
   text-decoration: none;
 }
 a{
@@ -212,6 +213,10 @@ padding: 0;
 .fa-check,
 .fa-edit{
   font-size: 30px;
+}
+.fa-sort{
+  font-size: 24px;
+  padding-top: 10px;
 }
 .fa-eye:hover,
 .fa-edit:hover,

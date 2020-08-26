@@ -31,6 +31,10 @@ class Task < ApplicationRecord
   validates_uniqueness_of :task_name, case_sensitive: false
   validates_presence_of :task_name, :priority, :repeat, :assign_task_to, :task_category
 
+  scope :ordered_by_field, ->(field, values) {
+    order(sanitize_sql_for_order(["field(#{field}, ?)", values]))
+  }
+
   scope :my_assigned_tasks, ->(user_id=nil) { where(assign_task_by: user_id).includes(:user, :category) }
   
   scope :my_assigned_tasks_filter, ->(filter=nil,user_id=nil) { where(priority: filter, assign_task_by: user_id).includes(:user, :category) }
@@ -208,7 +212,7 @@ class Task < ApplicationRecord
     })
   end
 
-  def self.fetch_tasks(filter = nil, query = nil, current_user_id)
+  def self.fetch_tasks(filter = nil, sort = nil, query = nil, current_user_id)
     current_user = User.find(current_user_id)
     if query.present?
       if current_user.admin
@@ -216,13 +220,46 @@ class Task < ApplicationRecord
       else
         tasks = self.search(query, current_user.id).map(&:id)
       end
-      return self.where(id: tasks).includes(:user, :category, :assign_by).order("id DESC")
     elsif filter.present?
       if current_user.admin
         self.all_task_filter(filter).order("created_at DESC")
       else
         self.my_task_filter(filter, current_user.id).order("created_at DESC")
-      end    
+      end 
+    elsif sort.present?
+      if current_user.admin
+        if sort == "Task name Ascending"
+          return self.all.includes(:user, :category, :assign_by).order("task_name ASC")
+        elsif sort == "Task name Descending"
+          return self.all.includes(:user, :category, :assign_by).order("task_name DESC")
+        elsif sort == "Deadline Ascending"
+          return self.all.includes(:user, :category, :assign_by).order("submit_date ASC")
+        elsif sort == "Deadline Descending"
+          return self.all.includes(:user, :category, :assign_by).order("submit_date DESC")
+        elsif sort == "Priority Low to High"
+          return self.all.includes(:user, :category, :assign_by).ordered_by_field(:priority, ["Low", "Medium", "High"])
+        elsif sort == "Priority High to Low"
+          return self.all.includes(:user, :category, :assign_by).ordered_by_field(:priority, ["High", "Medium", "Low"])
+        else
+          return self.all.includes(:user, :assign_by, :category).order("created_at DESC")
+        end
+      else
+        if sort == "Task name Ascending"
+          return current_user.tasks.where(approved: false).includes(:assign_by, :category).order("task_name ASC")
+        elsif sort == "Task name Descending"
+          return current_user.tasks.where(approved: false).includes(:assign_by, :category).order("task_name DESC")
+        elsif sort == "Deadline Ascending"
+          return current_user.tasks.where(approved: false).includes(:assign_by, :category).order("submit_date ASC")
+        elsif sort == "Deadline Descending"
+          return current_user.tasks.where(approved: false).includes(:assign_by, :category).order("submit_date DESC")
+        elsif sort == "Priority Low to High"
+          return current_user.tasks.where(approved: false).includes(:assign_by, :category).ordered_by_field(:priority, ["Low", "Medium", "High"])
+        elsif sort == "Priority High to Low"
+          return current_user.tasks.where(approved: false).includes(:assign_by, :category).ordered_by_field(:priority, ["High", "Medium", "Low"])
+        else
+          return current_user.tasks.where(approved: false).includes(:assign_by, :category).order("created_at DESC")
+        end
+      end
     else
       if current_user.admin
         self.all.includes(:user, :assign_by, :category).order("created_at DESC")
@@ -232,19 +269,35 @@ class Task < ApplicationRecord
     end
   end
 
-  def self.fetch_admins_task(filter = nil, query = nil, current_user_id)
+  def self.fetch_admins_task(filter = nil, sort = nil, query = nil, current_user_id)
     current_user = User.find(current_user_id)
     if query.present?
       tasks = self.search(query, current_user.id).map(&:id)
       return self.where(id: tasks).includes(:user, :category, :assign_by).order("id DESC")
     elsif filter.present?
       self.admins_task_filter(filter, current_user.id).order("created_at DESC")
+    elsif sort.present?
+      if sort == "Task name Ascending"
+        return current_user.tasks.includes(:assign_by, :category).order("task_name ASC")
+      elsif sort == "Task name Descending"
+        return current_user.tasks.includes(:assign_by, :category).order("task_name DESC")
+      elsif sort == "Deadline Ascending"
+        return current_user.tasks.includes(:assign_by, :category).order("submit_date ASC")
+      elsif sort == "Deadline Descending"
+        return current_user.tasks.includes(:assign_by, :category).order("submit_date DESC")
+      elsif sort == "Priority Low to High"
+        return current_user.tasks.includes(:assign_by, :category).ordered_by_field(:priority, ["Low", "Medium", "High"])
+      elsif sort == "Priority High to Low"
+        return current_user.tasks.includes(:assign_by, :category).ordered_by_field(:priority, ["High", "Medium", "Low"])
+      else
+        return current_user.tasks.includes(:assign_by, :category).order("created_at DESC")
+      end
     else
       current_user.tasks.includes(:assign_by, :category).order("created_at DESC")
     end
   end
 
-  def self.fetch_approved_tasks(filter = nil, query = nil, current_user_id)
+  def self.fetch_approved_tasks(filter = nil, sort = nil, query = nil, current_user_id)
     current_user = User.find(current_user_id)
     if query.present?
       if current_user.admin
@@ -259,6 +312,40 @@ class Task < ApplicationRecord
       else
         self.users_approved_tasks_filter(filter, current_user.id).order("created_at DESC")
       end
+    elsif sort.present?
+      if current_user.admin
+        if sort == "Task name Ascending"
+          return self.approved_tasks.order("task_name ASC")
+        elsif sort == "Task name Descending"
+          return self.approved_tasks.order("task_name DESC")
+        elsif sort == "Deadline Ascending"
+          return self.approved_tasks.order("submit_date ASC")
+        elsif sort == "Deadline Descending"
+          return self.approved_tasks.order("submit_date DESC")
+        elsif sort == "Priority Low to High"
+          return self.approved_tasks.ordered_by_field(:priority, ["Low", "Medium", "High"])
+        elsif sort == "Priority High to Low"
+          return self.approved_tasks.ordered_by_field(:priority, ["High", "Medium", "Low"])
+        else
+          return self.approved_tasks.order("created_at DESC")
+        end
+      else
+        if sort == "Task name Ascending"
+          return self.users_approved_tasks(current_user.id).order("task_name ASC")
+        elsif sort == "Task name Descending"
+          return self.users_approved_tasks(current_user.id).order("task_name DESC")
+        elsif sort == "Deadline Ascending"
+          return self.users_approved_tasks(current_user.id).order("submit_date ASC")
+        elsif sort == "Deadline Descending"
+          return self.users_approved_tasks(current_user.id).order("submit_date DESC")
+        elsif sort == "Priority Low to High"
+          return self.users_approved_tasks(current_user.id).ordered_by_field(:priority, ["Low", "Medium", "High"])
+        elsif sort == "Priority High to Low"
+          return self.users_approved_tasks(current_user.id).ordered_by_field(:priority, ["High", "Medium", "Low"])
+        else
+          return self.users_approved_tasks(current_user.id).order("created_at DESC")
+        end
+      end
     else
       if current_user.admin
         self.approved_tasks.order("created_at DESC")
@@ -268,13 +355,29 @@ class Task < ApplicationRecord
     end
   end
 
-  def self.fetch_user_assigned_tasks(filter = nil, query = nil, current_user_id)
+  def self.fetch_user_assigned_tasks(filter = nil, sort= nil, query = nil, current_user_id)
     current_user = User.find(current_user_id)
     if query.present?
       tasks = self.user_assigned_tasks_search(query, current_user.id).map(&:id)
       self.where(id: tasks).includes(:user, :category, :assign_by).order("id DESC")
     elsif filter.present?
       self.my_assigned_tasks_filter(filter, current_user.id).order("created_at DESC")
+    elsif sort.present?
+      if sort == "Task name Ascending"
+        return self.my_assigned_tasks(current_user.id).order("task_name ASC")
+      elsif sort == "Task name Descending"
+        return self.my_assigned_tasks(current_user.id).order("task_name DESC")
+      elsif sort == "Deadline Ascending"
+        return self.my_assigned_tasks(current_user.id).order("submit_date ASC")
+      elsif sort == "Deadline Descending"
+        return self.my_assigned_tasks(current_user.id).order("submit_date DESC")
+      elsif sort == "Priority Low to High"
+        return self.my_assigned_tasks(current_user.id).ordered_by_field(:priority, ["Low", "Medium", "High"])
+      elsif sort == "Priority High to Low"
+        return self.my_assigned_tasks(current_user.id).ordered_by_field(:priority, ["High", "Medium", "Low"])
+      else
+        return self.my_assigned_tasks(current_user.id).order("created_at DESC")
+      end
     else
       self.my_assigned_tasks(current_user.id).order("created_at DESC")
     end  
@@ -286,6 +389,22 @@ class Task < ApplicationRecord
       self.where(id: tasks).includes(:user, :category, :assign_by).order("updated_at DESC")
     elsif filter.present?
       self.notified_tasks_filter(filter).order("created_at DESC")
+    elsif sort.present?
+      if sort == "Task name Ascending"
+        return self.notified_tasks.order("task_name ASC")
+      elsif sort == "Task name Descending"
+        return self.notified_tasks.order("task_name DESC")
+      elsif sort == "Deadline Ascending"
+        return self.notified_tasks.order("submit_date ASC")
+      elsif sort == "Deadline Descending"
+        return self.notified_tasks.order("submit_date DESC")
+      elsif sort == "Priority Low to High"
+        return self.notified_tasks.order("submit_date ASC")
+      elsif sort == "Priority High to Low"
+        return self.notified_tasks.ordered_by_field(:priority, ["High", "Medium", "Low"])
+      else
+        return self.notified_tasks.order("created_at DESC")
+      end
     else
       self.notified_tasks.order("created_at DESC")
     end  
@@ -297,6 +416,22 @@ class Task < ApplicationRecord
     end
   end
 
+  def self.to_csv(fields = column_names, options={})
+    CSV.generate(options) do |csv|
+      csv << fields
+      all.each do |task|
+        csv << task.attributes.values_at(*fields)
+      end
+    end
+  end
+
+  def self.import(file)
+    CSV.foreach(file.path, headers: true) do |row|
+      task_hash = row.to_hash
+      task = find_or_create_by!(task_name: task_hash['task_name'])
+      task.update_attributes(task_hash)
+    end
+  end
   private
 
   def squeeze_task_name

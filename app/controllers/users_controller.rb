@@ -17,8 +17,11 @@ class UsersController < ApplicationController
   
   def destroy
     return unless current_user.admin
-    return redirect_to users_path, flash: {success: t("user.destroy_success")} if @user.destroy
-    redirect_to users_path, flash: {success: t("user.failed")}
+    begin
+      return redirect_to users_path, flash: {success: t("user.destroy_success")} if @user.destroy
+    rescue
+      redirect_to users_path, flash: { danger: "Can not delete this user. One or more task is associated with this user." }
+    end
   end
 
   def edit

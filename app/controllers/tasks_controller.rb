@@ -8,7 +8,7 @@ class TasksController < ApplicationController
   before_action :redirect_path, only: [:new, :edit, :show]
   
   def admins_task
-    @tasks = Task.fetch_admins_task(params[:priority], params[:query], current_user.id)
+    @tasks = Task.fetch_admins_task(params[:priority], params[:sort], params[:query], current_user.id)
   end
 
   def approve
@@ -33,11 +33,11 @@ class TasksController < ApplicationController
   end
   
   def approved_task
-    @tasks = Task.fetch_approved_tasks(params[:priority], params[:query],current_user.id)
+    @tasks = Task.fetch_approved_tasks(params[:priority], params[:sort], params[:query],current_user.id)
   end  
   
   def user_assigned_task
-    @tasks = Task.fetch_user_assigned_tasks(params[:priority], params[:query], current_user.id)      
+    @tasks = Task.fetch_user_assigned_tasks(params[:priority], params[:sort], params[:query], current_user.id)      
   end
 
   def create
@@ -113,8 +113,26 @@ class TasksController < ApplicationController
     redirect_to overview_path unless @task.assign_task_by == current_user.id || current_user.admin
   end
 
+  def export
+  end
+
+  def import
+    Task.import(params[:file])
+    redirect_to request.referrer, flash: {success: "Task Imported Successfully"}
+  end
+
   def index
-    @tasks =  Task.fetch_tasks(params[:priority], params[:query], current_user.id)
+    @tasks =  Task.fetch_tasks(params[:priority], params[:sort], params[:query], current_user.id)
+    respond_to do |format|
+      format.html
+      format.csv { send_data @tasks
+                    .to_csv(['task_category',
+                    'task_name', 'description',
+                    'priority', 'assign_task_to',
+                    'assign_task_by', 'priority',
+                    'repeat', 'submit_date', 'submit', 'approved', 'approved_by', 'recurring_task', 'notify_hr'])
+                 }
+      end
   end            
       
   def new
@@ -123,7 +141,7 @@ class TasksController < ApplicationController
 
   def notified_task
     return redirect_to overview_path, flash: { danger: "Yoou don't have assess to this page" } unless current_user.admin || current_user.hr
-    @tasks = Task.fetch_notified_tasks(params[:priority], params[:query])
+    @tasks = Task.fetch_notified_tasks(params[:priority], params[:sort], params[:query])
   end
 
   def notify_hr

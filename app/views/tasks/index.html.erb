@@ -4,7 +4,7 @@
     <div class="white-box bg-light">
       <div class="task-list">
         <div class="row justify-content-between">
-          <div class="col-12 col-sm-5 col-md-4 text-left">
+          <div class="col-12 col-sm-6 col-md-3 text-left">
             <%=form_tag(tasks_path, action:"index", method: :get) do %>
               <div class="form-group row">
                 <% priorities=["Low", "Medium", "High"]%>
@@ -15,12 +15,33 @@
               </div>  
             <% end %>
           </div>
-          <div class="col-12 col-sm-7 col-md-5 col-xl-4">
+          <div class="col-12 col-sm-6 col-md-4">
+            <%=form_tag(tasks_path, action:"index", method: :get) do %>
+              <div class="form-group row">
+                <% sorting_options = ["Task name Ascending", "Task name Descending", "Deadline Ascending", "Deadline Descending", "Priority High to Low", "Priority Low to High"]%>
+                <span class="fa fa-sort col-1 col-sm-2 text-right"></span>
+                <div class="col-11 col-sm-10 text-right">
+                  <%= select_tag(:sort, options_for_select(sorting_options, params[:sort]), prompt:"None", class:"form-control custom-select select-center", id: "sort_input") %>
+                </div>
+              </div>  
+            <% end %>
+          </div>
+          <div class="col-12 col-md-5 col-xl-4">
             <%=form_tag tasks_path, action: "index", method: :get do %>
               <%= render "layouts/search" %>
             <% end %>
           </div>
+          <div class="col-6 text-center">
+            <%= form_tag import_tasks_path, multipart: true do%>
+              <%= file_field_tag :file, id:"file-input" %>
+              <%= submit_tag 'Import CSV', class: "btn btn-success btn-sm" %>
+            <% end %>
+          </div>
+          <div class="col-6">
+            <%= link_to "Export CSV", tasks_path(format: "csv"), class: "btn btn-secondary btn-sm"%>
+          </div>
         </div>
+        <br />
         <div class="index-table">
           <%= render "tasks/task_list"%>
         </div>

@@ -10,7 +10,7 @@ class TaskMailer < ApplicationMailer
     else
       @url ="http://tms-kreeti.herokuapp.com/tasks/" + @task.id.to_s 
     end
-
+    attachments["#{@task.task_name}.pdf"] = generate_pdf_content(@task)
     mail to: User.find(@task.assign_task_to).email, subject: "Task Assigned: #{@task.task_name}"
   end
 
@@ -23,7 +23,7 @@ class TaskMailer < ApplicationMailer
     else
       @url ="http://tms-kreeti.herokuapp.com/tasks/" + @task.id.to_s 
     end
-
+    attachments["#{@task.task_name}.pdf"] = generate_pdf_content(@task)
     mail to: User.find(@task.assign_task_to).email, subject: "Task Updated: #{@task.task_name}"
   end
 
@@ -36,7 +36,7 @@ class TaskMailer < ApplicationMailer
     else
       @url ="http://tms-kreeti.herokuapp.com/tasks/" + @task.id.to_s 
     end
-
+    attachments["#{@task.task_name}.pdf"] = generate_pdf_content(@task)
     mail to: User.find(@task.assign_task_to).email, subject: "#{type} Reminder: #{@task.task_name}"
   end
 
@@ -49,7 +49,7 @@ class TaskMailer < ApplicationMailer
     else
       @url ="http://tms-kreeti.herokuapp.com/tasks/" + @task.id.to_s 
     end
-
+    attachments["#{@task.task_name}.pdf"] = generate_pdf_content(@task)
     mail to: User.find(@task.assign_task_to).email, subject: "Task Reminder: #{@task.task_name}"
   end
 
@@ -62,7 +62,7 @@ class TaskMailer < ApplicationMailer
     else
       @url ="http://tms-kreeti.herokuapp.com/tasks/" + @task.id.to_s 
     end
-
+    attachments["#{@task.task_name}.pdf"] = generate_pdf_content(@task)
     mail to: 'manomoy26@gmail.com', subject: "Task Approved: #{@task.task_name}"
   end
 
@@ -75,7 +75,7 @@ class TaskMailer < ApplicationMailer
     else
       @url ="http://tms-kreeti.herokuapp.com/tasks/" + @task.id.to_s 
     end
-
+    attachments["#{@task.task_name}.pdf"] = generate_pdf_content(@task)
     mail to: User.find(@task.assign_task_to).email, subject: "Task Approved: #{@task.task_name}"
   end
 
@@ -87,7 +87,17 @@ class TaskMailer < ApplicationMailer
     else
       @url ="http://tms-kreeti.herokuapp.com/tasks/" + @task.id.to_s 
     end
-
+    attachments["#{@task.task_name}.pdf"] = generate_pdf_content(@task)
     mail to: User.find(user_id).email, subject: "Task Approved Notification: #{@task.task_name}"
+  end
+  private
+
+  def generate_pdf_content(task)
+    pdf = TaskDetails.new(task)
+    Tempfile.create do |f|
+      pdf.render_file f
+      f.flush
+      File.read(f)
+    end
   end
 end
