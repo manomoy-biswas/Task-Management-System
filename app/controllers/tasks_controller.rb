@@ -2,6 +2,7 @@ class TasksController < ApplicationController
   include TasksHelper
   layout "dashboard"
   before_action :authenticate_user!
+  before_action :check_user_is_admin, only: [:admins_task]
   before_action :check_user_is_hr, only: [:print_task_list, :print_task_details]
   before_action :set_task, only: [:approve, :destroy, :download, :edit, :notify_hr, :show,
                 :submit_task, :update]
@@ -113,9 +114,6 @@ class TasksController < ApplicationController
     redirect_to overview_path unless @task.assign_task_by == current_user.id || current_user.admin
   end
 
-  def export
-  end
-
   def import
     Task.import(params[:file])
     redirect_to request.referrer, flash: {success: "Task Imported Successfully"}
@@ -130,7 +128,9 @@ class TasksController < ApplicationController
                     'task_name', 'description',
                     'priority', 'assign_task_to',
                     'assign_task_by', 'priority',
-                    'repeat', 'submit_date', 'submit', 'approved', 'approved_by', 'recurring_task', 'notify_hr'])
+                    'repeat', 'submit_date', 'submit', 
+                    'approved', 'approved_by', 
+                    'recurring_task', 'notify_hr'])
                  }
       end
   end            

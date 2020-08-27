@@ -429,7 +429,7 @@ class Task < ApplicationRecord
     CSV.foreach(file.path, headers: true) do |row|
       task_hash = row.to_hash
       task = find_or_create_by!(task_name: task_hash['task_name'])
-      task.update_attributes(task_hash)
+      task.update(task_hash)
     end
   end
   private

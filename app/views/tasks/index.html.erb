@@ -31,7 +31,7 @@
               <%= render "layouts/search" %>
             <% end %>
           </div>
-          <div class="col-6 text-center">
+          <div class="col-6 text-right">
             <%= form_tag import_tasks_path, multipart: true do%>
               <div class="image-upload">
                 <label for="file-input">
@@ -42,7 +42,7 @@
               </div>
             <% end %>
           </div>
-          <div class="col-6">
+          <div class="col-6 text-left">
             <%= link_to "Export to CSV", tasks_path(format: "csv"), class: "btn btn-secondary btn-sm"%>
           </div>
         </div>
