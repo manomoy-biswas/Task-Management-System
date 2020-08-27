@@ -44,7 +44,7 @@ $(document).unbind('keydown').bind('keydown', function (event) {
 $(document).ready(function(){
   //submitting dorm on change event
   $('#file-input').on('change', function() { 
-    $('#update_avater').submit(); 
+    $(this.form).submit(); 
   });
 
   $('#filter_input, #sort_input').on('change', function() { 

@@ -33,12 +33,17 @@
           </div>
           <div class="col-6 text-center">
             <%= form_tag import_tasks_path, multipart: true do%>
-              <%= file_field_tag :file, id:"file-input" %>
-              <%= submit_tag 'Import CSV', class: "btn btn-success btn-sm" %>
+              <div class="image-upload">
+                <label for="file-input">
+                  <div class="btn btn-success btn-sm">Import from CSV</div>
+                </label>
+                <%= file_field_tag :file, id:"file-input" %>
+                <%= submit_tag 'Import CSV' %>
+              </div>
             <% end %>
           </div>
           <div class="col-6">
-            <%= link_to "Export CSV", tasks_path(format: "csv"), class: "btn btn-secondary btn-sm"%>
+            <%= link_to "Export to CSV", tasks_path(format: "csv"), class: "btn btn-secondary btn-sm"%>
           </div>
         </div>
         <br />
