@@ -39,7 +39,7 @@ class InvitationsController < ApplicationController
         @invite.save(validate: false)
         User.generate_auth_token(:auth_token, @user)
         login(@user)
-        redirect_to overview_path, flash: {success: "Wencome #{@user.name}"}
+        redirect_to overview_path, flash: {success: "Welcome #{@user.name}"}
       else
         render "edit"
       end

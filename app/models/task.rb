@@ -220,6 +220,7 @@ class Task < ApplicationRecord
       else
         tasks = self.search(query, current_user.id).map(&:id)
       end
+      self.where(id: tasks).includes(:user, :category, :assign_by).order("id DESC")
     elsif filter.present?
       if current_user.admin
         self.all_task_filter(filter).order("created_at DESC")
@@ -383,7 +384,7 @@ class Task < ApplicationRecord
     end  
   end
 
-  def self.fetch_notified_tasks(filter = nil, query = nil)
+  def self.fetch_notified_tasks(filter = nil, sort = nil, query = nil)
     if query.present?
       tasks = self.notified_tasks_search(query).map(&:id)
       self.where(id: tasks).includes(:user, :category, :assign_by).order("updated_at DESC")

@@ -28,17 +28,17 @@ module ApplicationHelper
 
   def approved_task_count
     if current_user.admin
-      Task.where(approved: true).count
+      Task.approved_tasks.count
     else
-      current_user.tasks.where(approved: true).count
+      Task.users_approved_tasks(current_user.id).count
     end
   end
 
   def set_task_count
-    Task.where(assign_task_by: current_user.id).count
+    Task.my_assigned_tasks(current_user.id).count
   end
 
   def notified_count
-    Task.where(notify_hr: true).count
+    Task.notified_tasks.count
   end
 end
